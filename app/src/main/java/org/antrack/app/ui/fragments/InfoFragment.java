@@ -1,0 +1,133 @@
+package org.antrack.app.ui.fragments;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import org.antrack.app.Init;
+import org.antrack.app.libs.Files;
+import org.antrack.app.libs.Utils;
+import org.antrack.app.ui.RecyclerViewAnim;
+import org.antrack.app.ui.U;
+import org.antrack.app.ui.V;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import app.R;
+
+public class InfoFragment extends BaseFragment {
+    final String TAG = "InfoFragment";
+    Context context;
+
+    String infoFile;
+    String statusFile;
+
+    RecyclerViewAnim recyclerView;
+    InfoAdapter infoAdapter;
+
+    List<Info> infos;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        context = getActivity().getApplicationContext();
+
+        // Otherwise GetActivity() return null after orientation change
+        setRetainInstance(true);
+
+        View view = inflater.inflate(R.layout.fragment_cardview, null);
+
+        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        // FIXME Now it is hardcoded, but in production must read modinfo
+        infoFile = "/info";
+        statusFile = "/status";
+
+        infos = new ArrayList<>();
+        infoAdapter = new InfoAdapter(infos);
+        recyclerView.setAdapter(infoAdapter);
+
+        onFileUpdate();
+
+        U.runCommandAsync("info; status");
+        if (!U.isDeviceMain()) {
+            U.getFileAsync(infoFile);
+            U.getFileAsync(statusFile);
+        }
+
+        return view;
+    }
+
+    @Override
+    public void onFileUpdate() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                infos = new ArrayList<>();
+
+                Info info   = readFile(infoFile, "Device Info");
+                if (info == null)
+                    return;
+
+                Info status = readFile(statusFile, "Current status");
+                if (status == null)
+                    return;
+
+                infos.add(info);
+                infos.add(status);
+
+                if (getActivity() == null)
+                    return;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        infoAdapter.updateInfos(infos);
+                        infoAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
+    }
+
+    @Override
+    public String getName() { return "Info"; }
+
+    @Override
+    public String getWatchFile() {
+        return statusFile;
+    }
+
+    // Read file if it exist. If not request update.
+    private Info readFile(String file, String title) {
+        String path = U.getFullPath(file);
+
+        if (!new File(path).exists()) {
+            return null;
+        }
+
+        Info info = new Info();
+
+        try {
+            String infoText = Files.readTextFile(path);
+            info.title = title;
+
+            if (!infoText.equals(""))
+                info.data = infoText.trim();
+            else
+                return null;
+        } catch (IOException e) {
+            Log.e(TAG, "Can't read file: " + e.toString());
+        }
+
+        return info;
+    }
+}

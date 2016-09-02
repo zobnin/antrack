@@ -1,0 +1,48 @@
+package org.antrack.app;
+
+public class C {
+    public static final String DROPBOX_KEY = "otyoz3pz5z9rtmn";
+
+    public static final String APP_NAME = "org.antrack.app";
+    public static final String UPDATE_INTERVAL = "30";
+    public static final String[] INTERVALS = {"10", "30", "60", "120", "180"};
+    public static final int LOGS_MAX = 1000;
+    public static final int DB_LONGPOLL_TIMEOUT = 300;
+
+    public static final String DEVICES_DIR = "/devices/";
+    public static final String MODULES_DIR = "/modules/";
+    public static final String ODEX_DIR = "/odex/";
+
+    public static final String MODULES_FILE = "/modules";
+    public static final String SETTINGS_FILE = "/settings";
+    public static final String CONTROL_FILE = "/ctl";
+    public static final String RESULT_FILE = "/result";
+
+    public static final String CONTROL_Q_FILE = "/ctlq";
+    public static final int CONTROL_Q_MAX_LENGHT = 10;
+
+    public static final String MODULES_JSON_FILE = "/modules.json";
+
+    public static final String MAIN_LOG_FILE = "/logs";
+
+    public static final String NOWIPE_FILE = "/.nowipe";
+
+    public static final String LAST_CMD_TIME_FORMAT = "yyyyMMddHHmmssSSS";
+
+    public static final String S_LAUNCH_WIZARD = "launchWizard"; // false
+    public static final String S_USE_ADMIN = "useAdmin"; // false
+    public static final String S_USE_ROOT = "useRoot"; // false
+    public static final String S_UPDATE_INTERVAL = "updateInterval"; // 30
+    public static final String S_PLUGIN = "plugin"; // null
+    public static final String S_TOKEN = "token"; // null
+    public static final String S_START_AT_BOOT = "startAtBoot"; // true
+    public static final String S_ENABLE_SERVICE = "enableService"; // true
+    public static final String S_HIDDEN = "hidden"; // false
+    public static final String S_LOST = "lost"; // false
+    public static final String S_SCREEN_ON_PHOTO = "screenOnPhoto"; // false
+    public static final String S_BACKUP_PHONE = "backupPhone"; // null
+    public static final String S_SMS_ON_SIM_CHANGE = "smsOnSimChange"; // false
+    public static final String S_IMSI = "IMSI"; // null
+    public static final String S_SYSTEM_APP = "systemApp"; // false
+    public static final String S_LAST_CMD_TIME = "lastCmdId"; // null
+}

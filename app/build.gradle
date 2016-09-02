@@ -1,0 +1,41 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    maven { url "https://mint.splunk.com/gradle/" }
+    maven { url "https://jitpack.io" }
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion '23.0.3'
+
+    defaultConfig {
+        applicationId "org.antrack.app"
+        minSdkVersion 17
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:design:22.2.1'
+    compile 'com.android.support:cardview-v7:22.2.1'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile 'com.dropbox.core:dropbox-core-sdk:2.1.1'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.splunk.mint:mint:5.0.0"
+    //compile 'com.github.fcannizzaro.materialstepper'
+}

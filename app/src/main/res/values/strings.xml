@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">AnTrack</string>
+
+    <string name="menu_show_help">Show Help</string>
+    <string name="menu_launch_wizard">Launch Wizard</string>
+    <string name="title_activity_main2" translatable="false">Main2Activity</string>
+
+    <string name="main_enable_service">Enable service</string>
+    <string name="main_start_at_boot">Start service at boot</string>
+    <string name="main_hide_icon">Hide application icon</string>
+    <string name="main_update_interval">Update interval in minutes</string>
+    <string name="main_make_system">Removing protection</string>
+    <string name="wizard_admin_button">Grant admin permissions</string>
+    <string name="wizard_root_text">Remote screenshot function only works with root permission</string>
+    <string name="wizard_root_button">Grant root permissions</string>
+    <string name="wizard_plugin_button">Now you must choise what cloud service app will use for send data and get remote commands. Don\'t worry, app will see only its own directory in Applications folder.</string>
+    <string name="wizard_close_button">Close</string>
+    <string name="wizard_admin_text">Remote wipe and lock with PIN-code functions requires admin rights</string>
+
+    <string name="main_hide_icon_warning_title">Warning</string>
+    <string name="main_hide_icon_warning_text"><![CDATA[
+If you hide icon and press \"Home\" button you can\'t return back.
+You either need to remove the application or unhide icon using the command <i>hide off</i> in the file <i>control</i>.
+Hide icon?
+    ]]></string>
+
+    <string name="help_title">How to use</string>
+    <string name="help_text"><![CDATA[
+Coming soon
+    ]]></string>
+    <string name="ok">Ok</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="wizard_welcome">Settings wizard</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>

@@ -1,0 +1,206 @@
+package org.antrack.app.service;
+
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
+
+import org.antrack.app.C;
+import org.antrack.app.CloudWatcher;
+import org.antrack.app.FileWatcher;
+import org.antrack.app.Init;
+import org.antrack.app.Pw;
+import org.antrack.app.Settings;
+import org.antrack.app.libs.Utils;
+
+import java.io.File;
+import java.io.IOException;
+
+public class MainService extends Service {
+    final String TAG = "MainService";
+
+    FileWatcher fileWatcher;
+    CloudWatcher cloudWatcher;
+    Context context;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        context = this;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                /*** Init ***/
+
+                // Error reporting
+                Mint.initAndStartSession(MainService.this, "8af105a4");
+
+                Init.all(context);
+
+                V.cc = new CC(context);
+
+                /*** Set alarm timer ***/
+
+                String updateInterval = Settings.get(C.S_UPDATE_INTERVAL);
+                long time = Long.parseLong(updateInterval) * 60 * 1000;
+                Alarm.set(context, time);
+
+                /*** Connect to cloud ***/
+
+                try {
+                    Pw.init();
+                } catch (InterruptedException e) {
+                    Log.d(TAG, "Interrupted: " + e);
+                }
+
+                /*** Start watching for local file changes ***/
+
+                fileWatcher = FileWatcher.getInstance();
+                fileWatcher.addCallback("service", new LocalFileUpdated());
+
+                // Wait for file watcher
+                // FIXME
+                Utils.sleep(1);
+
+                /*** Bootstrap modules ***/
+
+                // Generate /modules file
+                if (!new File(Init.MAIN_DIR + C.MODULES_FILE).exists()) {
+                    V.cc.parseCommand("!modules");
+                }
+
+                V.cc.runModules("load", null);
+                V.cc.parseBootstrap();
+
+                /*** Get ctlq ***/
+
+                try {
+                    U.getFile(C.CONTROL_Q_FILE);
+                } catch (Exception e) {
+                    Log.d(TAG, "Can't parse ctlq file: " + e);
+                }
+
+                /*** Watching for remote file changes ***/
+
+                cloudWatcher = CloudWatcher.getInstance();
+                cloudWatcher.addCallback("service", new CloudFileUpdated());
+
+                Logger.started(MainService.this);
+            }
+        }).start();
+    }
+
+    // Callbacks waits for local file changes
+    public class LocalFileUpdated implements FileWatcher.Callback {
+        public void onFileUpdate(String path) {
+            // Current device ctl changed -> read and execute command
+            if (path.endsWith(C.CONTROL_FILE)) {
+                try {
+                    U.parseCtl();
+                } catch (IOException e) {
+                    Log.e(TAG, "Can't read ctl file: " + e.toString());
+                }
+            }
+            // Current device ctlq changed -> read and execute commands
+            else if (path.endsWith(C.CONTROL_Q_FILE)) {
+                try {
+                    U.parseCtlq();
+                } catch (IOException e) {
+                    Log.e(TAG, "Can't read ctlq file: " + e.toString());
+                }
+            }
+            // Other file changed -> upload to cloud
+            else {
+                try {
+                    U.uploadFile(path);
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "processFile interrupted: " + e.toString());
+                }
+            }
+        }
+
+        public String getWatchFile() {
+            return "/" + Init.DEVICE_NAME + "/";
+        }
+    }
+
+    // Callback waits for /control changes
+    public class CloudFileUpdated implements CloudWatcher.Callback {
+        public void onFileUpdate(String path) {
+            try {
+                Pw.getFile(Init.DEVICES_DIR + path, path);
+            } catch (Exception e) {
+                Log.e(TAG, "CloudFileUpdated exception: " + e);
+            }
+        }
+
+        public String getWatchFile() {
+            return "/" + Init.DEVICE_NAME + C.CONTROL_FILE;
+        }
+    }
+
+    @Override
+    public int onStartCommand(final Intent intent, int flags, int startId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "onStartCommmand");
+
+                if (intent != null) {
+                    if (intent.hasExtra("boot")) {
+                        Log.d(TAG, "Get boot");
+                        V.cc.runModules("boot", null);
+                    } else if (intent.hasExtra("alarm")) {
+                        Log.d(TAG, "Get alarm");
+                        Logger.alarm(context);
+                        V.cc.runModules("alarm", null);
+                    } else if (intent.hasExtra("screenOn")) {
+                        Log.d(TAG, "Get screenOn");
+                        V.cc.runModules("screenOn", null);
+                    } else if (intent.hasExtra("outgoingCall")) {
+                        Log.d(TAG, "Get outgoingCall");
+                        String number = intent.getStringExtra("phoneNumber");
+                        if (number != null)
+                            V.cc.runModules("outgoingCall", intent.getStringExtra("phoneNumber"));
+                    } else if (intent.hasExtra("incomingCall")) {
+                        Log.d(TAG, "Get incomingCall");
+                        V.cc.runModules("incomingCall", intent.getStringExtra("phoneNumber"));
+                    } else if (intent.hasExtra("command")) {
+                        Log.d(TAG, "Get command");
+                        V.cc.parseCommand(intent.getStringExtra("command"));
+                    }
+                }
+            }
+        }).start();
+
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        fileWatcher.removeCallback("service");
+        cloudWatcher.removeCallback("service");
+
+        // FIXME проблема в том, что если сервис отключен из-за отсутствия интернета alarm будет его запускать
+//        String enabled = Settings.get(C.S_ENABLE_SERVICE);
+//        if (enabled == null || enabled.equals("false")) {
+            Alarm.cancel(this);
+//        }
+
+        Logger.stopped(this);
+
+        stopSelf();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+}

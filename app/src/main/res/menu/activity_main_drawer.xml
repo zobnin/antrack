@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_menu_info"
+            android:title="Device Info" />
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_menu_location"
+            android:title="Location" />
+        <item
+            android:id="@+id/nav_apps"
+            android:icon="@drawable/ic_menu_apps"
+            android:title="Applications" />
+        <item
+            android:id="@+id/nav_contacts"
+            android:icon="@drawable/ic_menu_contacts"
+            android:title="Contacts" />
+        <item
+            android:id="@+id/nav_calls"
+            android:icon="@drawable/ic_menu_calls"
+            android:title="Calls" />
+        <item
+            android:id="@+id/nav_sms"
+            android:icon="@drawable/ic_menu_sms"
+            android:title="SMS" />
+        <item
+            android:id="@+id/nav_screenshots"
+            android:icon="@drawable/ic_menu_screenshots"
+            android:title="Screenshots" />
+        <item
+            android:id="@+id/nav_photos"
+            android:icon="@drawable/ic_menu_photos"
+            android:title="Photos" />
+        <item
+            android:id="@+id/nav_logs"
+            android:icon="@drawable/ic_menu_logs"
+            android:title="Logs" />
+        <item
+            android:id="@+id/nav_shell"
+            android:icon="@drawable/ic_menu_shell"
+            android:title="Shell" />
+        <item
+            android:id="@+id/nav_modules"
+            android:icon="@drawable/ic_menu_modules"
+            android:title="Installed modules" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_settings"
+            android:title="Settings" />
+    </group>
+
+    <item android:title="About">
+        <menu>
+            <item
+                android:id="@+id/nav_howto"
+                android:icon="@drawable/ic_menu_howto"
+                android:title="How to use app" />
+            <item
+                android:id="@+id/nav_site"
+                android:icon="@drawable/ic_menu_site"
+                android:title="Web site" />
+        </menu>
+    </item>
+
+</menu>

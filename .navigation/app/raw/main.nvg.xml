@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "ru.execbit.app.WizardActivity"/>
+      <point      
+        x = "500"      
+        y = "2120"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.dropbox.client2.android.AuthActivity"/>
+      <point      
+        x = "548"      
+        y = "2168"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        className = "ru.execbit.app.MainActivity"/>
+      <point      
+        x = "2080"      
+        y = "100"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "ru.execbit.app.MainActivity"/>
+      <point      
+        x = "500"      
+        y = "100"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>
