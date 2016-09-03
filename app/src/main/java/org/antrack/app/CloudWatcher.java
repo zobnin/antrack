@@ -2,22 +2,12 @@ package org.antrack.app;
 
 import android.util.Log;
 
-import org.antrack.app.C;
-import org.antrack.app.Init;
-import org.antrack.app.Pw;
-import org.antrack.app.libs.WakeLocks;
-import org.antrack.app.service.V;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 // Watch for control file changes in cloud
 public class CloudWatcher {
@@ -164,7 +154,8 @@ public class CloudWatcher {
 
         Log.d(TAG, "File modified, device: " + device + ", path: " + path);
 
-        if (!watchers.containsKey(device))
+        Watcher watcher = watchers.get(device);
+        if (watcher == null)
             return;
 
         for (Callback callback : watchers.get(device).getCallbacks().values()) {
