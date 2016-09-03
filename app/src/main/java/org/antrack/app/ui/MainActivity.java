@@ -136,14 +136,6 @@ public class MainActivity extends AppCompatActivity
 
         readModules();
 
-        /*** Init cloud disk ***/
-
-        try {
-            Pw.init();
-        } catch (InterruptedException e) {
-            Log.d(TAG, "Interrupted: " + e);
-        }
-
         /*** Load fragments ***/
 
         setContentView(R.layout.activity_main);
@@ -285,13 +277,6 @@ public class MainActivity extends AppCompatActivity
     // 1. with items from app folder (fast, not synced)
     // 2. with items from cloud (slow, synced)
     private void createDevicesMenu() {
-        // Don't create if not connected to cloud
-        if (!Pw.isConnected()) {
-            // FIXME translate
-            showToast(MainActivity.this, "Wait, initializing...");
-            return;
-        }
-
         /*** Show devices from app folder ***/
 
         ArrayList<String> devices = new ArrayList<>(Arrays.asList(new File(Init.DEVICES_DIR).list()));
@@ -304,6 +289,13 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE, device)
                     .setIcon(R.drawable.ic_menu_device);
             i = i + 1;
+        }
+
+        Pw pw = Pw.getInstance();
+        if (!pw.isConnected()) {
+            // FIXME translate
+            showToast(MainActivity.this, "Not connected to cloud, can't update device list");
+            return;
         }
 
         /*** Show devices from cloud ***/
@@ -430,7 +422,9 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void run() {
                                 try {
-                                    Pw.getFile(Init.DEVICES_DIR + path, path);
+                                    Pw pw = Pw.getInstance();
+                                    if (pw.isConnected())
+                                        pw.getFile(Init.DEVICES_DIR + path, path);
                                 } catch (Exception e) {
                                     Log.d(TAG, "CloudUpdatedCallback: error downloading file: " + e);
                                 }

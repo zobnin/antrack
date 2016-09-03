@@ -5,7 +5,6 @@ import android.util.Log;
 
 import org.antrack.app.libs.Net;
 import org.antrack.app.plugins.Dropbox;
-import org.antrack.app.service.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,47 +12,65 @@ import java.util.ArrayList;
 // Pw - Plugin wrapper
 
 public class Pw {
-    private static final String TAG = "Pw";
-
-    static Dropbox dPlugin;
-
-    static String token;
-    static boolean connected = false;
-
-    static public boolean isConnected() {
-        return connected;
+    private static volatile Pw instance;
+    public static Pw getInstance() {
+        Pw localInstance = instance;
+        if (localInstance == null) {
+            synchronized (Pw.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    instance = localInstance = new Pw();
+                }
+            }
+        }
+        return localInstance;
     }
 
-    static public void init() throws InterruptedException {
-        isOnline();
+    private static final String TAG = "Pw";
 
-        if (connected)
-            return;
+    // Max sleep time if no connection to cloud
+    private static final int MAX_SLEEP = 320;
 
+    Dropbox dPlugin;
+
+    String token;
+    boolean connected = false;
+
+    public Pw() {
         Settings.init();
 
         token = Settings.get(C.S_TOKEN);
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (token == null || token.equals("")) {
+            return;
+        }
+
+        if (Settings.get(C.S_PLUGIN).equals("dropbox")) {
             if (token != null) {
                 dPlugin = new Dropbox(token);
                 connected = true;
                 Log.d(TAG, "Connected to dropbox");
-            } else {
-                Settings.put(C.S_LAUNCH_WIZARD, "true");
-                // FIXME просто выйти?
-                System.exit(0);
             }
         }
     }
 
-    static public void auth(Activity activity) throws InterruptedException {
+    public boolean isConnected() {
+        if (Net.isOnline() && connected) {
+            return true;
+        }
+        else {
+            Log.d(TAG, "No connection to cloud");
+            return false;
+        }
+    }
+
+    public void auth(Activity activity) throws InterruptedException {
         if (Settings.get("plugin").equals("dropbox")) {
             dPlugin = new Dropbox();
             dPlugin.auth(activity);
         }
     }
 
-    static public String resume() {
+    public String resume() {
         if (Settings.get("plugin").equals("dropbox")) {
             return dPlugin.resume();
         } else {
@@ -61,21 +78,21 @@ public class Pw {
         }
     }
 
-    static public void putFile(String lFile, String rFile, boolean delete) throws InterruptedException {
+    public void putFile(String lFile, String rFile, boolean delete) throws InterruptedException {
         if (Settings.get("plugin").equals("dropbox")) {
             Log.d(TAG, "Put file " + lFile + " as " + rFile);
             dPlugin.putFile(lFile, rFile, delete);
         }
     }
 
-    static public void getFile(String lFile, String rFile) throws InterruptedException {
+    public void getFile(String lFile, String rFile) throws InterruptedException {
         if (Settings.get("plugin").equals("dropbox")) {
             Log.d(TAG, "Get file " + rFile + " as " + lFile);
             dPlugin.getFile(lFile, rFile);
         }
     }
 
-    static public ArrayList<String> listDir(String rDir) throws InterruptedException  {
+    public ArrayList<String> listDir(String rDir) throws InterruptedException  {
         if (Settings.get("plugin").equals("dropbox")) {
             Log.d(TAG, rDir);
             return dPlugin.listDir(rDir);
@@ -83,7 +100,8 @@ public class Pw {
         return null;
     }
 
-    static public void getDir(String lDir, String rDir) throws InterruptedException {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void getDir(String lDir, String rDir) throws InterruptedException {
         if (Settings.get("plugin").equals("dropbox")) {
             Log.d(TAG, "Get files from dir " + rDir + " to dir " + lDir);
             // We don't want to trigger fileObserver on every downloaded file
@@ -95,7 +113,7 @@ public class Pw {
         }
     }
 
-    static public ArrayList<String> listDirs(String rDir) throws InterruptedException  {
+    public ArrayList<String> listDirs(String rDir) throws InterruptedException  {
         if (Settings.get("plugin").equals("dropbox")) {
             Log.d(TAG, "List dirs " + rDir);
             return dPlugin.listDirs(rDir);
@@ -103,8 +121,7 @@ public class Pw {
         return null;
     }
 
-    static public ArrayList<String> watchForChanges(String dir) throws InterruptedException {
-        isOnline();
+    public ArrayList<String> watchForChanges(String dir) throws InterruptedException {
         if (Settings.get("plugin").equals("dropbox")) {
             Log.d(TAG, "Start watching");
             return dPlugin.watchForChanges(dir);
@@ -112,12 +129,12 @@ public class Pw {
         return null;
     }
 
-    static private synchronized void isOnline() throws InterruptedException {
-        int i = 1;
-        while (!Net.isOnline()) {
+    public synchronized void waitOnline() throws InterruptedException {
+        int i = 10;
+        while (!isConnected()) {
             Log.d(TAG, "No internet, sleep " + i + "0 seconds");
-            Thread.sleep(i * 10000);
-            if (i < 16)
+            Thread.sleep(i * 1000);
+            if (i < MAX_SLEEP)
                 i = i * 2;
         }
     }

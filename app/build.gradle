@@ -29,13 +29,13 @@ android {
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:cardview-v7:22.2.1'
     compile 'com.android.support:recyclerview-v7:22.2.1'
     compile 'com.google.android.gms:play-services-maps:9.4.0'
     compile 'com.dropbox.core:dropbox-core-sdk:2.1.1'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.splunk.mint:mint:5.0.0"
-    //compile 'com.github.fcannizzaro.materialstepper'
+    compile 'com.splunk.mint:mint:5.0.0'
+    //compile 'com.googlecode.json-simple:json-simple:1.1.1'
 }

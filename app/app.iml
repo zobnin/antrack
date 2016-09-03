@@ -120,7 +120,7 @@
     <orderEntry type="library" exported="" name="support-v4-23.0.0" level="project" />
     <orderEntry type="library" exported="" name="jackson-core-2.7.4" level="project" />
     <orderEntry type="library" exported="" name="mint-5.0.0" level="project" />
-    <orderEntry type="library" exported="" name="json_simple-1.1" level="project" />
+    <orderEntry type="library" exported="" name="json-simple-1.1.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.0.0" level="project" />

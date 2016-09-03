@@ -75,8 +75,10 @@ public class CloudWatcher {
 
                     while (active) {
                         try {
-                            // FIXME watchForChanges будет работать даже без аутентификации
-                            ArrayList<String> changedFiles = Pw.watchForChanges("/" + device);
+                            Pw pw = Pw.getInstance();
+                            // Sleep if there are no internet connection
+                            pw.waitOnline();
+                            ArrayList<String> changedFiles = pw.watchForChanges("/" + device);
 
                             // Second check if thread become inactive while blocked
                             if (!active)

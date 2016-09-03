@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.concurrent.Exchanger;
 
 public class U {
     final static String TAG = "U";
@@ -28,7 +27,11 @@ public class U {
     public static void getFile(String file) {
         try {
             Files.mkdirsForFile(Init.DEVICES_DIR + V.currentDevice + file);
-            Pw.getFile(Init.DEVICES_DIR + V.currentDevice + file, "/" + V.currentDevice + file);
+
+            Pw pw = Pw.getInstance();
+            if (pw.isConnected())
+                pw.getFile(Init.DEVICES_DIR + V.currentDevice + file, "/" + V.currentDevice + file);
+            // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't get file " + file + ":" + e);
         }
@@ -46,7 +49,10 @@ public class U {
     // Download all files in dir for current device
     public static void getDir(String dir) {
         try {
-            Pw.getDir(Init.DEVICES_DIR + V.currentDevice + dir, "/" + V.currentDevice + dir);
+            Pw pw = Pw.getInstance();
+            if (pw.isConnected())
+                pw.getDir(Init.DEVICES_DIR + V.currentDevice + dir, "/" + V.currentDevice + dir);
+            // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't get dir " + dir + ": " + e);
         }
@@ -65,7 +71,10 @@ public class U {
     // Upload file for current device
     public static void putFile(String file) {
         try {
-            Pw.putFile(Init.DEVICES_DIR + V.currentDevice + file, "/" + V.currentDevice + file, false);
+            Pw pw = Pw.getInstance();
+            if (pw.isConnected())
+                pw.putFile(Init.DEVICES_DIR + V.currentDevice + file, "/" + V.currentDevice + file, false);
+            // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't put file " + file + ": " + e);
         }
@@ -88,7 +97,10 @@ public class U {
             @Override
             public void run() {
                 try {
-                    listDirResult = Pw.listDir(dir);
+                    Pw pw = Pw.getInstance();
+                    if (pw.isConnected())
+                        listDirResult = pw.listDir(dir);
+                    // FIXME else throw...
                 } catch (Exception e) {
                     Log.e(TAG, "Can't list dir " + dir + ": " + e);
                 }
@@ -122,25 +134,7 @@ public class U {
 
         return notInlocal;
     }
-/*
-    // Run command for current device
-    public static void runCommand(String cmd) {
-        String deviceControlFile = getFullPath(C.CONTROL_FILE);
 
-        if (isDeviceMain()) {
-            cmd = "!" + cmd;
-        }
-
-        try {
-            Files.writeTextFile(deviceControlFile, cmd);
-            if (!isDeviceMain()) {
-                putFile(C.CONTROL_FILE);
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Can't run command " + cmd + ": " + e);
-        }
-    }
-*/
     public static void runCommandAsync(String cmd) {
         if (isDeviceMain()) {
             cmd = "!" + cmd;
@@ -207,6 +201,7 @@ public class U {
                         module.result = result;
                         // Make dirs for module
                         if (result.endsWith("/")) {
+                            //noinspection ResultOfMethodCallIgnored
                             new File(Init.DEVICES_DIR + V.currentDevice + result).mkdir();
                         }
                         break;

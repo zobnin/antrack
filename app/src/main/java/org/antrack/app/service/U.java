@@ -53,15 +53,23 @@ public class U {
     }
 
     public static void getFile(String file) throws InterruptedException {
-        Pw.getFile(U.getFullPath(file), U.getCloudPath(file));
+        Pw pw = Pw.getInstance();
+        if (pw.isConnected())
+            pw.getFile(U.getFullPath(file), U.getCloudPath(file));
     }
 
     public static void putFile(String file) throws InterruptedException {
-        Pw.putFile(U.getFullPath(file), U.getCloudPath(file), false);
+        Pw pw = Pw.getInstance();
+        if (pw.isConnected())
+            pw.putFile(U.getFullPath(file), U.getCloudPath(file), false);
     }
 
     // Upload file with full path
     public static void uploadFile(String path) throws InterruptedException {
+        Pw pw = Pw.getInstance();
+        if (!pw.isConnected())
+            return;
+
         File file = new File(path);
 
         if (file.isDirectory()) {
@@ -80,6 +88,6 @@ public class U {
         //    delete = true;
         //}
 
-        Pw.putFile(path, "/" + path.replace(Init.DEVICES_DIR, ""), false);
+        pw.putFile(path, "/" + path.replace(Init.DEVICES_DIR, ""), false);
     }
 }

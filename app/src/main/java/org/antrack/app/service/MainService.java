@@ -25,6 +25,7 @@ public class MainService extends Service {
     FileWatcher fileWatcher;
     CloudWatcher cloudWatcher;
     Context context;
+    Pw pw;
 
     @Override
     public void onCreate() {
@@ -40,8 +41,11 @@ public class MainService extends Service {
                 // Error reporting
                 Mint.initAndStartSession(MainService.this, "8af105a4");
 
+                // Dirs and settings
                 Init.all(context);
-
+                // Cloud connection
+                pw = Pw.getInstance();
+                // Control Center
                 V.cc = new CC(context);
 
                 /*** Set alarm timer ***/
@@ -49,14 +53,6 @@ public class MainService extends Service {
                 String updateInterval = Settings.get(C.S_UPDATE_INTERVAL);
                 long time = Long.parseLong(updateInterval) * 60 * 1000;
                 Alarm.set(context, time);
-
-                /*** Connect to cloud ***/
-
-                try {
-                    Pw.init();
-                } catch (InterruptedException e) {
-                    Log.d(TAG, "Interrupted: " + e);
-                }
 
                 /*** Start watching for local file changes ***/
 
@@ -133,7 +129,9 @@ public class MainService extends Service {
     public class CloudFileUpdated implements CloudWatcher.Callback {
         public void onFileUpdate(String path) {
             try {
-                Pw.getFile(Init.DEVICES_DIR + path, path);
+                Pw pw = Pw.getInstance();
+                if (pw.isConnected())
+                    pw.getFile(Init.DEVICES_DIR + path, path);
             } catch (Exception e) {
                 Log.e(TAG, "CloudFileUpdated exception: " + e);
             }

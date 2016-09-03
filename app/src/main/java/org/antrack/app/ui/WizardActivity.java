@@ -67,7 +67,8 @@ public class WizardActivity extends ActionBarActivity {
                 Settings.put(C.S_PLUGIN, "dropbox");
                 try {
                     pluginChoise = true;
-                    Pw.auth(activity);
+                    Pw pw = Pw.getInstance();
+                    pw.auth(activity);
                 } catch (InterruptedException e) {
                     Utils.showToast(WizardActivity.this, "No internet, try later");
                 }
@@ -101,7 +102,8 @@ public class WizardActivity extends ActionBarActivity {
 
         // Handle Dropbox plugin auth
         if (pluginChoise) {
-            String token = Pw.resume();
+            Pw pw = Pw.getInstance();
+            String token = pw.resume();
             if (token != null) {
                 Settings.put("token", token);
                 button_close.setEnabled(true);
