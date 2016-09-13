@@ -30,7 +30,6 @@ public class MainService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
         context = this;
 
         new Thread(new Runnable() {
@@ -81,7 +80,7 @@ public class MainService extends Service {
                     Log.d(TAG, "Can't parse ctlq file: " + e);
                 }
 
-                /*** Watching for remote file changes ***/
+                /*** Watch for remote file changes ***/
 
                 cloudWatcher = CloudWatcher.getInstance();
                 cloudWatcher.addCallback("service", new CloudFileUpdated());
@@ -91,7 +90,7 @@ public class MainService extends Service {
         }).start();
     }
 
-    // Callbacks waits for local file changes
+    // Callback waits for local file changes
     public class LocalFileUpdated implements FileWatcher.Callback {
         public void onFileUpdate(String path) {
             // Current device ctl changed -> read and execute command
@@ -164,10 +163,12 @@ public class MainService extends Service {
                         Log.d(TAG, "Get outgoingCall");
                         String number = intent.getStringExtra("phoneNumber");
                         if (number != null)
-                            V.cc.runModules("outgoingCall", intent.getStringExtra("phoneNumber"));
+                            V.cc.runModules("outgoingCall", number);
                     } else if (intent.hasExtra("incomingCall")) {
                         Log.d(TAG, "Get incomingCall");
-                        V.cc.runModules("incomingCall", intent.getStringExtra("phoneNumber"));
+                        String number = intent.getStringExtra("phoneNumber");
+                        if (number != null)
+                            V.cc.runModules("incomingCall", number);
                     } else if (intent.hasExtra("command")) {
                         Log.d(TAG, "Get command");
                         V.cc.parseCommand(intent.getStringExtra("command"));
