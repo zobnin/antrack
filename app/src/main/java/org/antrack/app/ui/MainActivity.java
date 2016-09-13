@@ -34,6 +34,7 @@ import org.antrack.app.ui.fragments.AppsFragment;
 import org.antrack.app.ui.fragments.BaseFragment;
 import org.antrack.app.ui.fragments.CallsFragment;
 import org.antrack.app.ui.fragments.ContactsFragment;
+import org.antrack.app.ui.fragments.ControlFragment;
 import org.antrack.app.ui.fragments.HowtoFragment;
 import org.antrack.app.ui.fragments.InfoFragment;
 import org.antrack.app.ui.fragments.LogsFragment;
@@ -73,8 +74,9 @@ public class MainActivity extends AppCompatActivity
     SmsFragment      smsFragment;
     ScreensFragment  screensFragment;
     PhotosFragment   photosFragment;
-    LogsFragment     logsFragment;
+    ControlFragment  controlFragment;
     ShellFragment    shellFragment;
+    LogsFragment     logsFragment;
     ModulesFragment  modulesFragment;
     SettingsFragment settingsFragment;
     HowtoFragment    howtoFragment;
@@ -151,8 +153,9 @@ public class MainActivity extends AppCompatActivity
         smsFragment      = new SmsFragment();
         screensFragment  = new ScreensFragment();
         photosFragment   = new PhotosFragment();
-        logsFragment     = new LogsFragment();
+        controlFragment  = new ControlFragment();
         shellFragment    = new ShellFragment();
+        logsFragment     = new LogsFragment();
         modulesFragment  = new ModulesFragment();
         settingsFragment = new SettingsFragment();
         howtoFragment    = new HowtoFragment();
@@ -618,11 +621,14 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_photos:
                 selectedFragment = photosFragment;
                 break;
-            case R.id.nav_logs:
-                selectedFragment = logsFragment;
-                break;
             case R.id.nav_shell:
                 selectedFragment = shellFragment;
+                break;
+            case R.id.nav_control:
+                selectedFragment = controlFragment;
+                break;
+            case R.id.nav_logs:
+                selectedFragment = logsFragment;
                 break;
             case R.id.nav_modules:
                 selectedFragment = modulesFragment;

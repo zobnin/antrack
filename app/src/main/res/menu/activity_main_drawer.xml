@@ -35,13 +35,21 @@
             android:icon="@drawable/ic_menu_photos"
             android:title="Photos" />
         <item
-            android:id="@+id/nav_logs"
-            android:icon="@drawable/ic_menu_logs"
-            android:title="Logs" />
+            android:id="@+id/nav_audio"
+            android:icon="@drawable/ic_menu_audio"
+            android:title="Audio" />
+        <item
+            android:id="@+id/nav_control"
+            android:icon="@drawable/ic_menu_control"
+            android:title="Control" />
         <item
             android:id="@+id/nav_shell"
             android:icon="@drawable/ic_menu_shell"
             android:title="Shell" />
+        <item
+            android:id="@+id/nav_logs"
+            android:icon="@drawable/ic_menu_logs"
+            android:title="Logs" />
         <item
             android:id="@+id/nav_modules"
             android:icon="@drawable/ic_menu_modules"

@@ -1,0 +1,123 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="org.antrack.app.ui.MainActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hide application"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_marginTop="5dp" />
+
+    <Switch
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Hide AnTrack icon"
+        android:id="@+id/fragment_control_hide"
+        android:checked="false"
+        android:textStyle="bold"
+        android:layout_margin="10dp"
+        />
+
+    <Switch
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Move app to system partition"
+        android:id="@+id/fragment_control_system"
+        android:checked="false"
+        android:textStyle="bold"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="If device lost"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_marginTop="5dp" />
+
+    <Switch
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Mark as lost"
+        android:id="@+id/fragment_control_lost"
+        android:checked="false"
+        android:textStyle="bold"
+        android:layout_margin="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        >
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Wipe"
+            android:id="@+id/fragment_control_wipe"
+            android:layout_weight="0.33"
+            />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Lock"
+            android:id="@+id/fragment_control_lock"
+            android:layout_weight="0.33"
+            />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Alarm"
+            android:id="@+id/fragment_control_alarm"
+            android:layout_weight="0.33"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SMS / Calls"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_marginTop="5dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        >
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Send SMS"
+            android:id="@+id/fragment_control_call"
+            android:layout_weight="0.5"
+            />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Make call"
+            android:id="@+id/fragment_control_sms"
+            android:layout_weight="0.5"
+            />
+
+    </LinearLayout>
+</LinearLayout>

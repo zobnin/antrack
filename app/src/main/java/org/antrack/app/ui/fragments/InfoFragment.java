@@ -74,7 +74,7 @@ public class InfoFragment extends BaseFragment {
             public void run() {
                 infos = new ArrayList<>();
 
-                Info info   = readFile(infoFile, "Device Info");
+                Info info = readFile(infoFile, "Device Info");
                 if (info == null)
                     return;
 
@@ -85,15 +85,15 @@ public class InfoFragment extends BaseFragment {
                 infos.add(info);
                 infos.add(status);
 
-                if (getActivity() == null)
-                    return;
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        infoAdapter.updateInfos(infos);
-                        infoAdapter.notifyDataSetChanged();
-                    }
-                });
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            infoAdapter.updateInfos(infos);
+                            infoAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
             }
         }).start();
     }

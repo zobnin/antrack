@@ -1,10 +1,7 @@
 package org.antrack.app;
 
-import android.content.Context;
 import android.util.Log;
 
-import org.antrack.app.C;
-import org.antrack.app.Init;
 import org.antrack.app.libs.Shell;
 
 import java.io.FileInputStream;

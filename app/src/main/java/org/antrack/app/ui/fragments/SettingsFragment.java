@@ -84,58 +84,6 @@ public class SettingsFragment extends BaseFragment {
             }
         });
 
-        /*** Hide icon switch ***/
-
-        final Switch switchHideIcon = (Switch) view.findViewById(R.id.switch_hide_icon);
-
-        String hidden = Settings.get(C.S_HIDDEN);
-        if (hidden == null || hidden.equals("false")) {
-            switchHideIcon.setChecked(false);
-        } else {
-            switchHideIcon.setChecked(true);
-        }
-
-        switchHideIcon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    showHideIconWarning(switchHideIcon);
-                } else {
-                    serviceIntent = new Intent(context, MainService.class);
-                    serviceIntent.putExtra("command", "hide off");
-                    context.startService(serviceIntent);
-                }
-            }
-        });
-
-        /*** Remove protection switch ***/
-
-        final Switch switchMakeSystem = (Switch) view.findViewById(R.id.switch_make_system);
-
-        String useRoot = Settings.get(C.S_USE_ROOT);
-        if (useRoot == null || useRoot.equals("false")) {
-            switchMakeSystem.setEnabled(false);
-        }
-
-        String systemApp = Settings.get(C.S_SYSTEM_APP);
-        if (systemApp == null || systemApp.equals("false")) {
-            switchMakeSystem.setChecked(false);
-        } else {
-            switchMakeSystem.setChecked(true);
-        }
-
-        switchMakeSystem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    serviceIntent = new Intent(context, MainService.class);
-                    serviceIntent.putExtra("command", "makesystem");
-                    context.startService(serviceIntent);
-                } else {
-                    // FIXME
-                    switchMakeSystem.setChecked(true);
-                }
-            }
-        });
-
         /*** Update interval spinner ***/
 
         int selection = Arrays.asList(C.INTERVALS).indexOf(Settings.get(C.S_UPDATE_INTERVAL));
@@ -164,34 +112,6 @@ public class SettingsFragment extends BaseFragment {
         view.animate().alpha(1);
 
         return view;
-    }
-
-    protected void showHideIconWarning(final Switch switchHideIcon) {
-        String title = getResources().getString(R.string.main_hide_icon_warning_title);
-        Spanned text = Html.fromHtml(getResources().getString(R.string.main_hide_icon_warning_text));
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setMessage(text);
-
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent myIntent = new Intent(context, MainService.class);
-                myIntent.putExtra("command", "hide on");
-                context.startService(myIntent);
-
-                dialog.dismiss();
-            }
-        });
-
-        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                switchHideIcon.setChecked(false);
-                dialog.dismiss();
-            }
-        });
-
-        builder.show();
     }
 
     @Override
