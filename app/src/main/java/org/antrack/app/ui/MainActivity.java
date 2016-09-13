@@ -171,13 +171,13 @@ public class MainActivity extends AppCompatActivity
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            // Hide keyboard after drawer open
+            // Hide keyboard on drawer open
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 Keyboard.hide(MainActivity.this);
             }
-            // Change fragment after drawer close
+            // Change fragment on drawer close
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -230,14 +230,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     // FIXME он должен блкировать приложение до окончания своей работы
+    // FIXME вынести код инициализации после readModules в другую функцию и вызывать ее отсюда
     private void readModules() {
         if (!new File(Init.MAIN_DIR + C.MODULES_FILE).exists()) {
             // Wait for modules init
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    // FIXME translate
-                    LoadingDialog.show(MainActivity.this, "Loading...");
+                    LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 
                     while (!new File(Init.MAIN_DIR + C.MODULES_FILE).exists()) {
                         Utils.sleep(1);
@@ -294,10 +294,10 @@ public class MainActivity extends AppCompatActivity
             i = i + 1;
         }
 
+        // If not connected - don't redraw menu and exit
         Pw pw = Pw.getInstance();
         if (!pw.isConnected()) {
-            // FIXME translate
-            showToast(MainActivity.this, "Not connected to cloud, can't update device list");
+            showToast(MainActivity.this, getResources().getString(R.string.not_connected_to_cloud));
             return;
         }
 
@@ -310,8 +310,7 @@ public class MainActivity extends AppCompatActivity
                     final ArrayList<String> deviceDirs = U.listDir("");
 
                     if (deviceDirs == null) {
-                        // FIXME translate
-                        showToast(MainActivity.this, "Can't get devices list...");
+                        showToast(MainActivity.this, getResources().getString(R.string.cant_get_devices_list));
                         return;
                     }
 
@@ -569,8 +568,7 @@ public class MainActivity extends AppCompatActivity
                 fileWatcher = FileWatcher.getInstance();
                 fileWatcher.addCallback("modules", new FileUpdatedModulesCallback());
                 U.getFileAsync(C.MODULES_FILE);
-                // FIXME translate
-                LoadingDialog.show(MainActivity.this, "Loading...");
+                LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 
                 // Workaround to stop loading dialog if don't get modules
                 new Thread(new Runnable() {
@@ -579,8 +577,7 @@ public class MainActivity extends AppCompatActivity
                         Utils.sleep(15);
                         if (LoadingDialog.isShown()) {
                             LoadingDialog.hide(MainActivity.this);
-                            // FIXME translate
-                            showToast(MainActivity.this, "Can't connect. Try later.");
+                            showToast(MainActivity.this, getResources().getString(R.string.cant_connect));
                         }
                     }
                 }).start();

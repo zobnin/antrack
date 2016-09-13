@@ -96,4 +96,8 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="wizard_welcome">Мастер настройки</string>
     <string name="navigation_drawer_close">Закрыть понель навигации</string>
     <string name="navigation_drawer_open">Открыть панель навигации</string>
+    <string name="loading_dialog">Загрузка...</string>
+    <string name="not_connected_to_cloud">Нет подключения к облаку, невозможно получить список устройств</string>
+    <string name="cant_get_devices_list">Невозможно получить список устройств</string>
+    <string name="cant_connect">Нет соединения. Попробуйте позже.</string>
 </resources>

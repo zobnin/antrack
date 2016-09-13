@@ -34,4 +34,8 @@ Coming soon
     <string name="wizard_welcome">Settings wizard</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="loading_dialog">Loading...</string>
+    <string name="not_connected_to_cloud">Not connected to cloud, can\'t update device list</string>
+    <string name="cant_get_devices_list">Can\'t get devices list</string>
+    <string name="cant_connect">Can\'t connect. Try later.</string>
 </resources>
