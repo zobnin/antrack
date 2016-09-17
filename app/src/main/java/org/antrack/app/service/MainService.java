@@ -120,7 +120,7 @@ public class MainService extends Service {
         }
 
         public String getWatchFile() {
-            return "/" + Init.DEVICE_NAME + "/";
+            return "/" + Init.DEVICE_NAME_IMEI + "/";
         }
     }
 
@@ -137,7 +137,7 @@ public class MainService extends Service {
         }
 
         public String getWatchFile() {
-            return "/" + Init.DEVICE_NAME + C.CONTROL_FILE;
+            return "/" + Init.DEVICE_NAME_IMEI + C.CONTROL_FILE;
         }
     }
 

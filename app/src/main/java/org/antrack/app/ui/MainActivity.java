@@ -108,8 +108,10 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             firstRun = false;
             V.currentDevice = savedInstanceState.getString(CURRENT_DEVICE);
+            V.currentDeviceName = U.getDisplayName(V.currentDevice);
         } else {
-            V.currentDevice = Init.DEVICE_NAME;
+            V.currentDevice = Init.DEVICE_NAME_IMEI;
+            V.currentDeviceName = U.getDisplayName(V.currentDevice);
         }
 
         Log.d(TAG, "Running on: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
@@ -197,7 +199,7 @@ public class MainActivity extends AppCompatActivity
         };
 
         drawer.setDrawerListener(drawerToggle);
-        // Calling sync state is necessary or else your hamburger icon wont show up
+        // Calling sync state is necessary or hamburger icon wont show up
         drawerToggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -215,11 +217,11 @@ public class MainActivity extends AppCompatActivity
         /*** Load default fragment ***/
 
         if (firstRun) {
-            deviceTextView.setText(V.currentDevice);
+            deviceTextView.setText(V.currentDeviceName);
             loadFragment(infoFragment);
         } else {
             if (U.isDeviceMain()) {
-                deviceTextView.setText(V.currentDevice);
+                deviceTextView.setText(V.currentDeviceName);
             } else {
                 switchDevice();
             }
@@ -259,7 +261,7 @@ public class MainActivity extends AppCompatActivity
         V.currentFragment = fragment;
 
         if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle(V.currentDevice + " / " + fragment.getName());
+            getSupportActionBar().setTitle(V.currentDeviceName + " / " + fragment.getName());
 
         Log.d(TAG, "Fragment loaded");
     }
@@ -270,7 +272,7 @@ public class MainActivity extends AppCompatActivity
         ft.detach(fragment).attach(fragment).commit();
 
         if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle(V.currentDevice + " / " + fragment.getName());
+            getSupportActionBar().setTitle(V.currentDeviceName + " / " + fragment.getName());
 
         Log.d(TAG, "Fragment reloaded");
     }
@@ -289,7 +291,8 @@ public class MainActivity extends AppCompatActivity
 
         int i = 0;
         for (String device : devices) {
-            navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE, device)
+            navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE,
+                    U.getDisplayName(device))
                     .setIcon(R.drawable.ic_menu_device);
             i = i + 1;
         }
@@ -334,7 +337,8 @@ public class MainActivity extends AppCompatActivity
                                 //noinspection ResultOfMethodCallIgnored
                                 new File(Init.DEVICES_DIR + deviceDir).mkdir();
                                 if (redrawMenu) {
-                                    navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE, new File(deviceDir).getName())
+                                    navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE,
+                                            U.getDisplayName(new File(deviceDir).getName()))
                                             .setIcon(R.drawable.ic_menu_device);
                                 }
                                 i = i + 1;
@@ -519,7 +523,7 @@ public class MainActivity extends AppCompatActivity
         U.initModules();
 
         // Reload menu
-        deviceTextView.setText(V.currentDevice);
+        deviceTextView.setText(V.currentDeviceName);
         navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.activity_main_drawer);
 
@@ -560,6 +564,7 @@ public class MainActivity extends AppCompatActivity
     // Called when devices selected from menu
     private void selectDevice(String device) {
         V.currentDevice = device;
+        V.currentDeviceName = U.getDisplayName(V.currentDeviceName);
 
         // Get modules list if not exist
         if (!U.isDeviceMain()) {

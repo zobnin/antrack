@@ -22,7 +22,7 @@ public class U {
 
     // Get full cloud dir path
     public static String getCloudPath(String path) {
-        return "/" + Init.DEVICE_NAME + path;
+        return "/" + Init.DEVICE_NAME_IMEI + path;
     }
 
     public static void parseCtl() throws IOException {

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 
+// FIXME он не умеет отменять alarm, потому что нужно отдавать ранее сохраненный интент, а не создавать новый
 public class Alarm extends BroadcastReceiver
 {
     @Override

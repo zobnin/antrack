@@ -132,7 +132,7 @@ public class Pw {
     public synchronized void waitOnline() throws InterruptedException {
         int i = 10;
         while (!isConnected()) {
-            Log.d(TAG, "No internet, sleep " + i + "0 seconds");
+            Log.d(TAG, "No internet, sleep " + i + " seconds");
             Thread.sleep(i * 1000);
             if (i < MAX_SLEEP)
                 i = i * 2;
