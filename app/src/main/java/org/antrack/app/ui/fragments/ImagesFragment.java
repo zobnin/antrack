@@ -1,14 +1,17 @@
 package org.antrack.app.ui.fragments;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Switch;
 
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -46,7 +49,10 @@ public class ImagesFragment extends BaseFragment {
         fullDir = U.getFullPath(modDir);
         imageList = new File(fullDir).list();
 
-        View view = inflater.inflate(R.layout.fragment_gridview, null);
+        if (imageList.length == 0)
+            showNodata();
+
+        View view = inflater.inflate(R.layout.fragment_gridview, container, false);
 
         gridview = (GridView) view.findViewById(R.id.fragment_gridview);
         imagesAdapter = new ImagesAdapter(getActivity(), U.getFullPath(modDir), imageList);
@@ -98,6 +104,14 @@ public class ImagesFragment extends BaseFragment {
                 // Re-read image list to reflect changes
                 imageList = new File(fullDir).list();
 
+                // If no files show "No data."
+                if (imageList.length == 0) {
+                    showNodata();
+                    return;
+                }
+
+                hideNodata();
+
                 if (getActivity() == null) return;
 
                 getActivity().runOnUiThread(new Runnable() {
@@ -110,6 +124,31 @@ public class ImagesFragment extends BaseFragment {
                 });
             }
         }).start();
+    }
+
+    protected void showRemoveWarning(final Switch switchHideIcon) {
+        String title = getResources().getString(R.string.main_hide_icon_warning_title);
+        Spanned text = Html.fromHtml(getResources().getString(R.string.main_hide_icon_warning_text));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
+        builder.setMessage(text);
+
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                U.runCommandAsync("hide on");
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                switchHideIcon.setChecked(false);
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
     }
 }
 

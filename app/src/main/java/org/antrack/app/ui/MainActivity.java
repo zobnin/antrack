@@ -651,6 +651,10 @@ public class MainActivity extends AppCompatActivity
                 selectedDevice = (String) item.getTitle();
         }
 
+        // Hide "No data." and "No module."
+        findViewById(R.id.nodata).setVisibility(View.GONE);
+        findViewById(R.id.nomodule).setVisibility(View.GONE);
+
         // Fade out container
         fragmentContainer = findViewById(R.id.container);
         fragmentContainer.animate().alpha(0);

@@ -24,6 +24,9 @@ public class ModulesFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getActivity().getApplicationContext();
 
+        if (V.modules.isEmpty())
+            showNodata();
+
         View view = inflater.inflate(R.layout.fragment_cardview, null);
 
         recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);

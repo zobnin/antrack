@@ -77,6 +77,11 @@ public class SmsFragment extends BaseFragment {
             public void run() {
                 readFile();
 
+                if (smses.isEmpty()) {
+                    showNodata();
+                    return;
+                }
+
                 if (getActivity() == null) return;
 
                 getActivity().runOnUiThread(new Runnable() {

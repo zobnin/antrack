@@ -75,6 +75,13 @@ public class CallsFragment extends BaseFragment {
             public void run() {
                 readFile();
 
+                if (calls.isEmpty()) {
+                    showNodata();
+                    return;
+                }
+
+                hideNodata();
+
                 if (getActivity() == null) return;
 
                 getActivity().runOnUiThread(new Runnable() {

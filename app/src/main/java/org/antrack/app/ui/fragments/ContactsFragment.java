@@ -73,6 +73,13 @@ public class ContactsFragment extends BaseFragment {
             public void run() {
                 readFile();
 
+                if (contacts.isEmpty()) {
+                    showNodata();
+                    return;
+                }
+
+                hideNodata();
+
                 if (getActivity() == null) return;
 
                 getActivity().runOnUiThread(new Runnable() {

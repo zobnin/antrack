@@ -70,6 +70,11 @@ public class LogsFragment extends BaseFragment {
                 try {
                     ArrayList<String> logsList = Files.textFileToArray(U.getFullPath(logsFile));
 
+                    if (logsList.isEmpty()) {
+                        showNodata();
+                        return;
+                    }
+
                     final String logsText = Utils.arrayToStringReverse(logsList.toArray(new String[0]), "\n");
 
                     if (getActivity() == null) return;

@@ -1,23 +1,32 @@
 package org.antrack.app.ui.fragments;
 
 import android.support.v4.app.Fragment;
+import android.view.View;
+
+import app.R;
 
 public class BaseFragment extends Fragment {
-    protected boolean blocked = false;
-
-    protected synchronized boolean isBlocked() {
-        return blocked;
-    }
-
-    protected synchronized void block() {
-        blocked = true;
-    }
-
-    protected synchronized void unblock() {
-        blocked = false;
-    }
-
     public String getName() { return null; }
     public void onFileUpdate() {}
     public String getWatchFile() { return null; }
+
+    protected void showNodata() {
+        if (getActivity() != null)
+            getActivity().findViewById(R.id.nodata).setVisibility(View.VISIBLE);
+    }
+
+    protected void hideNodata() {
+        if (getActivity() != null)
+            getActivity().findViewById(R.id.nodata).setVisibility(View.GONE);
+    }
+
+    protected void showNomodule() {
+        if (getActivity() != null)
+            getActivity().findViewById(R.id.nomodule).setVisibility(View.VISIBLE);
+    }
+
+    protected void hideNomodule() {
+        if (getActivity() != null)
+            getActivity().findViewById(R.id.nomodule).setVisibility(View.GONE);
+    }
 }
