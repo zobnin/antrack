@@ -4,8 +4,11 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Shell;
 import org.antrack.app.libs.Utils;
+
+import java.io.IOException;
 
 public class Init {
     private static String TAG="Init";
@@ -38,6 +41,7 @@ public class Init {
             makeDirs(context);
             initSettings(context);
             initLastCmdTime();
+            writeName();
             done = true;
         }
     }
@@ -66,6 +70,15 @@ public class Init {
     public static void getIMEI(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         DEVICE_IMEI = tm.getDeviceId();
+    }
+
+    public static void writeName() {
+        try {
+            Files.writeTextFile(MAIN_DIR + C.NAME_FILE,
+                    android.os.Build.BRAND + " " + android.os.Build.MODEL);
+        } catch (IOException e) {
+            Log.e(TAG, "Can't write /name: " + e.toString());
+        }
     }
 
     public static void initSettings(Context context) {

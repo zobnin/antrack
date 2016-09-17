@@ -291,6 +291,8 @@ public class MainActivity extends AppCompatActivity
 
         int i = 0;
         for (String device : devices) {
+            if (!device.matches("[A-Za-z].*_[0-9]{4}"))
+                continue;
             navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE,
                     U.getDisplayName(device))
                     .setIcon(R.drawable.ic_menu_device);
@@ -334,6 +336,8 @@ public class MainActivity extends AppCompatActivity
 
                             int i = 0;
                             for (String deviceDir : deviceDirs) {
+                                if (!new File(deviceDir).getName().matches("[A-Za-z].*_[0-9]{4}"))
+                                    continue;
                                 //noinspection ResultOfMethodCallIgnored
                                 new File(Init.DEVICES_DIR + deviceDir).mkdir();
                                 if (redrawMenu) {

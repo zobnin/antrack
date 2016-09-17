@@ -13,6 +13,7 @@ public class C {
     public static final String MODULES_DIR = "/modules/";
     public static final String ODEX_DIR = "/odex/";
 
+    public static final String NAME_FILE = "/name";
     public static final String MODULES_FILE = "/modules";
     public static final String SETTINGS_FILE = "/settings";
     public static final String CONTROL_FILE = "/ctl";

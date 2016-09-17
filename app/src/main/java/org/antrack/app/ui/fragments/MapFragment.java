@@ -81,7 +81,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                blocked = true;
                 if (readFile()) {
                     if (getActivity() == null) return;
                     getActivity().runOnUiThread(new Runnable() {
@@ -103,16 +102,19 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.setMyLocationEnabled(true);
 
+        // Clear map from previous markers
+        map.clear();
+
+        // Add marker
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(Double.parseDouble(currentLocation.lat), Double.parseDouble(currentLocation.lng)))
+                .title(currentLocation.date + " " + currentLocation.time));
+
         // Updates the location and zoom of the MapView
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng
                 (Double.parseDouble(currentLocation.lat), Double.parseDouble(currentLocation.lng)), 15);
         map.animateCamera(cameraUpdate);
 
-        // Add marker
-        // FIXME при обновлении - два маркера
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(Double.parseDouble(currentLocation.lat), Double.parseDouble(currentLocation.lng)))
-                .title(currentLocation.date + " " + currentLocation.time));
     }
 
     private boolean readFile() {
