@@ -19,18 +19,6 @@ import java.util.LinkedHashMap;
 public class U {
     final static String TAG = "U";
 
-    public static boolean isDeviceMain() {
-        return V.currentDevice.equals(Init.DEVICE_NAME_IMEI);
-    }
-
-    public static String getDisplayName(String device) {
-        int index = device.indexOf('_');
-        if (index < 0)
-            return device;
-        else
-            return device.substring(0, device.indexOf('_'));
-    }
-
     // Download file for current device
     public static void getFile(String file) {
         try {
@@ -144,7 +132,7 @@ public class U {
     }
 
     public static void runCommandAsync(String cmd) {
-        if (isDeviceMain()) {
+        if (V.currentDevice.isMain()) {
             cmd = "!" + cmd;
 
             String deviceControlFile = getFullPath(C.CONTROL_FILE);

@@ -90,9 +90,11 @@ public class MainActivity extends AppCompatActivity
 
     View fragmentContainer;
 
+    ArrayList<Device> devices;
+
     // For Drawer
     BaseFragment selectedFragment;
-    String selectedDevice;
+    int selectedDevice = -1;
 
     boolean firstRun = true;
     boolean initDone = false;
@@ -107,11 +109,9 @@ public class MainActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             firstRun = false;
-            V.currentDevice = savedInstanceState.getString(CURRENT_DEVICE);
-            V.currentDeviceName = U.getDisplayName(V.currentDevice);
+            V.currentDevice = new Device(savedInstanceState.getString(CURRENT_DEVICE));
         } else {
-            V.currentDevice = Init.DEVICE_NAME_IMEI;
-            V.currentDeviceName = U.getDisplayName(V.currentDevice);
+            V.currentDevice = new Device(Init.DEVICE_NAME_IMEI);
         }
 
         Log.d(TAG, "Running on: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
@@ -190,10 +190,10 @@ public class MainActivity extends AppCompatActivity
                     selectedFragment = null;
                     return;
                 }
-                if (selectedDevice != null) {
+                if (selectedDevice != -1) {
                     fragmentContainer.animate().alpha(1);
                     selectDevice(selectedDevice);
-                    selectedDevice = null;
+                    selectedDevice = -1;
                 }
             }
         };
@@ -217,11 +217,11 @@ public class MainActivity extends AppCompatActivity
         /*** Load default fragment ***/
 
         if (firstRun) {
-            deviceTextView.setText(V.currentDeviceName);
+            deviceTextView.setText(V.currentDevice.getName());
             loadFragment(infoFragment);
         } else {
-            if (U.isDeviceMain()) {
-                deviceTextView.setText(V.currentDeviceName);
+            if (V.currentDevice.isMain()) {
+                deviceTextView.setText(V.currentDevice.getName());
             } else {
                 switchDevice();
             }
@@ -231,24 +231,17 @@ public class MainActivity extends AppCompatActivity
         initDone = true;
     }
 
-    // FIXME он должен блкировать приложение до окончания своей работы
-    // FIXME вынести код инициализации после readModules в другую функцию и вызывать ее отсюда
     private void readModules() {
         if (!new File(Init.MAIN_DIR + C.MODULES_FILE).exists()) {
             // Wait for modules init
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
+            LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 
-                    while (!new File(Init.MAIN_DIR + C.MODULES_FILE).exists()) {
-                        Utils.sleep(1);
-                    }
+            while (!new File(Init.MAIN_DIR + C.MODULES_FILE).exists()) {
+                Utils.sleep(1);
+            }
 
-                    U.initModules();
-                    LoadingDialog.hide(MainActivity.this);
-                }
-            }).start();
+            U.initModules();
+            LoadingDialog.hide(MainActivity.this);
         } else {
             U.initModules();
         }
@@ -261,7 +254,7 @@ public class MainActivity extends AppCompatActivity
         V.currentFragment = fragment;
 
         if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle(V.currentDeviceName + " / " + fragment.getName());
+            getSupportActionBar().setTitle(V.currentDevice.getName() + " / " + fragment.getName());
 
         Log.d(TAG, "Fragment loaded");
     }
@@ -272,7 +265,7 @@ public class MainActivity extends AppCompatActivity
         ft.detach(fragment).attach(fragment).commit();
 
         if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle(V.currentDeviceName + " / " + fragment.getName());
+            getSupportActionBar().setTitle(V.currentDevice.getName() + " / " + fragment.getName());
 
         Log.d(TAG, "Fragment reloaded");
     }
@@ -284,17 +277,22 @@ public class MainActivity extends AppCompatActivity
     private void createDevicesMenu() {
         /*** Show devices from app folder ***/
 
-        ArrayList<String> devices = new ArrayList<>(Arrays.asList(new File(Init.DEVICES_DIR).list()));
-        Collections.sort(devices);
+        ArrayList<String> deviceDirs = new ArrayList<>(Arrays.asList(new File(Init.DEVICES_DIR).list()));
+        Collections.sort(deviceDirs);
 
         navigationView.getMenu().clear();
 
+        devices = new ArrayList<>();
+
         int i = 0;
-        for (String device : devices) {
-            if (!device.matches("[A-Za-z].*_[0-9]{4}"))
+        for (String deviceDir : deviceDirs) {
+            if (!deviceDir.matches("[A-Za-z].*_[0-9]{4}"))
                 continue;
-            navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE,
-                    U.getDisplayName(device))
+
+            Device device = new Device(deviceDir);
+            devices.add(Menu.FIRST + i, device);
+
+            navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE, device.getName())
                     .setIcon(R.drawable.ic_menu_device);
             i = i + 1;
         }
@@ -334,15 +332,21 @@ public class MainActivity extends AppCompatActivity
 
                             navigationView.getMenu().clear();
 
+                            devices = new ArrayList<>();
+
                             int i = 0;
                             for (String deviceDir : deviceDirs) {
                                 if (!new File(deviceDir).getName().matches("[A-Za-z].*_[0-9]{4}"))
                                     continue;
+
+                                Device device = new Device(new File(deviceDir).getName());
+                                devices.add(Menu.FIRST + i, device);
+
                                 //noinspection ResultOfMethodCallIgnored
                                 new File(Init.DEVICES_DIR + deviceDir).mkdir();
+
                                 if (redrawMenu) {
-                                    navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE,
-                                            U.getDisplayName(new File(deviceDir).getName()))
+                                    navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE, device.getName())
                                             .setIcon(R.drawable.ic_menu_device);
                                 }
                                 i = i + 1;
@@ -499,7 +503,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(CURRENT_DEVICE, V.currentDevice);
+        savedInstanceState.putString(CURRENT_DEVICE, V.currentDevice.dirName);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -527,7 +531,7 @@ public class MainActivity extends AppCompatActivity
         U.initModules();
 
         // Reload menu
-        deviceTextView.setText(V.currentDeviceName);
+        deviceTextView.setText(V.currentDevice.getName());
         navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.activity_main_drawer);
 
@@ -543,7 +547,7 @@ public class MainActivity extends AppCompatActivity
 
         fileWatcher.addCallback("ui", new FileUpdatedFragmentCallback());
 
-        if (!U.isDeviceMain())
+        if (!V.currentDevice.isMain())
             cloudWatcher.addCallback("ui", new CloudUpdatedCallback());
 
     }
@@ -566,12 +570,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Called when devices selected from menu
-    private void selectDevice(String device) {
-        V.currentDevice = device;
-        V.currentDeviceName = U.getDisplayName(V.currentDeviceName);
+    private void selectDevice(int deviceId) {
+        V.currentDevice = devices.get(deviceId);
 
         // Get modules list if not exist
-        if (!U.isDeviceMain()) {
+        if (!V.currentDevice.isMain()) {
             String modulesFile = U.getFullPath(C.MODULES_FILE);
             if (!new File(modulesFile).exists()) {
                 fileWatcher = FileWatcher.getInstance();
@@ -648,7 +651,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_site:
                 break;
             default:
-                selectedDevice = (String) item.getTitle();
+                selectedDevice = item.getItemId();
         }
 
         // Hide "No data." and "No module."

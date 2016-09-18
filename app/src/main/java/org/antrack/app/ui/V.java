@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 
 public class V {
     public static LinkedHashMap<String, Module> modules;
-    public static String currentDevice;
-    public static String currentDeviceName;
+    public static Device currentDevice;
     public static BaseFragment currentFragment;
 }
