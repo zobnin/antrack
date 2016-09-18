@@ -22,11 +22,12 @@ public class U {
     // Download file for current device
     public static void getFile(String file) {
         try {
-            Files.mkdirsForFile(Init.DEVICES_DIR + V.currentDevice + file);
+            Files.mkdirsForFile(Init.DEVICES_DIR + V.currentDevice.getDir() + file);
 
             Pw pw = Pw.getInstance();
             if (pw.isConnected())
-                pw.getFile(Init.DEVICES_DIR + V.currentDevice + file, "/" + V.currentDevice + file);
+                pw.getFile(Init.DEVICES_DIR + V.currentDevice.getDir() + file,
+                        "/" + V.currentDevice.getDir() + file);
             // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't get file " + file + ":" + e);
@@ -47,7 +48,8 @@ public class U {
         try {
             Pw pw = Pw.getInstance();
             if (pw.isConnected())
-                pw.getDir(Init.DEVICES_DIR + V.currentDevice + dir, "/" + V.currentDevice + dir);
+                pw.getDir(Init.DEVICES_DIR + V.currentDevice.getDir() + dir,
+                        "/" + V.currentDevice.getDir() + dir);
             // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't get dir " + dir + ": " + e);
@@ -69,7 +71,8 @@ public class U {
         try {
             Pw pw = Pw.getInstance();
             if (pw.isConnected())
-                pw.putFile(Init.DEVICES_DIR + V.currentDevice + file, "/" + V.currentDevice + file, false);
+                pw.putFile(Init.DEVICES_DIR + V.currentDevice.getDir() + file,
+                        "/" + V.currentDevice.getDir() + file, false);
             // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't put file " + file + ": " + e);
@@ -117,7 +120,7 @@ public class U {
     public static ArrayList<String> compareDirs(String dir) {
         ArrayList<String> remoteDir, localDir, notInlocal;
 
-        remoteDir = listDir("/" + V.currentDevice + dir);
+        remoteDir = listDir("/" + V.currentDevice.getDir() + dir);
         localDir = new ArrayList<>(Arrays.asList(new File(getFullPath(dir)).list()));
         notInlocal = new ArrayList<>();
 
@@ -157,7 +160,7 @@ public class U {
 
     // Get full dir name with main dir and current device name
     public static String getFullPath(String path) {
-        return Init.DEVICES_DIR + V.currentDevice + path;
+        return Init.DEVICES_DIR + V.currentDevice.getDir() + path;
     }
 
     // Read modules and save in V.modules
@@ -198,7 +201,7 @@ public class U {
                         // Make dirs for module
                         if (result.endsWith("/")) {
                             //noinspection ResultOfMethodCallIgnored
-                            new File(Init.DEVICES_DIR + V.currentDevice + result).mkdir();
+                            new File(Init.DEVICES_DIR + V.currentDevice.getDir() + result).mkdir();
                         }
                         break;
                     case "Start when":

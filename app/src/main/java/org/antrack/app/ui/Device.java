@@ -22,6 +22,10 @@ public class Device {
         return dirName.substring(0, dirName.indexOf('_'));
     }
 
+    public String getDir() {
+        return dirName;
+    }
+
     public String getFullName() {
         String fullName;
         try {

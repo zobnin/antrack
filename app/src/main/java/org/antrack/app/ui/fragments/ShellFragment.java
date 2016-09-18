@@ -55,7 +55,7 @@ public class ShellFragment extends BaseFragment {
         });
 
         ps1 = (TextView) view.findViewById(R.id.fragment_shell_ps1);
-        String text = V.currentDevice + "$ ";
+        String text = V.currentDevice.getName() + "$ ";
         ps1.setText(text);
 
         editText = (EditText) view.findViewById(R.id.fragment_shell_edittext);
@@ -99,7 +99,7 @@ public class ShellFragment extends BaseFragment {
     }
 
     private void showProgress() {
-        if (U.isDeviceMain())
+        if (V.currentDevice.isMain())
             return;
 
         progress = true;

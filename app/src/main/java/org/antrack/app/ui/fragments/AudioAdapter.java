@@ -1,0 +1,65 @@
+package org.antrack.app.ui.fragments;
+
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.antrack.app.ui.RecyclerViewAnim;
+
+import java.util.List;
+
+import app.R;
+
+public class AudioAdapter extends RecyclerViewAnim.Adapter<AudioAdapter.ModuleViewHolder> {
+    public static class ModuleViewHolder extends RecyclerView.ViewHolder {
+        CardView cv;
+        TextView length;
+        TextView date;
+
+        ModuleViewHolder(View itemView) {
+            super(itemView);
+            cv = (CardView) itemView.findViewById(R.id.cardview_audios);
+            date = (TextView) itemView.findViewById(R.id.cardview_audios_date);
+            length = (TextView) itemView.findViewById(R.id.cardview_audios_length);
+        }
+    }
+
+    List<Audio> audios;
+
+    AudioAdapter(List<Audio> audios){
+        this.audios = audios;
+    }
+
+    public void update(List<Audio> audios) {
+        this.audios = audios;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public ModuleViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_audios, viewGroup, false);
+        return new ModuleViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(ModuleViewHolder viewHolder, final int i) {
+        String a[] = audios.get(i).file.substring(0, audios.get(i).file.lastIndexOf('.')).split("-");
+        final String date = a[0]+"."+a[1]+"."+a[2]+" "+a[3]+":"+a[4]+":"+a[5];
+
+        viewHolder.date.setText(date);
+        viewHolder.length.setText(String.valueOf(audios.get(i).length) + "s");
+    }
+
+    @Override
+    public int getItemCount() {
+        return audios.size();
+    }
+
+}

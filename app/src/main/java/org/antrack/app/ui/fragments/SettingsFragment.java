@@ -1,12 +1,8 @@
 package org.antrack.app.ui.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +30,7 @@ public class SettingsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getActivity().getApplicationContext();
 
-        View view = inflater.inflate(R.layout.fragment_settings, null);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         /*** Enable service switch ***/
 
@@ -88,7 +84,7 @@ public class SettingsFragment extends BaseFragment {
 
         int selection = Arrays.asList(C.INTERVALS).indexOf(Settings.get(C.S_UPDATE_INTERVAL));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, C.INTERVALS);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, C.INTERVALS);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         final Spinner spinnerUpdateInterval = (Spinner) view.findViewById(R.id.spinner_update_interval);

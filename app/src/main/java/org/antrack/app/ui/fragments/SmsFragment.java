@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.antrack.app.Init;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -18,7 +17,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import app.R;
@@ -41,7 +39,7 @@ public class SmsFragment extends BaseFragment {
 
         context = getActivity().getApplicationContext();
 
-        View view = inflater.inflate(R.layout.fragment_cardview, null);
+        View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
         recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
@@ -55,7 +53,7 @@ public class SmsFragment extends BaseFragment {
 
         U.runCommandAsync("dumpsms");
 
-        if (!U.isDeviceMain()) {
+        if (!V.currentDevice.isMain()) {
             U.getFileAsync(smsFile);
         }
 

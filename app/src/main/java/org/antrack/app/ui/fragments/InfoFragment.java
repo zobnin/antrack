@@ -59,7 +59,7 @@ public class InfoFragment extends BaseFragment {
         onFileUpdate();
 
         U.runCommandAsync("info; status");
-        if (!U.isDeviceMain()) {
+        if (!V.currentDevice.isMain()) {
             U.getFileAsync(infoFile);
             U.getFileAsync(statusFile);
         }

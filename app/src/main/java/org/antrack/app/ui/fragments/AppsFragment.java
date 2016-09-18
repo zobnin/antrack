@@ -62,7 +62,7 @@ public class AppsFragment extends BaseFragment {
         onFileUpdate();
 
         U.runCommandAsync(modCmd);
-        if (!U.isDeviceMain()) {
+        if (!V.currentDevice.isMain()) {
             U.getFileAsync(modFile);
         }
 

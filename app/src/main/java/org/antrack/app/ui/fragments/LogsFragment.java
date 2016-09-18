@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.antrack.app.Init;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.U;
@@ -37,7 +36,7 @@ public class LogsFragment extends BaseFragment {
 
         context = getActivity().getApplicationContext();
 
-        View view = inflater.inflate(R.layout.fragment_textview, null);
+        View view = inflater.inflate(R.layout.fragment_textview, container, false);
 
         textView = (TextView) view.findViewById(R.id.fragment_textview_text);
 
@@ -46,7 +45,7 @@ public class LogsFragment extends BaseFragment {
 
         onFileUpdate();
 
-        if (!U.isDeviceMain()) {
+        if (!V.currentDevice.isMain()) {
             U.getFileAsync(logsFile);
         }
 

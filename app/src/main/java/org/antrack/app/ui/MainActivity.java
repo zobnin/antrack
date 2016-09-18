@@ -31,6 +31,7 @@ import org.antrack.app.libs.Utils;
 import org.antrack.app.service.MainService;
 import org.antrack.app.Settings;
 import org.antrack.app.ui.fragments.AppsFragment;
+import org.antrack.app.ui.fragments.AudioFragment;
 import org.antrack.app.ui.fragments.BaseFragment;
 import org.antrack.app.ui.fragments.CallsFragment;
 import org.antrack.app.ui.fragments.ContactsFragment;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     SmsFragment      smsFragment;
     ScreensFragment  screensFragment;
     PhotosFragment   photosFragment;
+    AudioFragment    audioFragment;
     ControlFragment  controlFragment;
     ShellFragment    shellFragment;
     LogsFragment     logsFragment;
@@ -158,6 +160,7 @@ public class MainActivity extends AppCompatActivity
         smsFragment      = new SmsFragment();
         screensFragment  = new ScreensFragment();
         photosFragment   = new PhotosFragment();
+        audioFragment    = new AudioFragment();
         controlFragment  = new ControlFragment();
         shellFragment    = new ShellFragment();
         logsFragment     = new LogsFragment();
@@ -372,7 +375,7 @@ public class MainActivity extends AppCompatActivity
 
         public String getWatchFile() {
             if (V.currentFragment != null) {
-                watchFile = "/" + V.currentDevice + V.currentFragment.getWatchFile();
+                watchFile = "/" + V.currentDevice.getDir() + V.currentFragment.getWatchFile();
             }
             return watchFile;
         }
@@ -400,7 +403,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         public String getWatchFile() {
-            return "/" + V.currentDevice + C.RESULT_FILE;
+            return "/" + V.currentDevice.getDir() + C.RESULT_FILE;
         }
     }
 
@@ -419,7 +422,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         public String getWatchFile() {
-            return "/" + V.currentDevice + C.MODULES_FILE;
+            return "/" + V.currentDevice.getDir() + C.MODULES_FILE;
         }
     }
 
@@ -448,7 +451,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         public String getWatchFile() {
-            return "/" + V.currentDevice + "/";
+            return "/" + V.currentDevice.getDir() + "/";
         }
     }
 
@@ -501,7 +504,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(CURRENT_DEVICE, V.currentDevice.dirName);
+        savedInstanceState.putString(CURRENT_DEVICE, V.currentDevice.getDir());
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -629,6 +632,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_photos:
                 selectedFragment = photosFragment;
+                break;
+            case R.id.nav_audio:
+                selectedFragment = audioFragment;
                 break;
             case R.id.nav_shell:
                 selectedFragment = shellFragment;

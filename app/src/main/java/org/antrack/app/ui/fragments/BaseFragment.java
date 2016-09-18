@@ -12,21 +12,41 @@ public class BaseFragment extends Fragment {
 
     protected void showNodata() {
         if (getActivity() != null)
-            getActivity().findViewById(R.id.nodata).setVisibility(View.VISIBLE);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().findViewById(R.id.nodata).setVisibility(View.VISIBLE);
+                }
+            });
     }
 
     protected void hideNodata() {
         if (getActivity() != null)
-            getActivity().findViewById(R.id.nodata).setVisibility(View.GONE);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().findViewById(R.id.nodata).setVisibility(View.GONE);
+                }
+            });
     }
 
     protected void showNomodule() {
         if (getActivity() != null)
-            getActivity().findViewById(R.id.nomodule).setVisibility(View.VISIBLE);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().findViewById(R.id.nomodule).setVisibility(View.VISIBLE);
+                }
+            });
     }
 
     protected void hideNomodule() {
         if (getActivity() != null)
-            getActivity().findViewById(R.id.nomodule).setVisibility(View.GONE);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().findViewById(R.id.nomodule).setVisibility(View.GONE);
+                }
+            });
     }
 }

@@ -53,7 +53,7 @@ public class CallsFragment extends BaseFragment {
         onFileUpdate();
 
         // Call getFile when view created, view will be updated when files downloaded
-        if (!U.isDeviceMain()) {
+        if (!V.currentDevice.isMain()) {
             U.getFileAsync(modFile);
         }
 

@@ -14,6 +14,7 @@ import android.widget.Switch;
 
 import org.antrack.app.C;
 import org.antrack.app.ui.U;
+import org.antrack.app.ui.V;
 
 import java.io.FileInputStream;
 import java.util.Properties;
@@ -32,7 +33,7 @@ public class ControlFragment extends BaseFragment {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
-        if (!U.isDeviceMain())
+        if (!V.currentDevice.isMain())
             U.getFile(settingsFile);
 
         // в конце вызывать onfileupdate, он просто будет расставлять значения кнопочек

@@ -11,7 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -67,7 +70,7 @@ public class ImagesFragment extends BaseFragment {
             }
         });
 
-        if (!U.isDeviceMain()) {
+        if (!V.currentDevice.isMain()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {

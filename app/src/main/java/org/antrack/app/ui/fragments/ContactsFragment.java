@@ -51,7 +51,7 @@ public class ContactsFragment extends BaseFragment {
         onFileUpdate();
 
         U.runCommandAsync("contacts");
-        if (!U.isDeviceMain()) {
+        if (!V.currentDevice.isMain()) {
             U.getFileAsync(contactsFile);
         }
 

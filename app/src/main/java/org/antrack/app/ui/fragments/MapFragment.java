@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.antrack.app.ui.U;
+import org.antrack.app.ui.V;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,7 +55,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         onFileUpdate();
 
         U.runCommandAsync("locate");
-        if (!U.isDeviceMain()) {
+        if (!V.currentDevice.isMain()) {
             U.getFileAsync(locationFile);
         }
 
