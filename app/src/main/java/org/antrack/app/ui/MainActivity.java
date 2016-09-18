@@ -96,6 +96,9 @@ public class MainActivity extends AppCompatActivity
     BaseFragment selectedFragment;
     int selectedDevice = -1;
 
+    // For CreateDeviceMenu
+    boolean deviceMenuActive = false;
+
     boolean firstRun = true;
     boolean initDone = false;
 
@@ -297,14 +300,16 @@ public class MainActivity extends AppCompatActivity
             i = i + 1;
         }
 
+        deviceMenuActive = true;
+
+        /*** Show devices from cloud ***/
+
         // If not connected - don't redraw menu and exit
         Pw pw = Pw.getInstance();
         if (!pw.isConnected()) {
             showToast(MainActivity.this, getResources().getString(R.string.not_connected_to_cloud));
             return;
         }
-
-        /*** Show devices from cloud ***/
 
         new Thread(new Runnable() {
             @Override
@@ -322,14 +327,6 @@ public class MainActivity extends AppCompatActivity
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            boolean redrawMenu = true;
-
-                            // Workaround: if device menu is not shown don't redraw it
-                            // FIXME don't work with translation
-                            if (navigationView.getMenu().getItem(0).getTitle().equals("Device Info")) {
-                                redrawMenu = false;
-                            }
-
                             navigationView.getMenu().clear();
 
                             devices = new ArrayList<>();
@@ -345,7 +342,8 @@ public class MainActivity extends AppCompatActivity
                                 //noinspection ResultOfMethodCallIgnored
                                 new File(Init.DEVICES_DIR + deviceDir).mkdir();
 
-                                if (redrawMenu) {
+                                // Workaround: if device menu is not shown don't redraw it
+                                if (deviceMenuActive) {
                                     navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE, device.getName())
                                             .setIcon(R.drawable.ic_menu_device);
                                 }
@@ -534,6 +532,8 @@ public class MainActivity extends AppCompatActivity
         deviceTextView.setText(V.currentDevice.getName());
         navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.activity_main_drawer);
+
+        deviceMenuActive = false;
 
         reloadCurrentFragment();
     }
