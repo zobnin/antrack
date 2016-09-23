@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import app.R;
@@ -108,13 +110,13 @@ public class SmsFragment extends BaseFragment {
                 String[] pair = line.split(":");
                 switch(pair[0]) {
                     case "From":
-                        sms.from = pair[1].trim();
+                        sms.from = line.replaceAll(pair[0] + ":", "").trim();
                         break;
                     case "Date":
-                        sms.date = pair[1].trim() + ":" + pair[2] + ":" + pair[3];
+                        sms.date = line.replaceAll(pair[0] + ":", "").trim();
                         break;
                     case "Body":
-                        sms.body = pair[1].trim();
+                        sms.body = line.replaceAll(pair[0] + ":", "").trim();
                         break;
                     default:
                         smses.add(sms);
