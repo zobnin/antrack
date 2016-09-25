@@ -12,5 +12,6 @@
     <org.antrack.app.ui.RecyclerViewAnim
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment_cardview_list" />
+        android:id="@+id/fragment_cardview_list"
+        />
 </LinearLayout>

@@ -1,12 +1,15 @@
 package org.antrack.app.ui.fragments;
 
+import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.antrack.app.service.U;
 import org.antrack.app.ui.RecyclerViewAnim;
 
 import java.util.List;
@@ -19,17 +22,20 @@ public class AudioAdapter extends RecyclerViewAnim.Adapter<AudioAdapter.ModuleVi
         TextView length;
         TextView date;
 
-        ModuleViewHolder(View itemView) {
-            super(itemView);
-            cv = (CardView) itemView.findViewById(R.id.cardview_audios);
-            date = (TextView) itemView.findViewById(R.id.cardview_audios_date);
-            length = (TextView) itemView.findViewById(R.id.cardview_audios_length);
+        ModuleViewHolder(View view) {
+            super(view);
+            cv = (CardView) view.findViewById(R.id.cardview_audios);
+            date = (TextView) view.findViewById(R.id.cardview_audios_date);
+            length = (TextView) view.findViewById(R.id.cardview_audios_length);
+
         }
     }
 
-    List<Audio> audios;
+    private List<Audio> audios;
+    private Activity activity;
 
-    AudioAdapter(List<Audio> audios){
+    AudioAdapter(Activity activity, List<Audio> audios){
+        this.activity = activity;
         this.audios = audios;
     }
 
@@ -55,6 +61,13 @@ public class AudioAdapter extends RecyclerViewAnim.Adapter<AudioAdapter.ModuleVi
 
         viewHolder.date.setText(date);
         viewHolder.length.setText(String.valueOf(audios.get(i).length) + "s");
+
+        viewHolder.cv.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                AudioPlayDialog.show(activity, date,
+                        U.getFullPath(AudioFragment.audioDir + audios.get(i).file));
+            }
+        });
     }
 
     @Override

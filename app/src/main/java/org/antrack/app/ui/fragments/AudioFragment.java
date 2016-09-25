@@ -37,7 +37,8 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
     private RecyclerViewAnim recyclerView;
     private AudioAdapter audioAdapter;
 
-    private String audioDir = "/audio/";
+    static String audioDir = "/audio/";
+
     private String fullDir;
     private String[] fileList;
 
@@ -56,7 +57,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         recyclerView.setLayoutManager(linearLayoutManager);
 
         audios = new ArrayList<>();
-        audioAdapter = new AudioAdapter(audios);
+        audioAdapter = new AudioAdapter(getActivity(), audios);
         recyclerView.setAdapter(audioAdapter);
 
         if (!V.currentDevice.isMain()) {
