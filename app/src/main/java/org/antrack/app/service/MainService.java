@@ -15,6 +15,7 @@ import org.antrack.app.Init;
 import org.antrack.app.Pw;
 import org.antrack.app.Settings;
 import org.antrack.app.Trial;
+import org.antrack.app.libs.Checks;
 import org.antrack.app.libs.Utils;
 
 import java.io.File;
@@ -50,6 +51,7 @@ public class MainService extends Service {
 
                 // DEBUG
                 Trial.checkDate();
+                Checks.all(context);
 
                 /*** Set alarm timer ***/
 
