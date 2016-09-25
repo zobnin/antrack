@@ -92,10 +92,24 @@ public class Pw {
         }
     }
 
+    public void delete(String rFile, boolean permanent) throws InterruptedException {
+        if (Settings.get("plugin").equals("dropbox")) {
+            dPlugin.delete(rFile, permanent);
+        }
+    }
+
     public ArrayList<String> listDir(String rDir) throws InterruptedException  {
         if (Settings.get("plugin").equals("dropbox")) {
             Log.d(TAG, rDir);
             return dPlugin.listDir(rDir);
+        }
+        return null;
+    }
+
+    public ArrayList<String> listDir(String rDir, boolean withDeleted) throws InterruptedException  {
+        if (Settings.get("plugin").equals("dropbox")) {
+            Log.d(TAG, rDir);
+            return dPlugin.listDir(rDir, withDeleted);
         }
         return null;
     }

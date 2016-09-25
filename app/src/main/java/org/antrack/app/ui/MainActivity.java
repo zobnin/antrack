@@ -24,6 +24,7 @@ import org.antrack.app.CloudWatcher;
 import org.antrack.app.FileWatcher;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
+import org.antrack.app.Trial;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Keyboard;
 import org.antrack.app.libs.LoadingDialog;

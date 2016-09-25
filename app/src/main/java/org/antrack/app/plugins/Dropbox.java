@@ -85,12 +85,29 @@ public class Dropbox {
         }
     }
 
+    public void delete(final String path, boolean permanent) {
+        try {
+            if (permanent)
+                client.files().permanentlyDelete(path);
+            else
+                client.files().delete(path);
+        } catch (Exception e) {
+            Log.e(TAG, "GetFile exception: " + e.toString());
+        }
+    }
+
     // Return list of files in directory with full path
     public ArrayList<String> listDir(final String rDir) {
+        return listDir(rDir, false);
+    }
+
+    public ArrayList<String> listDir(final String rDir, boolean withDeleted) {
         ArrayList<String> fileList = new ArrayList<>();
 
         try {
-            ListFolderResult result = client.files().listFolder(rDir);
+            ListFolderResult result = client.files().listFolderBuilder(rDir)
+                    .withIncludeDeleted(withDeleted)
+                    .start();
             while (true) {
                 for (Metadata metadata : result.getEntries()) {
                     String path = metadata.getPathLower();
@@ -162,9 +179,7 @@ public class Dropbox {
             }
 
             longpollResult = client.files().listFolderLongpoll(cursors.get(dir), C.DB_LONGPOLL_TIMEOUT);
-            //boolean changes = longpoll(cursors.get(dir));
 
-            //if (changes) {
             if (longpollResult.getChanges()) {
                 boolean hasMore = true;
                 while (hasMore) {
