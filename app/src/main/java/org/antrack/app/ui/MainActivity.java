@@ -25,6 +25,7 @@ import org.antrack.app.FileWatcher;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
 import org.antrack.app.Trial;
+import org.antrack.app.libs.Checks;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Keyboard;
 import org.antrack.app.libs.LoadingDialog;
@@ -134,6 +135,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void main() {
+        /*** Check trial and integrity ***/
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (!Trial.checkDate()) {
+                    // FIXME translate
+                    Utils.showToast(MainActivity.this, "Trial is expired");
+                    //System.exit(-1);
+                    Log.e(TAG, "Trial is expired");
+                }
+                // Crash app
+                if (!Checks.all(MainActivity.this)) {
+                    //Pw zz = null;
+                    //zz.isConnected();
+                    Log.e(TAG, "Checks failed");
+                }
+
+            }
+        }).start();
+
         /*** Start service ***/
 
         final String serviceEnabled = Settings.get(C.S_ENABLE_SERVICE);

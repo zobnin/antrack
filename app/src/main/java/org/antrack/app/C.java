@@ -20,7 +20,7 @@ public class C {
     public static final String RESULT_FILE = "/result";
 
     public static final String CONTROL_Q_FILE = "/ctlq";
-    public static final int CONTROL_Q_MAX_LENGHT = 10;
+    public static final int CONTROL_Q_MAX_LENGTH = 10;
 
     public static final String MODULES_JSON_FILE = "/modules.json";
 

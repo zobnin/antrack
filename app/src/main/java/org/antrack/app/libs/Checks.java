@@ -12,7 +12,7 @@ import java.security.MessageDigest;
 
 public class Checks {
     private static final String TAG = "Checks";
-    private static final String SIGNATURE = null;
+    private static final String SIGNATURE = "";
     private static final String PLAY_STORE_APP_ID = "com.android.vending";
 
     public static boolean all(Context context) {
@@ -34,14 +34,7 @@ public class Checks {
     }
 
     public static boolean checkSignature(Context context) {
-        // FIXME
-        /*
-        if (SIGNATURE.equals(getSignature(context))){
-            return true;
-        }
-        */
-        getSignature(context);
-        return true;
+        return SIGNATURE.equals(getSignature(context));
     }
 
     public static String getSignature(Context context) {
@@ -55,7 +48,7 @@ public class Checks {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
                 apkSignature = Base64.encodeToString(md.digest(), Base64.DEFAULT);
-                Log.e("DEBUG", "SIGNATURE:" + apkSignature);
+                Log.e("DEBUG", "SIGNATURE: " + apkSignature);
             }
         } catch (Exception e) {}
         return apkSignature;

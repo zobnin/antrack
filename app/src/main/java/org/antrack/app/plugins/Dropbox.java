@@ -92,7 +92,7 @@ public class Dropbox {
             else
                 client.files().delete(path);
         } catch (Exception e) {
-            Log.e(TAG, "GetFile exception: " + e.toString());
+            Log.e(TAG, "Delete exception: " + e.toString());
         }
     }
 

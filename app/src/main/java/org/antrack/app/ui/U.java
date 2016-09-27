@@ -150,7 +150,7 @@ public class U {
             String deviceControlFile = getFullPath(C.CONTROL_Q_FILE);
 
             try {
-                Files.addLineToStack(deviceControlFile, Utils.date(C.LAST_CMD_TIME_FORMAT) + " " + cmd, C.CONTROL_Q_MAX_LENGHT);
+                Files.addLineToStack(deviceControlFile, Utils.date(C.LAST_CMD_TIME_FORMAT) + " " + cmd, C.CONTROL_Q_MAX_LENGTH);
                 putFileAsync(C.CONTROL_Q_FILE);
             } catch (IOException e) {
                 Log.e(TAG, "Can't run command " + cmd + ": " + e);
