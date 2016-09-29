@@ -13,11 +13,12 @@ import org.antrack.app.service.U;
 import org.antrack.app.ui.RecyclerViewAnim;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import app.R;
 
-public class AudioAdapter extends RecyclerViewAnim.Adapter<AudioAdapter.ModuleViewHolder> {
-    public static class ModuleViewHolder extends RecyclerView.ViewHolder {
+class AudioAdapter extends RecyclerViewAnim.Adapter<AudioAdapter.ModuleViewHolder> {
+    static class ModuleViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView length;
         TextView date;
@@ -60,7 +61,11 @@ public class AudioAdapter extends RecyclerViewAnim.Adapter<AudioAdapter.ModuleVi
         final String date = a[0]+"."+a[1]+"."+a[2]+" "+a[3]+":"+a[4]+":"+a[5];
 
         viewHolder.date.setText(date);
-        viewHolder.length.setText(String.valueOf(audios.get(i).length) + "s");
+        viewHolder.length.setText(String.format("%02d:%02d",
+                TimeUnit.SECONDS.toMinutes(audios.get(i).length),
+                TimeUnit.SECONDS.toSeconds(audios.get(i).length) %
+                        TimeUnit.MINUTES.toSeconds(1))
+        );
 
         viewHolder.cv.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {

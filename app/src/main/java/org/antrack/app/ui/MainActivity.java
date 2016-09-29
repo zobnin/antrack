@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity
                 continue;
 
             Device device = new Device(deviceDir);
-            devices.add(Menu.FIRST + i, device);
+            devices.add(device);
 
             navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE, device.getName())
                     .setIcon(R.drawable.ic_menu_device);
@@ -363,7 +363,7 @@ public class MainActivity extends AppCompatActivity
                                     continue;
 
                                 Device device = new Device(new File(deviceDir).getName());
-                                devices.add(Menu.FIRST + i, device);
+                                devices.add(device);
 
                                 //noinspection ResultOfMethodCallIgnored
                                 new File(Init.DEVICES_DIR + deviceDir).mkdir();
@@ -680,7 +680,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_site:
                 break;
             default:
-                selectedDevice = item.getItemId();
+                selectedDevice = item.getItemId() - Menu.FIRST;
         }
 
         // Hide "No data." and "No module."

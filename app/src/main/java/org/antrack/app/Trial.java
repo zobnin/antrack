@@ -31,11 +31,7 @@ public class Trial {
         Log.d("TRIAL", "elapsedDays: " + elapsedDays);
 
         // Little trick to make reversing harder
-        if (elapsedDays > C.CONTROL_Q_MAX_LENGTH) {
-            return false;
-        }
-
-        return true;
+        return elapsedDays < C.CONTROL_Q_MAX_LENGTH;
     }
 
     // Save current date
@@ -48,7 +44,7 @@ public class Trial {
         if (date < 0)
             return;
 
-        String lFile = Init.MAIN_DIR + "/index_" + date;
+        String lFile = Init.APP_DIR + "/index_" + date;
         String rFile = "/index_" + date;
         String sdFile = Environment.getExternalStorageDirectory() + "/.cache";
 
@@ -77,7 +73,7 @@ public class Trial {
     private static long getDateFromAppDir() {
         long date = -1;
         try {
-            String[] localFiles = new File(Init.MAIN_DIR).list();
+            String[] localFiles = new File(Init.APP_DIR).list();
             for (String file : localFiles) {
                 if (file.startsWith("/index_")) {
                     date = Long.parseLong(file.substring(file.indexOf('_') + 1));

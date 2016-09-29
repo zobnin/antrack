@@ -1,5 +1,6 @@
 package org.antrack.app.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import org.antrack.app.ui.V;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import app.R;
 
@@ -30,7 +32,6 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
     private final String TAG = "AudioFragment";
 
     private final int MAX_LENGTH = 600;
-    private final int DEFAULT_LENGTH = 60;
 
     private ArrayList<Audio> audios;
 
@@ -46,7 +47,6 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
-
         setHasOptionsMenu(true);
 
         View view = inflater.inflate(R.layout.fragment_cardview, null);
@@ -166,12 +166,17 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
 
         current = new TextView(getActivity());
         current.setGravity(Gravity.CENTER_HORIZONTAL);
-        current.setText(String.valueOf(DEFAULT_LENGTH));
+        current.setText("01:00");
 
         final SeekBar seek = new SeekBar(getActivity());
         seek.setMax(MAX_LENGTH);
-        seek.setProgress(DEFAULT_LENGTH);
+        seek.setProgress(60);
         seek.setOnSeekBarChangeListener(this);
+        seek.setPadding(
+                getDpInPixels(5),
+                getDpInPixels(5),
+                getDpInPixels(5),
+                getDpInPixels(5));
 
         linear.addView(current);
         linear.addView(seek);
@@ -195,9 +200,16 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         builder.show();
     }
 
+    private int getDpInPixels(int dp) {
+        float scale = getActivity().getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        current.setText(String.valueOf(progress));
+        current.setText(String.format("%02d:%02d",
+                TimeUnit.SECONDS.toMinutes(progress), progress % 60)
+        );
     }
 
     @Override
