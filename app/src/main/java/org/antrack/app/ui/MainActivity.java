@@ -234,6 +234,7 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         /*** Device selector ***/
 
         deviceTextView = (TextView) findViewById(R.id.nav_header_main_text1);
@@ -248,6 +249,7 @@ public class MainActivity extends AppCompatActivity
         if (firstRun) {
             deviceTextView.setText(V.currentDevice.getName());
             loadFragment(infoFragment);
+            navigationView.getMenu().getItem(0).setChecked(true);
         } else {
             if (V.currentDevice.isMain()) {
                 deviceTextView.setText(V.currentDevice.getName());
@@ -558,10 +560,11 @@ public class MainActivity extends AppCompatActivity
         deviceTextView.setText(V.currentDevice.getName());
         navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.activity_main_drawer);
+        navigationView.getMenu().getItem(0).setChecked(true);
 
         deviceMenuActive = false;
 
-        reloadCurrentFragment();
+        loadFragment(infoFragment);
     }
 
     private void addCallbacks() {
@@ -682,6 +685,10 @@ public class MainActivity extends AppCompatActivity
             default:
                 selectedDevice = item.getItemId() - Menu.FIRST;
         }
+
+        // Select item
+        if (item.isChecked()) item.setChecked(false);
+        else item.setChecked(true);
 
         // Hide "No data." and "No module."
         findViewById(R.id.nodata).setVisibility(View.GONE);

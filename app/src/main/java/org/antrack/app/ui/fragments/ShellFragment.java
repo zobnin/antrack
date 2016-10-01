@@ -63,6 +63,12 @@ public class ShellFragment extends BaseFragment {
 
         textView = (TextView) view.findViewById(R.id.fragment_shell_textview);
         textView.setMovementMethod(new ScrollingMovementMethod());
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Keyboard.show(getActivity());
+            }
+        });
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
