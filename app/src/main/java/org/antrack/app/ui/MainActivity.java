@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (!Trial.checkDate()) {
+                if (!Trial.checkTrial()) {
                     // FIXME translate
                     Utils.showToast(MainActivity.this, "Trial is expired");
                     //System.exit(-1);

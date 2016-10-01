@@ -13,25 +13,29 @@ import java.util.ArrayList;
 public class Trial {
     // Compare saved date with current date
     // Save date if there are no saved date
-    public static boolean checkDate() {
+    public static boolean checkTrial() {
+        long remainingDays = getRemainingDays();
+
+        Log.d("TRIAL", "remainingDays: " + remainingDays);
+
+        return remainingDays > 0;
+    }
+
+    public static long getRemainingDays() {
         long currentDate = getCurrentDate();
         long savedDate = getSavedDate();
 
         if (savedDate < 0) {
             saveDate();
-            return true;
+            return -1;
         }
 
         if (currentDate < 0) {
-            return true;
+            return -1;
         }
 
-        long elapsedDays = (currentDate - savedDate) / 1000 / 60 / 60 / 24;
-
-        Log.d("TRIAL", "elapsedDays: " + elapsedDays);
-
         // Little trick to make reversing harder
-        return elapsedDays < C.CONTROL_Q_MAX_LENGTH;
+        return C.CONTROL_Q_MAX_LENGTH - (currentDate - savedDate) / 1000 / 60 / 60 / 24;
     }
 
     // Save current date

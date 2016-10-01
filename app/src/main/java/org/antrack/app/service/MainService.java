@@ -17,7 +17,6 @@ import org.antrack.app.Settings;
 import org.antrack.app.Trial;
 import org.antrack.app.libs.Checks;
 import org.antrack.app.libs.Utils;
-import org.antrack.app.ui.MainActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +54,7 @@ public class MainService extends Service {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if (!Trial.checkDate()) {
+                        if (!Trial.checkTrial()) {
                             //System.exit(-1);
                             Log.e(TAG, "Trial is expired");
                         }

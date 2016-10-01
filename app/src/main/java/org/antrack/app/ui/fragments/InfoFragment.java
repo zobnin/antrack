@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.antrack.app.Init;
+import org.antrack.app.Trial;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.RecyclerViewAnim;
@@ -74,16 +75,24 @@ public class InfoFragment extends BaseFragment {
             public void run() {
                 infos = new ArrayList<>();
 
+                // FIXME translate
                 Info info = readFile(infoFile, "Device Info");
                 if (info == null)
                     return;
 
+                // FIXME translate
                 Info status = readFile(statusFile, "Current status");
                 if (status == null)
                     return;
 
+                Info trial = new Info();
+                // FIXME translate
+                trial.title = "Trial";
+                trial.data = "Days remaining: " + Trial.getRemainingDays();
+
                 infos.add(info);
                 infos.add(status);
+                infos.add(trial);
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
