@@ -28,6 +28,7 @@ public class WizardActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final Context context = this;
         setContentView(R.layout.activity_wizard);
 
         Init.all(this);
@@ -42,24 +43,22 @@ public class WizardActivity extends ActionBarActivity {
             }
         });
 
-        final TextView textView_root = (TextView) findViewById(R.id.textView_root);
-        //if (Shell.checkSu()) {
-            //textView_root.setText("Su exist!");
-        //}
-
-        final Context context = this;
 
         final Button button_root = (Button) findViewById(R.id.button_root);
-        button_root.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (Shell.checkSuRun()) {
-                    Settings.put(C.S_USE_ROOT, "true");
-                    Utils.showToast(context, "Root rights granted");
-                } else {
-                    Utils.showToast(context, "No root rights");
+        if (Shell.checkSu()) {
+            button_root.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (Shell.checkSuRun()) {
+                        Settings.put(C.S_USE_ROOT, "true");
+                        Utils.showToast(context, "Root rights granted");
+                    } else {
+                        Utils.showToast(context, "No root rights");
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            button_root.setEnabled(false);
+        }
 
         final Button button_dropbox = (Button) findViewById(R.id.button_dropbox);
         button_dropbox.setOnClickListener(new View.OnClickListener() {

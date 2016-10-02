@@ -10,9 +10,6 @@ import java.util.regex.Pattern;
 public class Shell {
     static private String TAG="ShellTools";
 
-    static String listGovsFile = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors";
-    static String chGovFile = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor";
-
     static public String getWifiPassword() {
         String wpa_supplicant = Shell.runCommand("cat /data/misc/wifi/wpa_supplicant.conf", true, true);
         if (wpa_supplicant == null || wpa_supplicant.equals("")) {
@@ -29,27 +26,25 @@ public class Shell {
     }
 
     static public String[] getGovs() {
+        String listGovsFile = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors";
         return runCommand("cat " + listGovsFile, false, true).split(" ");
     }
 
     static public boolean changeGov(String gov) {
+        String chGovFile = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor";
         runCommand("echo " + gov + " > " + chGovFile, true, false);
         String newgov = runCommand("cat " + chGovFile, false, true);
-        return newgov.equals(gov);
+        return newgov != null && newgov.equals(gov);
     }
 
     static public boolean itsQualcomm() {
         String cpuinfo = runCommand("cat /proc/cpuinfo", false, true);
-        if (cpuinfo == null)
-            return false;
-        return (cpuinfo.contains("Qualcomm"));
+        return cpuinfo != null && (cpuinfo.contains("Qualcomm"));
     }
 
     static public boolean checkSuRun() {
         String uid = runCommand("id", true, true);
-        if (uid == null)
-            return false;
-        return uid.startsWith("uid=0");
+        return uid != null && uid.startsWith("uid=0");
     }
 
     static public boolean checkSu() {
@@ -59,7 +54,7 @@ public class Shell {
                 return true;
             }
         }
-        // New SuperSU support
+        // System less SU
         return new File("/su/bin").exists();
     }
 
@@ -81,9 +76,7 @@ public class Shell {
 
             return (result == 0);
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -109,7 +102,7 @@ public class Shell {
                     new InputStreamReader(process.getInputStream()));
             int read;
             char[] buffer = new char[4096];
-            StringBuffer output = new StringBuffer();
+            StringBuilder output = new StringBuilder();
             while ((read = reader.read(buffer)) > 0) {
                 output.append(buffer, 0, read);
             }
@@ -117,9 +110,7 @@ public class Shell {
 
             process.waitFor();
             return output.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
