@@ -66,7 +66,14 @@ public class ControlFragment extends BaseFragment {
         Button smsButton = (Button) view.findViewById(R.id.fragment_control_sms);
         smsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                SendSms.show(getActivity(), null, null);
+                SendSmsDialog.show(getActivity(), null, null);
+            }
+        });
+
+        Button callButton = (Button) view.findViewById(R.id.fragment_control_call);
+        callButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                MakeCallDialog.show(getActivity(), null);
             }
         });
 

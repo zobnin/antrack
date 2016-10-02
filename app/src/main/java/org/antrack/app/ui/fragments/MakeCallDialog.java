@@ -4,19 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.TextView;
 
 import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.U;
 
-class SendSms {
-    public static void show(final Activity activity, String number, String text) {
+class MakeCallDialog {
+    public static void show(final Activity activity, String number) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         // FIXME translate
-        builder.setTitle("Send SMS");
+        builder.setTitle("Make call");
 
         int p = getDpInPixels(activity, 20);
 
@@ -29,41 +29,30 @@ class SendSms {
         textNumber.setText("Number:");
 
         final EditText editNumber = new EditText(activity);
+        editNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
         if (number != null) {
             editNumber.setText(number);
         }
 
-        final TextView textText = new TextView(activity);
-        // FIXME translate
-        textText.setText("Text:");
-
-        final Space space = new Space(activity);
-        space.setMinimumHeight(p);
-
-        final EditText editText = new EditText(activity);
-        if (text != null) {
-            editText.setText(text);
-        }
-
         linear.addView(textNumber);
         linear.addView(editNumber);
-        linear.addView(space);
-        linear.addView(textText);
-        linear.addView(editText);
         builder.setView(linear);
 
         // FIXME translate
         builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String number = editNumber.getText().toString();
-                String text = editText.getText().toString();
 
-                if (number.equals("") || text.equals("")) {
+                if (number.equals("")) {
                     // FIXME translate
-                    Utils.showToast(activity, "Fill number and message fields");
+                    Utils.showToast(activity, "Fill number field");
+                    return;
                 }
 
-                U.runCommandAsync("sms " + editNumber.getText() + " " + editText.getText());
+                number = number.replace(" ", "");
+                number = number.replace("-", "");
+                U.runCommandAsync("call " + number);
+
                 dialog.dismiss();
             }
         });

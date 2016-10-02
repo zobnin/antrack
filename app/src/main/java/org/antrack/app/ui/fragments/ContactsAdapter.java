@@ -16,10 +16,10 @@ import java.util.List;
 
 import app.R;
 
-public class ContactsAdapter extends RecyclerViewAnim.Adapter<ContactsAdapter.ModuleViewHolder> {
-    Activity activity;
+class ContactsAdapter extends RecyclerViewAnim.Adapter<ContactsAdapter.ModuleViewHolder> {
+    private Activity activity;
 
-    public static class ModuleViewHolder extends RecyclerView.ViewHolder {
+    static class ModuleViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView name;
         TextView number;
@@ -36,7 +36,7 @@ public class ContactsAdapter extends RecyclerViewAnim.Adapter<ContactsAdapter.Mo
         }
     }
 
-    List<Contact> contacts;
+    private List<Contact> contacts;
 
     ContactsAdapter(Activity activity, List<Contact> contacts){
         this.activity = activity;
@@ -70,6 +70,8 @@ public class ContactsAdapter extends RecyclerViewAnim.Adapter<ContactsAdapter.Mo
             @Override
             public void onClick(View view) {
                 String number = contacts.get(i).number;
+                number = number.replace(" ", "");
+                number = number.replace("-", "");
                 U.runCommandAsync("dial " + number);
             }
         });
@@ -77,7 +79,7 @@ public class ContactsAdapter extends RecyclerViewAnim.Adapter<ContactsAdapter.Mo
         viewHolder.message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SendSms.show(activity, contacts.get(i).number, null);
+                SendSmsDialog.show(activity, contacts.get(i).number, null);
             }
         });
     }
