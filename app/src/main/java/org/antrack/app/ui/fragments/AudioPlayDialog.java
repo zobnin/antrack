@@ -19,22 +19,18 @@ class AudioPlayDialog {
     private static MediaPlayer mp;
 
     public static void show(final Activity activity, String title, String file) {
-        float scale = activity.getResources().getDisplayMetrics().density;
-
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(title);
 
+        int p = getDpInPixels(activity, 20);
+
         LinearLayout linear = new LinearLayout(activity);
         linear.setOrientation(LinearLayout.VERTICAL);
+        linear.setPadding(p,p,p,p);
 
         final TextView progress = new TextView(activity);
         progress.setGravity(Gravity.CENTER_HORIZONTAL);
         progress.setText("0");
-        progress.setPadding(
-                getDpInPixels(activity, 5),
-                getDpInPixels(activity, 5),
-                getDpInPixels(activity, 5),
-                getDpInPixels(activity, 5));
 
         final SeekBar seek = new SeekBar(activity);
         seek.setMax((int) Media.getDuration(file));

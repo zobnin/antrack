@@ -107,7 +107,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Send SMS"
-            android:id="@+id/fragment_control_call"
+            android:id="@+id/fragment_control_sms"
             android:layout_weight="0.5"
             />
 
@@ -115,7 +115,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Make call"
-            android:id="@+id/fragment_control_sms"
+            android:id="@+id/fragment_control_call"
             android:layout_weight="0.5"
             />
 

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -59,6 +60,13 @@ public class ControlFragment extends BaseFragment {
                 } else {
                     U.runCommandAsync("lost off");
                 }
+            }
+        });
+
+        Button smsButton = (Button) view.findViewById(R.id.fragment_control_sms);
+        smsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                SendSms.show(getActivity(), null, null);
             }
         });
 

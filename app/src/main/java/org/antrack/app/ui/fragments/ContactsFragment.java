@@ -45,7 +45,7 @@ public class ContactsFragment extends BaseFragment {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         contacts = new ArrayList<>();
-        contactsAdapter = new ContactsAdapter(contacts);
+        contactsAdapter = new ContactsAdapter(getActivity(), contacts);
         recyclerView.setAdapter(contactsAdapter);
 
         onFileUpdate();

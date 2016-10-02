@@ -1,5 +1,6 @@
 package org.antrack.app.ui.fragments;
 
+import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import java.util.List;
 import app.R;
 
 public class ContactsAdapter extends RecyclerViewAnim.Adapter<ContactsAdapter.ModuleViewHolder> {
+    Activity activity;
+
     public static class ModuleViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView name;
@@ -35,7 +38,8 @@ public class ContactsAdapter extends RecyclerViewAnim.Adapter<ContactsAdapter.Mo
 
     List<Contact> contacts;
 
-    ContactsAdapter(List<Contact> contacts){
+    ContactsAdapter(Activity activity, List<Contact> contacts){
+        this.activity = activity;
         this.contacts = contacts;
     }
 
@@ -69,14 +73,13 @@ public class ContactsAdapter extends RecyclerViewAnim.Adapter<ContactsAdapter.Mo
                 U.runCommandAsync("dial " + number);
             }
         });
-        /*
-        viewHolder.call.setOnClickListener(new View.OnClickListener() {
+
+        viewHolder.message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                U.runCommandAsync("sms " + contacts.get(i).number);
+                SendSms.show(activity, contacts.get(i).number, null);
             }
         });
-        */
     }
 
     @Override
