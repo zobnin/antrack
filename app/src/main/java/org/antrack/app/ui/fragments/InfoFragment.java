@@ -1,6 +1,5 @@
 package org.antrack.app.ui.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,10 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.antrack.app.Init;
 import org.antrack.app.Trial;
 import org.antrack.app.libs.Files;
-import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -87,7 +84,7 @@ public class InfoFragment extends BaseFragment {
 
                 Info trial = new Info();
                 // FIXME translate
-                trial.title = "Trial";
+                trial.title = "Trial status";
                 trial.data = "Days remaining: " + Trial.getRemainingDays();
 
                 infos.add(info);

@@ -166,7 +166,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
 
         current = new TextView(getActivity());
         current.setGravity(Gravity.CENTER_HORIZONTAL);
-        current.setText("01:00");
+        current.setText("00:00");
 
         final SeekBar seek = new SeekBar(getActivity());
         seek.setMax(MAX_LENGTH);

@@ -25,15 +25,15 @@ public class SimChangeReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         Log.d("SimChangeReceiver", "SIM state changed");
 
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String IMSI = tm.getSubscriberId();
-
-        Settings.init();
-
         Bundle extras = intent.getExtras();
         String ready = extras.getString("ss");
 
         if (ready != null && ready.equals("READY")) {
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String IMSI = tm.getSubscriberId();
+
+            Settings.init();
+
             if (Settings.get(C.S_IMSI) == null) {
                 Settings.put(C.S_IMSI, IMSI);
             } else {
@@ -46,7 +46,6 @@ public class SimChangeReceiver extends BroadcastReceiver {
                     if (needSms != null && needSms.equals("true")) {
                         String number = Settings.get(C.S_BACKUP_PHONE);
                         if (number != null) {
-                            Logger.simChanged(context);
                             String model = android.os.Build.MODEL;
                             SmsManager.getDefault().sendTextMessage(number, null, "Sim change on " + model + " detected!", null, null);
                         }
