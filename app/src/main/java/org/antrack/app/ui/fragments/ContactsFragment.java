@@ -106,13 +106,11 @@ public class ContactsFragment extends BaseFragment {
             while ((line = reader.readLine()) != null) {
                 String[] pair = line.split(":");
                 if (pair.length < 2)
-                    // FIXME надо выводить картинку, что данных нет
-                    return;
+                    continue;
                 Contact contact = new Contact();
                 contact.name = pair[0];
                 contact.number  = pair[1].trim();
                 contacts.add(contact);
-                // FIXME добавить сохранение иконки в кеш
             }
         } catch (IOException e) {
             Log.e(TAG, "Can't read apps file: " + e);
