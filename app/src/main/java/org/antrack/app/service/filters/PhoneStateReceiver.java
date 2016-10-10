@@ -18,11 +18,11 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)){
             phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
             if (phoneNumber != null)
-                myIntent.putExtra("outgoingCall", true);
+                myIntent.setAction("outgoingCall");
         } else {
             phoneNumber = intent.getStringExtra("incoming_number");
             if (phoneNumber != null)
-                myIntent.putExtra("incomingCall", true);
+                myIntent.setAction("incomingCall");
         }
 
         myIntent.putExtra("phoneNumber", phoneNumber);

@@ -13,7 +13,7 @@ public class ScreenOnReceiver extends BroadcastReceiver {
         Log.d("ScreenOnReceiver", "Screen On");
 
         Intent myIntent = new Intent(context, MainService.class);
-        myIntent.putExtra("screenOn", true);
+        myIntent.setAction("screenOn");
         context.startService(myIntent);
     }
 }

@@ -135,27 +135,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void main() {
-        /*** Check trial and integrity ***/
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (!Trial.checkTrial()) {
-                    // FIXME translate
-                    Utils.showToast(MainActivity.this, "Trial is expired");
-                    //System.exit(-1);
-                    Log.e(TAG, "Trial is expired");
-                }
-                // Crash app
-                if (!Checks.all(MainActivity.this)) {
-                    //Pw zz = null;
-                    //zz.isConnected();
-                    Log.e(TAG, "Checks failed");
-                }
-
-            }
-        }).start();
-
         /*** Start service ***/
 
         final String serviceEnabled = Settings.get(C.S_ENABLE_SERVICE);
@@ -260,6 +239,32 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "Initialization done");
         initDone = true;
+
+        /*** Check trial and integrity ***/
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (!Trial.checkTrial()) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // FIXME translate
+                            Utils.showToast(MainActivity.this, "Trial is expired");
+                            //System.exit(-1);
+                        }
+                    });
+                    Log.e(TAG, "Trial is expired");
+                }
+                // Crash app
+                if (!Checks.all(MainActivity.this)) {
+                    //Pw zz = null;
+                    //zz.isConnected();
+                    Log.e(TAG, "Checks failed");
+                }
+
+            }
+        }).start();
     }
 
     private void readModules() {

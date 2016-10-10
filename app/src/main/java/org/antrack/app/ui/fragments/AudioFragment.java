@@ -1,11 +1,11 @@
 package org.antrack.app.ui.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -64,7 +64,15 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    new File(U.getFullPath(audioDir)).mkdir();
+
                     ArrayList<String> audioFiles = U.compareDirs(audioDir);
+
+                    if (audioFiles == null) {
+                        Log.d(TAG, "compareDirs returned null");
+                        return;
+                    }
+
                     if (!audioFiles.isEmpty()) {
                         for (String file : audioFiles) {
                             U.getFile(audioDir + file);
@@ -135,7 +143,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         fullDir = U.getFullPath(audioDir);
         fileList = new File(fullDir).list();
 
-        if (fileList.length == 0) {
+        if (fileList == null || fileList.length == 0) {
             return;
         }
 
@@ -160,23 +168,20 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         builder.setTitle(title);
         builder.setMessage(text);
 
-        LinearLayout linear = new LinearLayout(getActivity());
+        int p = getDpInPixels(20);
 
+        LinearLayout linear = new LinearLayout(getActivity());
         linear.setOrientation(LinearLayout.VERTICAL);
+        linear.setPadding(p,p,p,p);
 
         current = new TextView(getActivity());
         current.setGravity(Gravity.CENTER_HORIZONTAL);
-        current.setText("00:00");
+        current.setText("01:00");
 
         final SeekBar seek = new SeekBar(getActivity());
         seek.setMax(MAX_LENGTH);
         seek.setProgress(60);
         seek.setOnSeekBarChangeListener(this);
-        seek.setPadding(
-                getDpInPixels(5),
-                getDpInPixels(5),
-                getDpInPixels(5),
-                getDpInPixels(5));
 
         linear.addView(current);
         linear.addView(seek);

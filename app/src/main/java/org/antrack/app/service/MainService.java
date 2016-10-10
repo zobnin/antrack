@@ -170,30 +170,40 @@ public class MainService extends Service {
                 Log.d(TAG, "onStartCommmand");
 
                 if (intent != null) {
-                    if (intent.hasExtra("boot")) {
-                        Log.d(TAG, "Get boot");
-                        V.cc.runModules("boot", null);
-                    } else if (intent.hasExtra("alarm")) {
-                        Log.d(TAG, "Get alarm");
-                        Logger.alarm(context);
-                        V.cc.runModules("alarm", null);
-                    } else if (intent.hasExtra("screenOn")) {
-                        Log.d(TAG, "Get screenOn");
-                        V.cc.runModules("screenOn", null);
-                    } else if (intent.hasExtra("outgoingCall")) {
-                        Log.d(TAG, "Get outgoingCall");
-                        String number = intent.getStringExtra("phoneNumber");
-                        if (number != null)
-                            V.cc.runModules("outgoingCall", number);
-                    } else if (intent.hasExtra("incomingCall")) {
-                        Log.d(TAG, "Get incomingCall");
-                        String number = intent.getStringExtra("phoneNumber");
-                        if (number != null)
-                            V.cc.runModules("incomingCall", number);
-                    } else if (intent.hasExtra("command")) {
-                        Log.d(TAG, "Get command");
-                        V.cc.parseCommand(intent.getStringExtra("command"));
-                    }
+                    String action = intent.getAction();
+                    if (action != null) {
+                        switch (action) {
+                            case "boot":
+                                Log.d(TAG, "Get boot");
+                                V.cc.runModules("boot", null);
+                                break;
+                            case "alarm":
+                                Log.d(TAG, "Get alarm");
+                                Logger.alarm(context);
+                                V.cc.runModules("alarm", null);
+                                break;
+                            case "screenOn":
+                                Log.d(TAG, "Get screenOn");
+                                V.cc.runModules("screenOn", null);
+                                break;
+                            case "outgoingCall":
+                                Log.d(TAG, "Get outgoingCall");
+                                String outNumber = intent.getStringExtra("phoneNumber");
+                                if (outNumber != null)
+                                    V.cc.runModules("outgoingCall", outNumber);
+                                break;
+                            case "incomingCall":
+                                Log.d(TAG, "Get incomingCall");
+                                String number = intent.getStringExtra("phoneNumber");
+                                if (number != null)
+                                    V.cc.runModules("incomingCall", number);
+                                break;
+                            case "command":
+                                Log.d(TAG, "Get command");
+                                V.cc.parseCommand(intent.getStringExtra("command"));
+                                break;
+                            }
+                        }
                 }
             }
         }).start();

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.U;
 
-class MakeCallDialog {
+class CallDialog {
     public static void show(final Activity activity, String number) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         // FIXME translate

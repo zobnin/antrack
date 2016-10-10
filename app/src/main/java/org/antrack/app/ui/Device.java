@@ -19,7 +19,7 @@ public class Device {
     }
 
     public String getName() {
-        return dirName.substring(0, dirName.indexOf('_'));
+        return dirName.substring(0, dirName.lastIndexOf('_')).replace('_', ' ');
     }
 
     public String getDir() {

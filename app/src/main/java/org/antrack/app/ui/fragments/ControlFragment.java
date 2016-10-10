@@ -73,7 +73,7 @@ public class ControlFragment extends BaseFragment {
         Button callButton = (Button) view.findViewById(R.id.fragment_control_call);
         callButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                MakeCallDialog.show(getActivity(), null);
+                CallDialog.show(getActivity(), null);
             }
         });
 

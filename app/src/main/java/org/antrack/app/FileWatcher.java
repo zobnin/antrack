@@ -27,7 +27,7 @@ public class FileWatcher {
 
     HashMap<String, Watcher> watchers;
 
-    public FileWatcher() {
+    private FileWatcher() {
         watchers = new HashMap<>();
     }
 

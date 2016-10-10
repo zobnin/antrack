@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.antrack.app.libs.Files;
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
 
@@ -50,8 +52,10 @@ public class ImagesFragment extends BaseFragment {
         modDir = V.modules.get(getMod()).result;
 
         fullDir = U.getFullPath(modDir);
-        imageList = new File(fullDir).list();
+        if (V.currentDevice.isMain())
+            new File(fullDir).mkdir();
 
+        imageList = new File(fullDir).list();
         if (imageList.length == 0)
             showNodata();
 
@@ -75,6 +79,12 @@ public class ImagesFragment extends BaseFragment {
                 @Override
                 public void run() {
                     ArrayList<String> images = U.compareDirs(modDir);
+
+                    if (images == null) {
+                        Log.d(TAG, "compareDirs returned null");
+                        return;
+                    }
+
                     if (!images.isEmpty()) {
                         for (String image : images) {
                             U.getFile(modDir + image);

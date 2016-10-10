@@ -65,17 +65,22 @@ public class Trial {
     }
 
     private static long getSavedDate() {
-        long date1 = getDateFromAppDir();
-        long date2 = getDateFromSdcard();
-        long date3 = getDateFromCloud();
+        long[] dates = new long[3];
 
-        if (date2 > date1) return date2;
-        if (date3 > date2 || date3 > date1) return date3;
-        return date1;
+        dates[0] = getDateFromAppDir();
+        dates[1] = getDateFromSdcard();
+        dates[2] = getDateFromCloud();
+
+        long min = dates[0];
+        for (long i : dates) {
+            if (i < min) min = i;
+        }
+
+        return min;
     }
 
     private static long getDateFromAppDir() {
-        long date = -1;
+        long date = Long.MAX_VALUE;
         try {
             String[] localFiles = new File(Init.APP_DIR).list();
             for (String file : localFiles) {
@@ -93,7 +98,7 @@ public class Trial {
     }
 
     private static long getDateFromSdcard() {
-        long date = -1;
+        long date = Long.MAX_VALUE;
         try {
             date = Long.parseLong(Files.readTextFile(
                     Environment.getExternalStorageDirectory() + "/.cache"));
@@ -107,12 +112,11 @@ public class Trial {
     }
 
     private static long getDateFromCloud() {
-        long date = -1;
+        long date = Long.MAX_VALUE;
         try {
             Pw pw = Pw.getInstance();
             ArrayList<String> cloudFiles = pw.listDir("", true);
             for (String file : cloudFiles) {
-                Log.e("DEBUG", "file: " + file);
                 if (file.startsWith("/index_")) {
                     date = Long.parseLong(file.substring(file.indexOf('_') + 1));
                 }

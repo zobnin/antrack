@@ -51,6 +51,7 @@ public class Init {
         DEVICES_DIR = APP_DIR + C.DEVICES_DIR;
 
         DEVICE_NAME = android.os.Build.MODEL.toLowerCase();
+        DEVICE_NAME = DEVICE_NAME.replace(" ", "_");
         DEVICE_NAME_IMEI = DEVICE_NAME + "_" + DEVICE_IMEI.substring(DEVICE_IMEI.length() - 4);
 
         MAIN_DIR = DEVICES_DIR + DEVICE_NAME_IMEI;
