@@ -19,6 +19,24 @@ import java.util.LinkedHashMap;
 public class U {
     final static String TAG = "U";
 
+    static String getLastUpdate() {
+        //if (V.currentDevice.lastUpdate != null) {
+        //    return V.currentDevice.lastUpdate;
+        //}
+
+        String ret;
+        try {
+            ret = Files.readTextFile(U.getFullPath("/status"));
+            ret = ret.substring(ret.lastIndexOf("Last update") + 12).trim();
+        } catch (IOException e) {
+            Log.e(TAG, "Can't read info file: " + e.toString());
+            return null;
+        }
+
+        V.currentDevice.lastUpdate = ret;
+        return ret;
+    }
+
     // Download file for current device
     public static void getFile(String file) {
         try {
@@ -54,16 +72,6 @@ public class U {
         } catch (Exception e) {
             Log.e(TAG, "Can't get dir " + dir + ": " + e);
         }
-    }
-
-    public static void getDirAsync(final String dir) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                getDir(dir);
-            }
-        }).start();
-
     }
 
     // Upload file for current device

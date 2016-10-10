@@ -105,14 +105,13 @@ public class InfoFragment extends BaseFragment {
     }
 
     @Override
-    public String getName() { return "Info"; }
+    public String getName() { return "Device info"; }
 
     @Override
     public String getWatchFile() {
         return statusFile;
     }
 
-    // Read file if it exist. If not request update.
     private Info readFile(String file, String title) {
         String path = U.getFullPath(file);
 

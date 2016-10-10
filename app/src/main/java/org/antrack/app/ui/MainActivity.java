@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -284,13 +285,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadFragment(BaseFragment fragment) {
+        if (fragment.equals(V.currentFragment)) {
+            reloadCurrentFragment();
+            return;
+        }
+
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.container, fragment, "fragment");
         ft.commitAllowingStateLoss();
         V.currentFragment = fragment;
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle(V.currentDevice.getName() + " / " + fragment.getName());
+        setToolbarTitle();
 
         Log.d(TAG, "Fragment loaded");
     }
@@ -300,10 +305,24 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.detach(fragment).attach(fragment).commit();
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle(V.currentDevice.getName() + " / " + fragment.getName());
+        setToolbarTitle();
 
         Log.d(TAG, "Fragment reloaded");
+    }
+
+    private void setToolbarTitle() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(V.currentFragment.getName());
+
+            String lastUpdate = U.getLastUpdate();
+            if (lastUpdate == null) {
+                getSupportActionBar().setSubtitle(V.currentDevice.getName());
+            } else {
+                getSupportActionBar().setSubtitle(
+                        V.currentDevice.getName() + " (" + lastUpdate + ")");
+            }
+
+        }
     }
 
     // Create device selection menu

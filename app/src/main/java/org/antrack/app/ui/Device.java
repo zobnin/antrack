@@ -8,7 +8,8 @@ import org.antrack.app.libs.Files;
 import java.io.IOException;
 
 public class Device {
-    String dirName;
+    private String dirName;
+    String lastUpdate = null;
 
     public Device(String dir) {
         dirName = dir;
