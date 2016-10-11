@@ -130,6 +130,8 @@ public class U {
         ArrayList<String> remoteDir, localDir, notInlocal;
 
         remoteDir = listDir("/" + V.currentDevice.getDir() + dir);
+        if (remoteDir == null) return null;
+
         localDir = new ArrayList<>(Arrays.asList(new File(getFullPath(dir)).list()));
         notInlocal = new ArrayList<>();
 
