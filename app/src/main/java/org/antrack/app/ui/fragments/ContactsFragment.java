@@ -71,6 +71,7 @@ public class ContactsFragment extends BaseFragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                contacts = new ArrayList<>();
                 readFile();
 
                 if (contacts.isEmpty()) {

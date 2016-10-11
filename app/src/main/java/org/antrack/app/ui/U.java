@@ -20,10 +20,6 @@ public class U {
     final static String TAG = "U";
 
     static String getLastUpdate() {
-        //if (V.currentDevice.lastUpdate != null) {
-        //    return V.currentDevice.lastUpdate;
-        //}
-
         String ret;
         try {
             ret = Files.readTextFile(U.getFullPath("/status"));

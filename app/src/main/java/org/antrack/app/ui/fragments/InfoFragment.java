@@ -74,13 +74,17 @@ public class InfoFragment extends BaseFragment {
 
                 // FIXME translate
                 Info info = readFile(infoFile, "Device Info");
-                if (info == null)
+                if (info == null) {
+                    showNodata();
                     return;
+                }
 
                 // FIXME translate
                 Info status = readFile(statusFile, "Current status");
-                if (status == null)
+                if (status == null) {
+                    showNodata();
                     return;
+                }
 
                 Info trial = new Info();
                 // FIXME translate

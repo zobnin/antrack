@@ -15,7 +15,10 @@ public class BaseFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    getActivity().findViewById(R.id.nodata).setVisibility(View.VISIBLE);
+                    View noData = getActivity().findViewById(R.id.nodata);
+                    noData.setAlpha(0);
+                    noData.setVisibility(View.VISIBLE);
+                    noData.animate().alpha(1);
                 }
             });
     }

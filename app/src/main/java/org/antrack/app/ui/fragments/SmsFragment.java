@@ -75,6 +75,7 @@ public class SmsFragment extends BaseFragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                smses = new ArrayList<>();
                 readFile();
 
                 if (smses.isEmpty()) {

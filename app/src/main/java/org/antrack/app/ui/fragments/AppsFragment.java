@@ -70,7 +70,7 @@ public class AppsFragment extends BaseFragment {
     }
 
     @Override
-    public String getName() { return "Apps"; }
+    public String getName() { return "Applications"; }
 
     @Override
     public String getWatchFile() {
@@ -84,6 +84,11 @@ public class AppsFragment extends BaseFragment {
             public void run() {
                 apps = new ArrayList<>();
                 readFile();
+
+                if (apps.isEmpty()) {
+                    showNodata();
+                    return;
+                }
 
                 if (getActivity() == null) return;
 
@@ -111,13 +116,11 @@ public class AppsFragment extends BaseFragment {
             while ((line = reader.readLine()) != null) {
                 String[] pair = line.split(":");
                 if (pair.length < 2)
-                    // FIXME надо выводить картинку, что данных нет
                     return;
                 App app = new App();
                 app.name = pair[0];
                 app.pkg  = pair[1].trim();
                 apps.add(app);
-                // FIXME добавить сохранение иконки в кеш
             }
         } catch (IOException e) {
             Log.e(TAG, "Can't read " + modFile + ": " + e);

@@ -63,7 +63,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     }
 
     @Override
-    public String getName() { return "Map"; }
+    public String getName() { return "Location"; }
 
     @Override
     public String getWatchFile() {
@@ -76,7 +76,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             @Override
             public void run() {
                 if (readFile()) {
-                    if (getActivity() == null) return;
+                    if (getActivity() == null) {
+                        showNodata();
+                        return;
+                    }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

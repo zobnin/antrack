@@ -73,6 +73,7 @@ public class CallsFragment extends BaseFragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                calls = new ArrayList<>();
                 readFile();
 
                 if (calls.isEmpty()) {
