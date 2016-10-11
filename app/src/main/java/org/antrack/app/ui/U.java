@@ -23,6 +23,11 @@ public class U {
         String ret;
         try {
             ret = Files.readTextFile(U.getFullPath("/status"));
+
+            if (ret.equals("")) {
+                return null;
+            }
+
             ret = ret.substring(ret.lastIndexOf("Last update") + 12).trim();
         } catch (IOException e) {
             Log.e(TAG, "Can't read info file: " + e.toString());
