@@ -15,10 +15,15 @@ import org.antrack.app.libs.Utils;
 
 import java.util.concurrent.TimeUnit;
 
-class AudioPlayDialog {
-    private static MediaPlayer mp;
+class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
+    private MediaPlayer mp;
+    private Activity activity;
 
-    public static void show(final Activity activity, String title, String file) {
+    AudioPlayDialog(Activity activity) {
+        this.activity = activity;
+    }
+
+    public void show(String title, String file) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(title);
 
@@ -34,6 +39,7 @@ class AudioPlayDialog {
 
         final SeekBar seek = new SeekBar(activity);
         seek.setMax((int) Media.getDuration(file));
+        seek.setOnSeekBarChangeListener(this);
 
         linear.addView(progress);
         linear.addView(seek);
@@ -74,7 +80,7 @@ class AudioPlayDialog {
         }).start();
     }
 
-    private static void play(String file) {
+    private void play(String file) {
         mp = new MediaPlayer();
         try {
             mp.setDataSource(file);
@@ -86,8 +92,22 @@ class AudioPlayDialog {
 
     }
 
-    private static int getDpInPixels(Context context, int dp) {
+    private int getDpInPixels(Context context, int dp) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (fromUser)
+            mp.seekTo(progress * 1000);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
     }
 }

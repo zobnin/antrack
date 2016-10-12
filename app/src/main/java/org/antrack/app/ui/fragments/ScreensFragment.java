@@ -10,7 +10,7 @@ import app.R;
 
 public class ScreensFragment extends ImagesFragment {
     @Override
-    public String getMod() { return "screenshot"; }
+    public String getMod() { return Mod.SCREENSHOT; }
     @Override
     public String getName() { return "Screenshots"; }
 
@@ -25,7 +25,11 @@ public class ScreensFragment extends ImagesFragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.toolbar_action_front_camera:
-                U.runCommandAsync("screenshot");
+                if (Mod.check(getMod())) {
+                    U.runCommandAsync(getMod());
+                } else {
+                    Mod.showNoModule(getActivity(), getMod());
+                }
                 return true;
         }
         return false;

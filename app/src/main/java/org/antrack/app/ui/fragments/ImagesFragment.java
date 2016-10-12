@@ -33,27 +33,23 @@ public class ImagesFragment extends BaseFragment {
 
     private String fullDir;
     private String[] imageList;
-
     ImagesAdapter imagesAdapter;
+
     GridView gridview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
-
         setHasOptionsMenu(true);
 
-        if (!V.modules.containsKey(getMod())) {
-            // FIXME создавать view с сообщением о ненайденном модуле
+        if (!Mod.check(getMod())) {
+            showNomodule(getMod());
             return null;
         }
 
-        modDir = V.modules.get(getMod()).result;
-
+        modDir = Mod.getFile(getMod());
         fullDir = U.getFullPath(modDir);
-        if (V.currentDevice.isMain())
-            new File(fullDir).mkdir();
 
         imageList = new File(fullDir).list();
         if (imageList.length == 0)
@@ -118,21 +114,19 @@ public class ImagesFragment extends BaseFragment {
                 imageList = new File(fullDir).list();
 
                 // If no files show "No data."
-                if (imageList.length == 0) {
+                if (imageList == null || imageList.length == 0) {
                     showNodata();
                     return;
                 }
 
-                hideNodata();
-
                 if (getActivity() == null) return;
-
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         imagesAdapter.update(imageList);
                         imagesAdapter.notifyDataSetChanged();
                         gridview.smoothScrollToPosition(imageList.length-1);
+                        hideNodata();
                     }
                 });
             }

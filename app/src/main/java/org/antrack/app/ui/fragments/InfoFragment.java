@@ -25,20 +25,25 @@ public class InfoFragment extends BaseFragment {
     final String TAG = "InfoFragment";
     Context context;
 
-    String infoFile;
-    String statusFile;
-
     RecyclerViewAnim recyclerView;
     InfoAdapter infoAdapter;
 
     List<Info> infos;
 
+    String infoFile;
+    String statusFile;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        context = getActivity().getApplicationContext();
-
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
+
+        if (!Mod.check(Mod.INFO) && !Mod.check(Mod.STATUS)) {
+            showNomodule(Mod.INFO + ", " + Mod.STATUS);
+            return null;
+        }
+
+        context = getActivity().getApplicationContext();
 
         View view = inflater.inflate(R.layout.fragment_cardview, null);
 
@@ -47,8 +52,8 @@ public class InfoFragment extends BaseFragment {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         // FIXME Now it is hardcoded, but in production must read modinfo
-        infoFile = "/info";
-        statusFile = "/status";
+        infoFile = Mod.getFile(Mod.INFO);
+        statusFile = Mod.getFile(Mod.STATUS);
 
         infos = new ArrayList<>();
         infoAdapter = new InfoAdapter(infos);
@@ -101,6 +106,7 @@ public class InfoFragment extends BaseFragment {
                         public void run() {
                             infoAdapter.updateInfos(infos);
                             infoAdapter.notifyDataSetChanged();
+                            hideNodata();
                         }
                     });
                 }

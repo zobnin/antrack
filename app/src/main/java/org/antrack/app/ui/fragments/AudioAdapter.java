@@ -69,8 +69,8 @@ class AudioAdapter extends RecyclerViewAnim.Adapter<AudioAdapter.ModuleViewHolde
 
         viewHolder.cv.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                AudioPlayDialog.show(activity, date,
-                        U.getFullPath(AudioFragment.audioDir + audios.get(i).file));
+                AudioPlayDialog aplayDialog = new AudioPlayDialog(activity);
+                aplayDialog.show(date, U.getFullPath(AudioFragment.audioDir + audios.get(i).file));
             }
         });
     }

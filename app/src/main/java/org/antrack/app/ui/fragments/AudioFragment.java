@@ -30,18 +30,15 @@ import app.R;
 
 public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChangeListener {
     private final String TAG = "AudioFragment";
+    private final String MOD = "audio";
 
     private final int MAX_LENGTH = 600;
 
     private ArrayList<Audio> audios;
-
-    private RecyclerViewAnim recyclerView;
     private AudioAdapter audioAdapter;
 
-    static String audioDir = "/audio/";
-
-    private String fullDir;
-    private String[] fileList;
+    static String audioDir;
+    static String audioCmd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,10 +46,18 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
+        if(!Mod.check(Mod.AUDIO)) {
+            showNomodule(Mod.AUDIO);
+            return null;
+        }
+
+        audioDir = Mod.getFile(MOD);
+        audioCmd = Mod.getCommand(MOD);
+
         View view = inflater.inflate(R.layout.fragment_cardview, null);
 
         Context context = getActivity().getApplicationContext();
-        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -98,7 +103,13 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         int id = item.getItemId();
         switch (id) {
             case R.id.toolbar_action_record:
-                showRecordDialog();
+                if (Mod.check(Mod.AUDIO)) {
+                    showRecordDialog();
+                } else {
+                    if (getActivity() != null) {
+                        Mod.showNoModule(getActivity(), Mod.AUDIO);
+                    }
+                }
                 return true;
         }
         return false;
@@ -117,34 +128,32 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         new Thread(new Runnable() {
             @Override
             public void run() {
-                readFiles();
+                audios = new ArrayList<>();
 
-                if (audios.isEmpty()) {
+                if(!readFiles() || audios.isEmpty()) {
                     showNodata();
                     return;
                 }
 
-                hideNodata();
-
                 if (getActivity() == null) return;
-
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         audioAdapter.update(audios);
                         audioAdapter.notifyDataSetChanged();
+                        hideNodata();
                     }
                 });
             }
         }).start();
     }
 
-    private void readFiles() {
-        fullDir = U.getFullPath(audioDir);
-        fileList = new File(fullDir).list();
+    private boolean readFiles() {
+        String fullDir = U.getFullPath(audioDir);
+        String[] fileList = new File(fullDir).list();
 
         if (fileList == null || fileList.length == 0) {
-            return;
+            return false;
         }
 
         audios = new ArrayList<>();
@@ -155,6 +164,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
             audio.length = Media.getDuration(fullDir + file);
             audios.add(audio);
         }
+        return true;
     }
 
     TextView current;
@@ -191,7 +201,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         builder.setPositiveButton("Record", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String seconds = String.valueOf(seek.getProgress());
-                U.runCommandAsync("audio " + seconds);
+                U.runCommandAsync(audioCmd + " " + seconds);
                 dialog.dismiss();
             }
         });

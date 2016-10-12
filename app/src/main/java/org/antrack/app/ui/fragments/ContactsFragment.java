@@ -26,21 +26,28 @@ public class ContactsFragment extends BaseFragment {
     private final String TAG = "AppsFragment";
 
     private List<Contact> contacts;
-
-    private RecyclerViewAnim recyclerView;
     private ContactsAdapter contactsAdapter;
 
-    private String contactsFile = "/contacts";
+    private String contactsFile;
+    private String contactsCmd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
+        if (!Mod.check(Mod.CONTACTS)) {
+            showNomodule(Mod.CONTACTS);
+            return null;
+        }
+
+        contactsFile = Mod.getFile(Mod.CONTACTS);
+        contactsCmd = Mod.getCommand(Mod.CONTACTS);
+
         View view = inflater.inflate(R.layout.fragment_cardview, null);
 
         Context context = getActivity().getApplicationContext();
-        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -50,7 +57,7 @@ public class ContactsFragment extends BaseFragment {
 
         onFileUpdate();
 
-        U.runCommandAsync("contacts");
+        U.runCommandAsync(contactsCmd);
         if (!V.currentDevice.isMain()) {
             U.getFileAsync(contactsFile);
         }
@@ -79,15 +86,13 @@ public class ContactsFragment extends BaseFragment {
                     return;
                 }
 
-                hideNodata();
-
                 if (getActivity() == null) return;
-
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         contactsAdapter.update(contacts);
                         contactsAdapter.notifyDataSetChanged();
+                        hideNodata();
                     }
                 });
             }

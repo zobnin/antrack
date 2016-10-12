@@ -13,8 +13,8 @@ import java.util.List;
 
 import app.R;
 
-public class SmsAdapter extends RecyclerViewAnim.Adapter<SmsAdapter.ModuleViewHolder> {
-    public static class ModuleViewHolder extends RecyclerView.ViewHolder {
+class SmsAdapter extends RecyclerViewAnim.Adapter<SmsAdapter.ModuleViewHolder> {
+    static class ModuleViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView from;
         TextView date;
@@ -29,7 +29,7 @@ public class SmsAdapter extends RecyclerViewAnim.Adapter<SmsAdapter.ModuleViewHo
         }
     }
 
-    List<Sms> smses;
+    private List<Sms> smses;
 
     SmsAdapter(List<Sms> smses){
         this.smses = smses;

@@ -30,7 +30,7 @@
                 android:id="@+id/cardview_apps_start"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:enabled="false" />
+                />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

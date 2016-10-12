@@ -31,16 +31,25 @@ public class ShellFragment extends BaseFragment {
     TextView textView;
     TextView ps1;
 
-    String cmdOut = "/cmdout";
+    String cmdOut;
+    String cmdCmd;
 
     boolean progress = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        context = getActivity().getApplicationContext();
-
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
+
+        if (!Mod.check(Mod.CMD)) {
+            showNomodule(Mod.CMD);
+            return null;
+        }
+
+        cmdOut = Mod.getFile(Mod.CMD);
+        cmdCmd = Mod.getCommand(Mod.CMD);
+
+        context = getActivity().getApplicationContext();
 
         View view = inflater.inflate(R.layout.fragment_shell, container, false);
         view.setAlpha(0);
@@ -90,7 +99,7 @@ public class ShellFragment extends BaseFragment {
     }
 
     private void sendCommand(String cmd) {
-        U.runCommandAsync("cmd " + cmd);
+        U.runCommandAsync(cmdCmd + cmd);
     }
 
     private void addText(final String text) {

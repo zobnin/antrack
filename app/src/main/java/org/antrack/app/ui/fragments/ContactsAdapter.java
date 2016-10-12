@@ -63,23 +63,29 @@ class ContactsAdapter extends RecyclerViewAnim.Adapter<ContactsAdapter.ModuleVie
         viewHolder.name.setText(contacts.get(i).name);
         viewHolder.number.setText(contacts.get(i).number);
 
-        // FIXME проверять модули
-
         // FIXME Выводить предупреждение о звонке
         viewHolder.call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String number = contacts.get(i).number;
-                number = number.replace(" ", "");
-                number = number.replace("-", "");
-                U.runCommandAsync("dial " + number);
+                if (Mod.check(Mod.DIAL)) {
+                    String number = contacts.get(i).number;
+                    number = number.replace(" ", "");
+                    number = number.replace("-", "");
+                    U.runCommandAsync("dial " + number);
+                } else {
+                    Mod.showNoModule(activity, Mod.DIAL);
+                }
             }
         });
 
         viewHolder.message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SendSmsDialog.show(activity, contacts.get(i).number, null);
+                if (Mod.check(Mod.SMS)) {
+                    SendSmsDialog.show(activity, contacts.get(i).number, null);
+                } else {
+                    Mod.showNoModule(activity, Mod.SMS);
+                }
             }
         });
     }

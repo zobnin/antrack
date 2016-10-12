@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.antrack.app.Init;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -23,14 +22,10 @@ import java.util.List;
 import app.R;
 
 public class AppsFragment extends BaseFragment {
-    final private String TAG = "AppsFragment";
+    private final String TAG = "AppsFragment";
 
     private List<App> apps;
-
-    private RecyclerViewAnim recyclerView;
     private AppsAdapter appsAdapter;
-
-    private String MOD = "apps";
 
     private String modFile;
     private String modCmd;
@@ -40,23 +35,23 @@ public class AppsFragment extends BaseFragment {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
-        if(!V.modules.containsKey(MOD)) {
-            // FIXME создавать view с сообщением о ненайденном модуле
+        if (!Mod.check(Mod.APPS)) {
+            showNomodule(Mod.APPS);
             return null;
         }
 
-        modFile = V.modules.get(MOD).result;
-        modCmd  = V.modules.get(MOD).command;
+        modFile = Mod.getFile(Mod.APPS);
+        modCmd  = Mod.getCommand(Mod.APPS);
 
         View view = inflater.inflate(R.layout.fragment_cardview, null);
 
         Context context = getActivity().getApplicationContext();
-        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         apps = new ArrayList<>();
-        appsAdapter = new AppsAdapter(apps);
+        appsAdapter = new AppsAdapter(getActivity(), apps);
         recyclerView.setAdapter(appsAdapter);
 
         onFileUpdate();
@@ -83,31 +78,31 @@ public class AppsFragment extends BaseFragment {
             @Override
             public void run() {
                 apps = new ArrayList<>();
-                readFile();
 
-                if (apps.isEmpty()) {
+                if (!readFile() || apps.isEmpty()) {
                     showNodata();
                     return;
                 }
 
                 if (getActivity() == null) return;
-
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         appsAdapter.update(apps);
                         appsAdapter.notifyDataSetChanged();
+                        hideNodata();
                     }
                 });
             }
         }).start();
     }
 
-    private void readFile() {
+    private boolean readFile() {
         String path = U.getFullPath(modFile);
 
-        if (!new File(path).exists()) {
-            return;
+        File file = new File(path);
+        if (!file.exists() || file.length() == 0) {
+            return false;
         }
 
         try {
@@ -116,7 +111,7 @@ public class AppsFragment extends BaseFragment {
             while ((line = reader.readLine()) != null) {
                 String[] pair = line.split(":");
                 if (pair.length < 2)
-                    return;
+                    continue;
                 App app = new App();
                 app.name = pair[0];
                 app.pkg  = pair[1].trim();
@@ -124,6 +119,8 @@ public class AppsFragment extends BaseFragment {
             }
         } catch (IOException e) {
             Log.e(TAG, "Can't read " + modFile + ": " + e);
+            return false;
         }
+        return true;
     }
 }

@@ -44,10 +44,14 @@ public class ControlFragment extends BaseFragment {
         final Switch hideSwitch = (Switch) view.findViewById(R.id.fragment_control_hide);
         hideSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    showHideIconWarning(hideSwitch);
+                if (Mod.check(Mod.HIDE)) {
+                    if (isChecked) {
+                        showHideIconWarning(hideSwitch);
+                    } else {
+                        U.runCommandAsync("hide off");
+                    }
                 } else {
-                    U.runCommandAsync("hide off");
+                    Mod.showNoModule(getActivity(), Mod.HIDE);
                 }
             }
         });
@@ -55,6 +59,7 @@ public class ControlFragment extends BaseFragment {
         Switch lostSwitch = (Switch) view.findViewById(R.id.fragment_control_lost);
         lostSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // FIXME Mod.LOST not exist
                 if (isChecked) {
                     U.runCommandAsync("lost on");
                 } else {

@@ -10,7 +10,7 @@ import app.R;
 
 public class PhotosFragment extends ImagesFragment {
     @Override
-    public String getMod() { return "camera"; }
+    public String getMod() { return Mod.CAMERA; }
     @Override
     public String getName() { return "Photos"; }
 
@@ -25,11 +25,18 @@ public class PhotosFragment extends ImagesFragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.toolbar_action_back_camera:
-                U.runCommandAsync("camera back");
+                if (Mod.check(getMod())) {
+                    U.runCommandAsync(getMod() + " back");
+                } else {
+                    Mod.showNoModule(getActivity(), getMod());
+                }
                 return true;
-
             case R.id.toolbar_action_front_camera:
-                U.runCommandAsync("camera front");
+                if (Mod.check(getMod())) {
+                    U.runCommandAsync(getMod() + " front");
+                } else {
+                    Mod.showNoModule(getActivity(), getMod());
+                }
                 return true;
         }
         return false;

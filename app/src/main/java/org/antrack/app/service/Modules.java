@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Map;
 
 public class Modules {
-    private String TAG = "Modules";
+    private String TAG = "Mod";
     private Context context;
     private Map<String, ModuleInterface> modules = null;
 

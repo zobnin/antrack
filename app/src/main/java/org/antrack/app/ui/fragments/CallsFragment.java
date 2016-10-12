@@ -18,31 +18,40 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import app.R;
 
 public class CallsFragment extends BaseFragment {
     final String TAG = "CallsFragment";
+
     Context context;
 
     private List<Call> calls;
-
-    RecyclerViewAnim recyclerView;
     CallsAdapter callsAdapter;
 
-    String modFile = "/calls";
+    String modFile;
+    String modCmd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
+        if (!Mod.check(Mod.LOGCALLS)) {
+            showNomodule(Mod.LOGCALLS);
+            return null;
+        }
+
+        modFile = Mod.getFile(Mod.LOGCALLS);
+        modCmd  = Mod.getCommand(Mod.LOGCALLS);
+
         context = getActivity().getApplicationContext();
 
         View view = inflater.inflate(R.layout.fragment_cardview, null);
 
-        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -74,34 +83,34 @@ public class CallsFragment extends BaseFragment {
             @Override
             public void run() {
                 calls = new ArrayList<>();
-                readFile();
 
-                if (calls.isEmpty()) {
+                if (!readFile() || calls.isEmpty()) {
                     showNodata();
                     return;
                 }
 
-                hideNodata();
+                // We need calls from last
+                Collections.reverse(calls);
 
                 if (getActivity() == null) return;
-
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        hideNodata();
                         callsAdapter.update(calls);
                         callsAdapter.notifyDataSetChanged();
+                        hideNodata();
                     }
                 });
             }
         }).start();
     }
 
-    private void readFile() {
+    private boolean readFile() {
         String path = U.getFullPath(modFile);
 
-
-        if (!new File(path).exists()) {
-            return;
+        if (!new File(path).exists() || new File(path).length() == 0) {
+            return false;
         }
 
         try {
@@ -110,8 +119,7 @@ public class CallsFragment extends BaseFragment {
             while ((line = reader.readLine()) != null) {
                 String[] pair = line.split(" ");
                 if (pair.length < 4)
-                    // FIXME надо выводить картинку, что данных нет
-                    return;
+                    continue;
                 Call call = new Call();
                 call.date = pair[0];
                 call.time  = pair[1];
@@ -121,6 +129,8 @@ public class CallsFragment extends BaseFragment {
             }
         } catch (IOException e) {
             Log.e(TAG, "Can't read apps file: " + e);
+            return false;
         }
+        return true;
     }
 }

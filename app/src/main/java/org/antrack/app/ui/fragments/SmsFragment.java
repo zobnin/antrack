@@ -28,22 +28,29 @@ public class SmsFragment extends BaseFragment {
     Context context;
 
     private List<Sms> smses;
-
-    RecyclerViewAnim recyclerView;
     SmsAdapter smsAdapter;
 
-    String smsFile = "/sms/inbox";
+    String smsDir;
+    String smsCmd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
+        if (!Mod.check(Mod.DUMPSMS)) {
+            showNomodule(Mod.DUMPSMS);
+            return null;
+        }
+
+        smsDir = Mod.getFile(Mod.DUMPSMS);
+        smsCmd = Mod.getCommand(Mod.DUMPSMS);
+
         context = getActivity().getApplicationContext();
 
         View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
-        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -53,10 +60,11 @@ public class SmsFragment extends BaseFragment {
 
         onFileUpdate();
 
-        U.runCommandAsync("dumpsms");
+        U.runCommandAsync(smsCmd);
 
         if (!V.currentDevice.isMain()) {
-            U.getFileAsync(smsFile);
+            // FIXME
+            U.getFileAsync(smsDir + "inbox");
         }
 
         return view;
@@ -67,7 +75,7 @@ public class SmsFragment extends BaseFragment {
 
     @Override
     public String getWatchFile() {
-        return smsFile;
+        return smsDir;
     }
 
     @Override
@@ -76,35 +84,35 @@ public class SmsFragment extends BaseFragment {
             @Override
             public void run() {
                 smses = new ArrayList<>();
-                readFile();
 
-                if (smses.isEmpty()) {
+                if (!readFile() || smses.isEmpty()) {
                     showNodata();
                     return;
                 }
 
                 if (getActivity() == null) return;
-
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         smsAdapter.update(smses);
                         smsAdapter.notifyDataSetChanged();
+                        hideNodata();
                     }
                 });
             }
         }).start();
     }
 
-    private void readFile() {
-        String path = U.getFullPath(smsFile);
+    private boolean readFile() {
+        // FIXME
+        String path = U.getFullPath(smsDir + "inbox");
 
         if (!new File(path).exists()) {
-            return;
+            return false;
         }
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(U.getFullPath(smsFile)));
+            BufferedReader reader = new BufferedReader(new FileReader(U.getFullPath(smsDir + "inbox")));
             String line;
             Sms sms = new Sms();
             while ((line = reader.readLine()) != null) {
@@ -126,6 +134,8 @@ public class SmsFragment extends BaseFragment {
             }
         } catch (IOException e) {
             Log.e(TAG, "Can't read sms file: " + e);
+            return false;
         }
+        return true;
     }
 }

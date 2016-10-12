@@ -28,22 +28,31 @@ import app.R;
 public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     final String TAG = "MapFragment";
 
-    private String locationFile = "/location";
-
-    private MapView mapView;
+    private MapView mapView = null;
     private Location currentLocation;
 
+    private String locationFile;
+    private String locationCmd;
+
     private class Location {
-        public String date = "0";
-        public String time = "0";
-        public String lat = "0";
-        public String lng = "0";
+        String date = "0";
+        String time = "0";
+        String lat = "0";
+        String lng = "0";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
+
+        if (!Mod.check(Mod.LOCATE)) {
+            showNomodule(Mod.LOCATE);
+            return null;
+        }
+
+        locationFile = Mod.getFile(Mod.LOCATE);
+        locationCmd = Mod.getCommand(Mod.LOCATE);
 
         View view = inflater.inflate(R.layout.fragment_mapview, container, false);
 
@@ -54,7 +63,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
         onFileUpdate();
 
-        U.runCommandAsync("locate");
+        U.runCommandAsync(locationCmd);
         if (!V.currentDevice.isMain()) {
             U.getFileAsync(locationFile);
         }
@@ -75,18 +84,20 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (readFile()) {
-                    if (getActivity() == null) {
-                        showNodata();
-                        return;
-                    }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                                mapView.getMapAsync(MapFragment.this);
-                        }
-                    });
+                if (!readFile()) {
+                    showNodata();
+                    return;
                 }
+
+                if (getActivity() == null) return;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mapView.setVisibility(View.VISIBLE);
+                        mapView.getMapAsync(MapFragment.this);
+                        hideNodata();
+                    }
+                });
             }
         }).start();
     }
@@ -127,8 +138,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             while ((line = reader.readLine()) != null) {
                 String[] loc = line.split(" ");
                 if (loc.length < 4)
-                    // FIXME надо выводить картинку, что данных нет
-                    return false;
+                    continue;
                 currentLocation.date = loc[0];
                 currentLocation.time = loc[1];
                 currentLocation.lat  = loc[2];
@@ -136,6 +146,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             }
         } catch (IOException e) {
             Log.e(TAG, "Can't read apps file: " + e);
+            return false;
         }
 
         return true;
@@ -143,25 +154,33 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     @Override
     public void onResume() {
-        mapView.onResume();
+        if (mapView != null) {
+            mapView.onResume();
+        }
         super.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mapView.onPause();
+        if (mapView != null) {
+            mapView.onPause();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        if (mapView != null) {
+            mapView.onDestroy();
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
+        if (mapView != null) {
+            mapView.onLowMemory();
+        }
     }
 }

@@ -40,5 +40,5 @@ public class ModulesFragment extends BaseFragment {
     }
 
     @Override
-    public String getName() { return "Modules"; }
+    public String getName() { return "Mod"; }
 }
