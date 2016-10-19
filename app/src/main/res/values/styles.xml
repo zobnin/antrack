@@ -1,14 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
-        <!-- For old Android -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Otherwise custom action bar is not shown -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
     <style name="WizardTheme" parent="Theme.AppCompat.NoActionBar">
-
     </style>
 
 </resources>
