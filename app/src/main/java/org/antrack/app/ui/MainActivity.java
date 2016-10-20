@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity
     Intent serviceIntent;
 
     TextView deviceTextView;
+    TextView deviceTextView2;
 
     View fragmentContainer;
 
@@ -214,7 +215,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        /*** Device selector ***/
+        /*** Drawer header ***/
 
         deviceTextView = (TextView) findViewById(R.id.nav_header_main_text1);
         deviceTextView.setOnClickListener(new View.OnClickListener() {
@@ -222,6 +223,22 @@ public class MainActivity extends AppCompatActivity
                 createDevicesMenu();
             }
         });
+
+        deviceTextView2 = (TextView) findViewById(R.id.nav_header_main_text2);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Pw pw = Pw.getInstance();
+                final String mail = pw.getEmail();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        deviceTextView2.setText(mail);
+                    }
+                });
+            }
+        }).start();
 
         /*** Load default fragment ***/
 

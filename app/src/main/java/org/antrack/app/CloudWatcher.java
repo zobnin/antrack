@@ -89,7 +89,7 @@ public class CloudWatcher {
                                     processFile(path);
                                 }
                             }
-                        } catch (InterruptedException e) {
+                        } catch (Exception e) {
                             Log.e(TAG, "Thread interrupted");
                             break;
                         }

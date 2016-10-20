@@ -7,6 +7,7 @@ import org.antrack.app.libs.Net;
 import org.antrack.app.plugins.Dropbox;
 
 import java.io.File;
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 
 // Pw - Plugin wrapper
@@ -31,10 +32,10 @@ public class Pw {
     // Max sleep time if no connection to cloud
     private static final int MAX_SLEEP = 320;
 
-    Dropbox dPlugin;
+    private Dropbox dPlugin;
 
-    String token;
-    boolean connected = false;
+    private String token;
+    private boolean connected = false;
 
     public Pw() {
         Settings.init();
@@ -73,6 +74,14 @@ public class Pw {
     public String resume() {
         if (Settings.get("plugin").equals("dropbox")) {
             return dPlugin.resume();
+        } else {
+            return null;
+        }
+    }
+
+    public String getEmail() {
+        if (Settings.get("plugin").equals("dropbox")) {
+            return dPlugin.getEmail();
         } else {
             return null;
         }
@@ -127,7 +136,7 @@ public class Pw {
         }
     }
 
-    public ArrayList<String> listDirs(String rDir) throws InterruptedException  {
+    public ArrayList<String> listDirs(String rDir) throws InterruptedIOException  {
         if (Settings.get("plugin").equals("dropbox")) {
             Log.d(TAG, "List dirs " + rDir);
             return dPlugin.listDirs(rDir);

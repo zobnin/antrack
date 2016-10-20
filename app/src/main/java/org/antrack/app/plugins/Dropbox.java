@@ -55,6 +55,15 @@ public class Dropbox {
         return Auth.getOAuth2Token();
     }
 
+    public String getEmail() {
+        try {
+            return client.users().getCurrentAccount().getEmail();
+        } catch (Exception e) {
+            Log.e(TAG, "getEmail exception: " + e.toString());
+            return null;
+        }
+    }
+
     public void putFile(final String lFile, final String rFile, boolean delete) {
         File file = new File(lFile);
         try {
