@@ -1,8 +1,12 @@
 package org.antrack.app.ui.fragments;
 
 import android.app.Activity;
+import android.util.Log;
 
+import org.antrack.app.Pw;
+import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Utils;
+import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
 
 class Mod {
@@ -33,7 +37,7 @@ class Mod {
     }
 
     static String getCommand(String module) {
-        return V.modules.get(module).command;
+        return V.modules.get(module).name;
     }
 
     static String getFile(String module) {
@@ -48,5 +52,20 @@ class Mod {
                 Utils.showToast(activity, "Module not found: " + modName);
             }
         });
+    }
+
+    static void deleteFiles(final String moduleName) {
+        Files.deleteDir(U.getLocalPath(getFile(moduleName)), false);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Pw pw = Pw.getInstance();
+                    pw.delete(U.getCloudPath(getFile(moduleName)), false);
+                } catch (Exception e) {
+                    Log.e("Mod", "Delete exception: " + e.toString());
+                }
+            }
+        }).start();
     }
 }

@@ -142,7 +142,7 @@ public class ShellFragment extends BaseFragment {
     @Override
     public void onFileUpdate() {
         try {
-            final String out = Files.readTextFile(U.getFullPath(cmdOut));
+            final String out = Files.readTextFile(U.getLocalPath(cmdOut));
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override

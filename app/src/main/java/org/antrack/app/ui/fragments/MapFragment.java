@@ -126,14 +126,14 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     }
 
     private boolean readFile() {
-        String path = U.getFullPath(locationFile);
+        String path = U.getLocalPath(locationFile);
 
         if (!new File(path).exists()) {
             return false;
         }
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(U.getFullPath(locationFile)));
+            BufferedReader reader = new BufferedReader(new FileReader(U.getLocalPath(locationFile)));
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] loc = line.split(" ");

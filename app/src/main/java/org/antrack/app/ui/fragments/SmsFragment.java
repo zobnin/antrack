@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -18,7 +17,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import app.R;
@@ -105,14 +103,14 @@ public class SmsFragment extends BaseFragment {
 
     private boolean readFile() {
         // FIXME
-        String path = U.getFullPath(smsDir + "inbox");
+        String path = U.getLocalPath(smsDir + "inbox");
 
         if (!new File(path).exists()) {
             return false;
         }
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(U.getFullPath(smsDir + "inbox")));
+            BufferedReader reader = new BufferedReader(new FileReader(U.getLocalPath(smsDir + "inbox")));
             String line;
             Sms sms = new Sms();
             while ((line = reader.readLine()) != null) {

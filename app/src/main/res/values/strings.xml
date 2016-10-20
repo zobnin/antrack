@@ -38,4 +38,5 @@ Coming soon
     <string name="not_connected_to_cloud">Not connected to cloud, can\'t update device list</string>
     <string name="cant_get_devices_list">Can\'t get devices list</string>
     <string name="cant_connect">Can\'t connect. Try later.</string>
+    <string name="delete">Delete</string>
 </resources>

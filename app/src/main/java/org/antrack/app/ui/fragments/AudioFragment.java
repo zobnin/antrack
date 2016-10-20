@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,8 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import org.antrack.app.Pw;
+import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Media;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
@@ -69,7 +74,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    new File(U.getFullPath(audioDir)).mkdir();
+                    new File(U.getLocalPath(audioDir)).mkdir();
 
                     ArrayList<String> audioFiles = U.compareDirs(audioDir);
 
@@ -111,6 +116,9 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
                     }
                 }
                 return true;
+            case R.id.toolbar_action_delete:
+                showRemoveDialog();
+                return true;
         }
         return false;
     }
@@ -149,7 +157,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
     }
 
     private boolean readFiles() {
-        String fullDir = U.getFullPath(audioDir);
+        String fullDir = U.getLocalPath(audioDir);
         String[] fileList = new File(fullDir).list();
 
         if (fileList == null || fileList.length == 0) {
@@ -168,6 +176,34 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
     }
 
     TextView current;
+
+    protected void showRemoveDialog() {
+        String title = getResources().getString(R.string.main_hide_icon_warning_title);
+        // FIXME translate
+        String text = "bla-bla-bla";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
+        builder.setMessage(text);
+
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Mod.deleteFiles(Mod.AUDIO);
+                audioAdapter.update(new ArrayList<Audio>());
+                audioAdapter.notifyDataSetChanged();
+                showNodata();
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
+    }
 
     protected void showRecordDialog() {
         // FIXME translate

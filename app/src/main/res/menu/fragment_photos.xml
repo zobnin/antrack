@@ -12,4 +12,10 @@
         android:icon="@drawable/ic_action_back_camera"
         android:title="Back camera"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/toolbar_action_delete"
+        android:icon="@drawable/ic_action_delete"
+        android:title="@string/delete"
+        app:showAsAction="always"/>
 </menu>

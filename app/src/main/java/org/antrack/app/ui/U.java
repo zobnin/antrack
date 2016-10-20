@@ -19,10 +19,20 @@ import java.util.LinkedHashMap;
 public class U {
     final static String TAG = "U";
 
+    // Get full dir name with main dir and current device name
+    public static String getLocalPath(String path) {
+        return Init.DEVICES_DIR + V.currentDevice.getDir() + path;
+    }
+
+    // Get full path in cloud
+    public static String getCloudPath(String path) {
+        return "/" + V.currentDevice.getDir() + path;
+    }
+
     static String getLastUpdate() {
         String ret;
         try {
-            ret = Files.readTextFile(U.getFullPath("/status"));
+            ret = Files.readTextFile(U.getLocalPath("/status"));
 
             if (ret.equals("")) {
                 return null;
@@ -41,12 +51,11 @@ public class U {
     // Download file for current device
     public static void getFile(String file) {
         try {
-            Files.mkdirsForFile(Init.DEVICES_DIR + V.currentDevice.getDir() + file);
+            Files.mkdirsForFile(getLocalPath(file));
 
             Pw pw = Pw.getInstance();
             if (pw.isConnected())
-                pw.getFile(Init.DEVICES_DIR + V.currentDevice.getDir() + file,
-                        "/" + V.currentDevice.getDir() + file);
+                pw.getFile(getLocalPath(file), getCloudPath(file));
             // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't get file " + file + ":" + e);
@@ -67,8 +76,7 @@ public class U {
         try {
             Pw pw = Pw.getInstance();
             if (pw.isConnected())
-                pw.getDir(Init.DEVICES_DIR + V.currentDevice.getDir() + dir,
-                        "/" + V.currentDevice.getDir() + dir);
+                pw.getDir(getLocalPath(dir), getCloudPath(dir));
             // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't get dir " + dir + ": " + e);
@@ -80,8 +88,7 @@ public class U {
         try {
             Pw pw = Pw.getInstance();
             if (pw.isConnected())
-                pw.putFile(Init.DEVICES_DIR + V.currentDevice.getDir() + file,
-                        "/" + V.currentDevice.getDir() + file, false);
+                pw.putFile(getLocalPath(file), getCloudPath(file), false);
             // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't put file " + file + ": " + e);
@@ -132,7 +139,7 @@ public class U {
         remoteDir = listDir("/" + V.currentDevice.getDir() + dir);
         if (remoteDir == null) return null;
 
-        localDir = new ArrayList<>(Arrays.asList(new File(getFullPath(dir)).list()));
+        localDir = new ArrayList<>(Arrays.asList(new File(getLocalPath(dir)).list()));
         notInlocal = new ArrayList<>();
 
         for (String path : remoteDir) {
@@ -149,7 +156,7 @@ public class U {
         if (V.currentDevice.isMain()) {
             cmd = "!" + cmd;
 
-            String deviceControlFile = getFullPath(C.CONTROL_FILE);
+            String deviceControlFile = getLocalPath(C.CONTROL_FILE);
 
             try {
                 Files.writeTextFile(deviceControlFile, cmd);
@@ -158,7 +165,7 @@ public class U {
             }
         }
         else {
-            String deviceControlFile = getFullPath(C.CONTROL_Q_FILE);
+            String deviceControlFile = getLocalPath(C.CONTROL_Q_FILE);
 
             try {
                 Files.addLineToStack(deviceControlFile, Utils.date(C.LAST_CMD_TIME_FORMAT) + " " + cmd, C.CONTROL_Q_MAX_LENGTH);
@@ -169,17 +176,12 @@ public class U {
         }
     }
 
-    // Get full dir name with main dir and current device name
-    public static String getFullPath(String path) {
-        return Init.DEVICES_DIR + V.currentDevice.getDir() + path;
-    }
-
     // Read modules and save in V.modules
     static public boolean initModules() {
         LinkedHashMap<String, Module> modules = new LinkedHashMap<>();
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(getFullPath(C.MODULES_FILE)));
+            BufferedReader reader = new BufferedReader(new FileReader(getLocalPath(C.MODULES_FILE)));
             String line;
             Module module = new Module();
             while ((line = reader.readLine()) != null) {

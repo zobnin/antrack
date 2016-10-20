@@ -12,12 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.Switch;
-import android.widget.TextView;
 
-import org.antrack.app.libs.Files;
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
 
@@ -49,7 +45,7 @@ public class ImagesFragment extends BaseFragment {
         }
 
         modDir = Mod.getFile(getMod());
-        fullDir = U.getFullPath(modDir);
+        fullDir = U.getLocalPath(modDir);
 
         imageList = new File(fullDir).list();
         if (imageList.length == 0)
@@ -58,7 +54,7 @@ public class ImagesFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_gridview, container, false);
 
         gridview = (GridView) view.findViewById(R.id.fragment_gridview);
-        imagesAdapter = new ImagesAdapter(getActivity(), U.getFullPath(modDir), imageList);
+        imagesAdapter = new ImagesAdapter(getActivity(), U.getLocalPath(modDir), imageList);
         gridview.setAdapter(imagesAdapter);
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -133,9 +129,10 @@ public class ImagesFragment extends BaseFragment {
         }).start();
     }
 
-    protected void showRemoveWarning(final Switch switchHideIcon) {
+    protected void showRemoveDialog() {
         String title = getResources().getString(R.string.main_hide_icon_warning_title);
-        Spanned text = Html.fromHtml(getResources().getString(R.string.main_hide_icon_warning_text));
+        // FIXME translate
+        String text = "bla-bla-bla";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title);
@@ -143,14 +140,16 @@ public class ImagesFragment extends BaseFragment {
 
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                U.runCommandAsync("hide on");
+                Mod.deleteFiles(getMod());
+                imagesAdapter.update(new String[0]);
+                imagesAdapter.notifyDataSetChanged();
+                showNodata();
                 dialog.dismiss();
             }
         });
 
         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                switchHideIcon.setChecked(false);
                 dialog.dismiss();
             }
         });

@@ -9,11 +9,11 @@ import java.util.Stack;
 
 public class RecursiveFileObserver extends FileObserver {
 
-    public static int CHANGES_ONLY = CLOSE_WRITE | MOVED_TO;
+    private static int CHANGES_ONLY = CLOSE_WRITE | MOVED_TO | DELETE;
 
-    List<SingleFileObserver> mObservers;
-    String mPath;
-    int mMask;
+    private List<SingleFileObserver> mObservers;
+    private String mPath;
+    private int mMask;
 
     public RecursiveFileObserver(String path) {
         this(path, CHANGES_ONLY);
@@ -28,8 +28,8 @@ public class RecursiveFileObserver extends FileObserver {
     @Override
     public void startWatching() {
         if (mObservers != null) return;
-        mObservers = new ArrayList<SingleFileObserver>();
-        Stack<String> stack = new Stack<String>();
+        mObservers = new ArrayList<>();
+        Stack<String> stack = new Stack<>();
         stack.push(mPath);
 
         while (!stack.empty()) {

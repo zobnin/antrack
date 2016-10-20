@@ -25,6 +25,24 @@ public class Files {
         new File(FilePath.substring(0,FilePath.lastIndexOf("/"))).mkdirs();
     }
 
+    // Delete all data in folder
+    public static void deleteDir(String path, boolean delDir) {
+        File folder = new File(path);
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for(File f: files) {
+                if(f.isDirectory()) {
+                    deleteDir(f.getAbsolutePath(), true);
+                } else {
+                    f.delete();
+                }
+            }
+        }
+        if (delDir)
+            folder.delete();
+    }
+
+
     // Read file into String
     public static String readTextFile(String filename) throws IOException {
         File file = new File(filename);

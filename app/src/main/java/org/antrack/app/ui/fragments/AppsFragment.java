@@ -98,7 +98,7 @@ public class AppsFragment extends BaseFragment {
     }
 
     private boolean readFile() {
-        String path = U.getFullPath(modFile);
+        String path = U.getLocalPath(modFile);
 
         File file = new File(path);
         if (!file.exists() || file.length() == 0) {

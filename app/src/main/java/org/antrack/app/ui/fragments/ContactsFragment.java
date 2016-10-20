@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.antrack.app.Init;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -100,14 +99,14 @@ public class ContactsFragment extends BaseFragment {
     }
 
     private void readFile() {
-        String path = U.getFullPath(contactsFile);
+        String path = U.getLocalPath(contactsFile);
 
         if (!new File(path).exists()) {
             return;
         }
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(U.getFullPath(contactsFile)));
+            BufferedReader reader = new BufferedReader(new FileReader(U.getLocalPath(contactsFile)));
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] pair = line.split(":");

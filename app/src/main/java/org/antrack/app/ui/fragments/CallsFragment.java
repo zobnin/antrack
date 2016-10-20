@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.antrack.app.Init;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -107,14 +106,14 @@ public class CallsFragment extends BaseFragment {
     }
 
     private boolean readFile() {
-        String path = U.getFullPath(modFile);
+        String path = U.getLocalPath(modFile);
 
         if (!new File(path).exists() || new File(path).length() == 0) {
             return false;
         }
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(U.getFullPath(modFile)));
+            BufferedReader reader = new BufferedReader(new FileReader(U.getLocalPath(modFile)));
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] pair = line.split(" ");

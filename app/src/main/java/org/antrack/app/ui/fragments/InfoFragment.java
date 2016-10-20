@@ -123,7 +123,7 @@ public class InfoFragment extends BaseFragment {
     }
 
     private Info readFile(String file, String title) {
-        String path = U.getFullPath(file);
+        String path = U.getLocalPath(file);
 
         if (!new File(path).exists()) {
             return null;

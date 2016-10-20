@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -628,7 +627,7 @@ public class MainActivity extends AppCompatActivity
 
         // Get modules list if not exist
         if (!V.currentDevice.isMain()) {
-            String modulesFile = U.getFullPath(C.MODULES_FILE);
+            String modulesFile = U.getLocalPath(C.MODULES_FILE);
             if (!new File(modulesFile).exists()) {
                 fileWatcher = FileWatcher.getInstance();
                 fileWatcher.addCallback("modules", new FileUpdatedModulesCallback());

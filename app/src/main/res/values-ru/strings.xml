@@ -100,4 +100,5 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="not_connected_to_cloud">Нет подключения к облаку, невозможно получить список устройств</string>
     <string name="cant_get_devices_list">Невозможно получить список устройств</string>
     <string name="cant_connect">Нет соединения. Попробуйте позже.</string>
+    <string name="delete">Удалить</string>
 </resources>

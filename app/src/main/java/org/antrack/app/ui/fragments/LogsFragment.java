@@ -57,7 +57,7 @@ public class LogsFragment extends BaseFragment {
 
     @Override
     public void onFileUpdate() {
-        String path = U.getFullPath(logsFile);
+        String path = U.getLocalPath(logsFile);
 
         if (!new File(path).exists()) {
             return;
@@ -67,7 +67,7 @@ public class LogsFragment extends BaseFragment {
             @Override
             public void run() {
                 try {
-                    ArrayList<String> logsList = Files.textFileToArray(U.getFullPath(logsFile));
+                    ArrayList<String> logsList = Files.textFileToArray(U.getLocalPath(logsFile));
 
                     if (logsList.isEmpty()) {
                         showNodata();

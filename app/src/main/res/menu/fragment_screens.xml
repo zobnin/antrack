@@ -7,4 +7,9 @@
         android:title="Take screenshot"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/toolbar_action_delete"
+        android:icon="@drawable/ic_action_delete"
+        android:title="@string/delete"
+        app:showAsAction="always"/>
 </menu>

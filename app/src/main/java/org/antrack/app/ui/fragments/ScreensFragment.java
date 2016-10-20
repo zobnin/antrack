@@ -1,9 +1,12 @@
 package org.antrack.app.ui.fragments;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import org.antrack.app.Pw;
+import org.antrack.app.libs.Files;
 import org.antrack.app.ui.U;
 
 import app.R;
@@ -30,6 +33,9 @@ public class ScreensFragment extends ImagesFragment {
                 } else {
                     Mod.showNoModule(getActivity(), getMod());
                 }
+                return true;
+            case R.id.toolbar_action_delete:
+                showRemoveDialog();
                 return true;
         }
         return false;
