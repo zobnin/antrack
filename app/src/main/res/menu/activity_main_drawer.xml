@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Device">
-        <menu>
             <item
                 android:id="@+id/nav_info"
                 android:icon="@drawable/ic_menu_info"
@@ -55,9 +53,6 @@
                 android:id="@+id/nav_modules"
                 android:icon="@drawable/ic_menu_modules"
                 android:title="Installed modules" />
-        </menu>
-    </item>
-
     <item android:title="About">
         <menu>
             <item
