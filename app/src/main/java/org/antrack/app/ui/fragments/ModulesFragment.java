@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.antrack.app.C;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.V;
 
@@ -25,7 +24,7 @@ public class ModulesFragment extends BaseFragment {
         context = getActivity().getApplicationContext();
 
         if (V.modules.isEmpty())
-            showNodata();
+            showNoData();
 
         View view = inflater.inflate(R.layout.fragment_cardview, null);
 

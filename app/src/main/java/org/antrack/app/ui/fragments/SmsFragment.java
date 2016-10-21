@@ -37,7 +37,7 @@ public class SmsFragment extends BaseFragment {
         setRetainInstance(true);
 
         if (!Mod.check(Mod.DUMPSMS)) {
-            showNomodule(Mod.DUMPSMS);
+            showNoModule(Mod.DUMPSMS);
             return null;
         }
 
@@ -84,7 +84,7 @@ public class SmsFragment extends BaseFragment {
                 smses = new ArrayList<>();
 
                 if (!readFile() || smses.isEmpty()) {
-                    showNodata();
+                    showNoData();
                     return;
                 }
 
@@ -94,7 +94,7 @@ public class SmsFragment extends BaseFragment {
                     public void run() {
                         smsAdapter.update(smses);
                         smsAdapter.notifyDataSetChanged();
-                        hideNodata();
+                        hideNoData();
                     }
                 });
             }

@@ -39,7 +39,7 @@ public class InfoFragment extends BaseFragment {
         setRetainInstance(true);
 
         if (!Mod.check(Mod.INFO) && !Mod.check(Mod.STATUS)) {
-            showNomodule(Mod.INFO + ", " + Mod.STATUS);
+            showNoModule(Mod.INFO + ", " + Mod.STATUS);
             return null;
         }
 
@@ -80,14 +80,14 @@ public class InfoFragment extends BaseFragment {
                 // FIXME translate
                 Info info = readFile(infoFile, "Device Info");
                 if (info == null) {
-                    showNodata();
+                    showNoData();
                     return;
                 }
 
                 // FIXME translate
                 Info status = readFile(statusFile, "Current status");
                 if (status == null) {
-                    showNodata();
+                    showNoData();
                     return;
                 }
 
@@ -106,7 +106,7 @@ public class InfoFragment extends BaseFragment {
                         public void run() {
                             infoAdapter.updateInfos(infos);
                             infoAdapter.notifyDataSetChanged();
-                            hideNodata();
+                            hideNoData();
                         }
                     });
                 }

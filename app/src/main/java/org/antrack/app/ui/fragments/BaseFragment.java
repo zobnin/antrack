@@ -12,7 +12,7 @@ public class BaseFragment extends Fragment {
     public void onFileUpdate() {}
     public String getWatchFile() { return null; }
 
-    protected void showNodata() {
+    protected void showNoData() {
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -26,7 +26,7 @@ public class BaseFragment extends Fragment {
             });
     }
 
-    protected void hideNodata() {
+    protected void hideNoData() {
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -36,7 +36,7 @@ public class BaseFragment extends Fragment {
             });
     }
 
-    protected void showNomodule(String modName) {
+    protected void showNoModule(String modName) {
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -50,7 +50,7 @@ public class BaseFragment extends Fragment {
             });
     }
 
-    protected void hideNomodule() {
+    protected void hideNoModule() {
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -59,4 +59,19 @@ public class BaseFragment extends Fragment {
                 }
             });
     }
+
+    protected void showNoRoot() {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getActivity() == null) return;
+                    View noModule = getActivity().findViewById(R.id.noroot);
+                    noModule.setAlpha(0);
+                    noModule.setVisibility(View.VISIBLE);
+                    noModule.animate().alpha(1);
+                }
+            });
+    }
+
 }

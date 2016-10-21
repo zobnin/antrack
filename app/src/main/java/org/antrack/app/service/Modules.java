@@ -41,21 +41,15 @@ public class Modules {
 
     private boolean checkForRoot() {
         String useRoot = Settings.get(C.S_USE_ROOT);
-        if (useRoot == null || useRoot.equals("false")) {
-            return false;
-        }
-        return true;
+        return !(useRoot == null || useRoot.equals("false"));
     }
 
     private boolean checkForAdmin() {
         String useAdmin = Settings.get(C.S_USE_ADMIN);
-        if (useAdmin == null || useAdmin.equals("false")) {
-            return false;
-        }
-        return true;
+        return !(useAdmin == null || useAdmin.equals("false"));
     }
 
-    public String command(String moduleName, String[] args) {
+    String command(String moduleName, String[] args) {
         ModuleInterface module = modules.get(moduleName);
         if (module != null) {
             if (module.usesRoot() && !checkForRoot())
@@ -103,7 +97,7 @@ public class Modules {
         }
     }
 
-    public String listModules() {
+    String listModules() {
         if (modules == null)
             return "error: no modules";
 
@@ -139,7 +133,7 @@ public class Modules {
         return "done";
     }
 
-    public String dumpJSON() {
+    String dumpJSON() {
         try {
             FileWriter writer = new FileWriter(Init.MAIN_DIR + C.MODULES_JSON_FILE);
             for (Map.Entry<String, ModuleInterface> mod : modules.entrySet()) {

@@ -36,7 +36,7 @@ public class ContactsFragment extends BaseFragment {
         setRetainInstance(true);
 
         if (!Mod.check(Mod.CONTACTS)) {
-            showNomodule(Mod.CONTACTS);
+            showNoModule(Mod.CONTACTS);
             return null;
         }
 
@@ -81,7 +81,7 @@ public class ContactsFragment extends BaseFragment {
                 readFile();
 
                 if (contacts.isEmpty()) {
-                    showNodata();
+                    showNoData();
                     return;
                 }
 
@@ -91,7 +91,7 @@ public class ContactsFragment extends BaseFragment {
                     public void run() {
                         contactsAdapter.update(contacts);
                         contactsAdapter.notifyDataSetChanged();
-                        hideNodata();
+                        hideNoData();
                     }
                 });
             }

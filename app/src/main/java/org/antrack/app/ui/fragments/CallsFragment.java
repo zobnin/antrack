@@ -39,7 +39,7 @@ public class CallsFragment extends BaseFragment {
         setRetainInstance(true);
 
         if (!Mod.check(Mod.LOGCALLS)) {
-            showNomodule(Mod.LOGCALLS);
+            showNoModule(Mod.LOGCALLS);
             return null;
         }
 
@@ -84,7 +84,7 @@ public class CallsFragment extends BaseFragment {
                 calls = new ArrayList<>();
 
                 if (!readFile() || calls.isEmpty()) {
-                    showNodata();
+                    showNoData();
                     return;
                 }
 
@@ -95,10 +95,10 @@ public class CallsFragment extends BaseFragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        hideNodata();
+                        hideNoData();
                         callsAdapter.update(calls);
                         callsAdapter.notifyDataSetChanged();
-                        hideNodata();
+                        hideNoData();
                     }
                 });
             }

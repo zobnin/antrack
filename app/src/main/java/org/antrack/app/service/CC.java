@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-public class CC {
+class CC {
     private static final String TAG = "CC";
 
     private Context context;
@@ -23,16 +23,16 @@ public class CC {
 
     private boolean internalCommand = false;
 
-    public CC(Context context) {
+    CC(Context context) {
         this.context = context;
         modules = new Modules(context);
     }
 
-    public void runModules(String action, String extra) {
+    void runModules(String action, String extra) {
         modules.run(action, extra);
     }
 
-    public void parseBootstrap() {
+    void parseBootstrap() {
         try {
             InputStream is = context.getAssets().open("bootstrap");
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -49,7 +49,7 @@ public class CC {
         }
     }
 
-    public void parseCommand(String cmd) {
+    void parseCommand(String cmd) {
         Log.d(TAG, "command: " + cmd);
 
         if (cmd.length() > 200) {
@@ -114,7 +114,7 @@ public class CC {
         }
     }
 
-    public String lost(String pin) {
+    private String lost(String pin) {
         /*
          * 1. Lock screen
          * 2. Hide app

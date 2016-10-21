@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,11 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import org.antrack.app.Pw;
-import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Media;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
@@ -52,7 +47,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         setHasOptionsMenu(true);
 
         if(!Mod.check(Mod.AUDIO)) {
-            showNomodule(Mod.AUDIO);
+            showNoModule(Mod.AUDIO);
             return null;
         }
 
@@ -139,7 +134,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
                 audios = new ArrayList<>();
 
                 if(!readFiles() || audios.isEmpty()) {
-                    showNodata();
+                    showNoData();
                     return;
                 }
 
@@ -149,7 +144,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
                     public void run() {
                         audioAdapter.update(audios);
                         audioAdapter.notifyDataSetChanged();
-                        hideNodata();
+                        hideNoData();
                     }
                 });
             }
@@ -191,7 +186,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
                 Mod.deleteFiles(Mod.AUDIO);
                 audioAdapter.update(new ArrayList<Audio>());
                 audioAdapter.notifyDataSetChanged();
-                showNodata();
+                showNoData();
                 dialog.dismiss();
             }
         });

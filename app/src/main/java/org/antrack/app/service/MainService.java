@@ -167,7 +167,7 @@ public class MainService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "onStartCommmand");
+                Log.d(TAG, "onStartCommand");
 
                 if (intent != null) {
                     String action = intent.getAction();

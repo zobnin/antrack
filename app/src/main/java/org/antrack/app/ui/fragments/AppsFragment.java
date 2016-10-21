@@ -36,7 +36,7 @@ public class AppsFragment extends BaseFragment {
         setRetainInstance(true);
 
         if (!Mod.check(Mod.APPS)) {
-            showNomodule(Mod.APPS);
+            showNoModule(Mod.APPS);
             return null;
         }
 
@@ -80,7 +80,7 @@ public class AppsFragment extends BaseFragment {
                 apps = new ArrayList<>();
 
                 if (!readFile() || apps.isEmpty()) {
-                    showNodata();
+                    showNoData();
                     return;
                 }
 
@@ -90,7 +90,7 @@ public class AppsFragment extends BaseFragment {
                     public void run() {
                         appsAdapter.update(apps);
                         appsAdapter.notifyDataSetChanged();
-                        hideNodata();
+                        hideNoData();
                     }
                 });
             }

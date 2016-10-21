@@ -47,7 +47,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         setRetainInstance(true);
 
         if (!Mod.check(Mod.LOCATE)) {
-            showNomodule(Mod.LOCATE);
+            showNoModule(Mod.LOCATE);
             return null;
         }
 
@@ -85,7 +85,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             @Override
             public void run() {
                 if (!readFile()) {
-                    showNodata();
+                    showNoData();
                     return;
                 }
 
@@ -95,7 +95,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                     public void run() {
                         mapView.setVisibility(View.VISIBLE);
                         mapView.getMapAsync(MapFragment.this);
-                        hideNodata();
+                        hideNoData();
                     }
                 });
             }

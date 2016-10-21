@@ -7,9 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 
-// FIXME он не умеет отменять alarm, потому что нужно отдавать ранее сохраненный интент, а не создавать новый
-public class Alarm extends BroadcastReceiver
-{
+public class Alarm extends BroadcastReceiver {
+    private static PendingIntent pIntent = null;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent sIntent = new Intent(context, MainService.class);
@@ -21,16 +21,15 @@ public class Alarm extends BroadcastReceiver
     public static void set(Context context, long time) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, Alarm.class);
-        PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        pIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
         am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), time, pIntent);
     }
 
     public static void cancel(Context context) {
-        Intent intent = new Intent(context, Alarm.class);
-        PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.cancel(pIntent);
+        if (pIntent != null) {
+            AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            am.cancel(pIntent);
+        }
     }
 }

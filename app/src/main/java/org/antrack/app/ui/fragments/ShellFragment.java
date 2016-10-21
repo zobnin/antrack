@@ -42,7 +42,7 @@ public class ShellFragment extends BaseFragment {
         setRetainInstance(true);
 
         if (!Mod.check(Mod.CMD)) {
-            showNomodule(Mod.CMD);
+            showNoModule(Mod.CMD);
             return null;
         }
 

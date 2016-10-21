@@ -70,7 +70,7 @@ public class LogsFragment extends BaseFragment {
                     ArrayList<String> logsList = Files.textFileToArray(U.getLocalPath(logsFile));
 
                     if (logsList.isEmpty()) {
-                        showNodata();
+                        showNoData();
                         return;
                     }
 

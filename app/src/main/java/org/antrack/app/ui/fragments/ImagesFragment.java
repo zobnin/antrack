@@ -4,15 +4,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Switch;
 
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -40,7 +37,7 @@ public class ImagesFragment extends BaseFragment {
         setHasOptionsMenu(true);
 
         if (!Mod.check(getMod())) {
-            showNomodule(getMod());
+            showNoModule(getMod());
             return null;
         }
 
@@ -49,7 +46,7 @@ public class ImagesFragment extends BaseFragment {
 
         imageList = new File(fullDir).list();
         if (imageList.length == 0)
-            showNodata();
+            showNoData();
 
         View view = inflater.inflate(R.layout.fragment_gridview, container, false);
 
@@ -111,7 +108,7 @@ public class ImagesFragment extends BaseFragment {
 
                 // If no files show "No data."
                 if (imageList == null || imageList.length == 0) {
-                    showNodata();
+                    showNoData();
                     return;
                 }
 
@@ -122,7 +119,7 @@ public class ImagesFragment extends BaseFragment {
                         imagesAdapter.update(imageList);
                         imagesAdapter.notifyDataSetChanged();
                         gridview.smoothScrollToPosition(imageList.length-1);
-                        hideNodata();
+                        hideNoData();
                     }
                 });
             }
@@ -143,7 +140,7 @@ public class ImagesFragment extends BaseFragment {
                 Mod.deleteFiles(getMod());
                 imagesAdapter.update(new String[0]);
                 imagesAdapter.notifyDataSetChanged();
-                showNodata();
+                showNoData();
                 dialog.dismiss();
             }
         });
