@@ -10,6 +10,7 @@ import com.splunk.mint.Mint;
 
 import org.antrack.app.C;
 import org.antrack.app.CloudWatcher;
+import org.antrack.app.Features;
 import org.antrack.app.FileWatcher;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
@@ -82,6 +83,11 @@ public class MainService extends Service {
                 // Wait for file watcher
                 // FIXME
                 Utils.sleep(1);
+
+                /*** Save device features ***/
+
+                Features feat = new Features(MainService.this);
+                feat.write();
 
                 /*** Bootstrap modules ***/
 

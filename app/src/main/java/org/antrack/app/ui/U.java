@@ -3,6 +3,7 @@ package org.antrack.app.ui;
 import android.util.Log;
 
 import org.antrack.app.C;
+import org.antrack.app.Features;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
 import org.antrack.app.libs.Files;
@@ -177,7 +178,7 @@ public class U {
     }
 
     // Read modules and save in V.modules
-    static public boolean initModules() {
+    static boolean readModules() {
         LinkedHashMap<String, Module> modules = new LinkedHashMap<>();
 
         try {

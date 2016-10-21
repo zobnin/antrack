@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import org.antrack.app.C;
 import org.antrack.app.CloudWatcher;
+import org.antrack.app.Features;
 import org.antrack.app.FileWatcher;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
@@ -144,10 +145,6 @@ public class MainActivity extends AppCompatActivity
             startService();
         }
 
-        /*** Read modules ***/
-
-        readModules();
-
         /*** Load fragments ***/
 
         setContentView(R.layout.activity_main);
@@ -242,17 +239,8 @@ public class MainActivity extends AppCompatActivity
 
         /*** Load default fragment ***/
 
-        if (firstRun) {
-            deviceTextView.setText(V.currentDevice.getName());
-            loadFragment(infoFragment);
-            navigationView.getMenu().getItem(0).setChecked(true);
-        } else {
-            if (V.currentDevice.isMain()) {
-                deviceTextView.setText(V.currentDevice.getName());
-            } else {
-                switchDevice();
-            }
-        }
+        if (firstRun) waitModules();
+        switchDevice();
 
         Log.d(TAG, "Initialization done");
         initDone = true;
@@ -284,7 +272,27 @@ public class MainActivity extends AppCompatActivity
         }).start();
     }
 
-    private void readModules() {
+    // Switch device to currentDevice
+    private void switchDevice() {
+        // FIXME если нет файла выбрасываеть modules not found и возвращаться
+        U.readModules();
+
+        // Read features
+        V.features = new Features(this);
+
+        // Reload menu
+        deviceTextView.setText(V.currentDevice.getName());
+        navigationView.getMenu().clear();
+        navigationView.inflateMenu(R.menu.activity_main_drawer);
+        navigationView.getMenu().getItem(0).setChecked(true);
+
+        deviceMenuActive = false;
+
+        loadFragment(infoFragment);
+    }
+
+    // When app loads first time its takes time to save modules file
+    private void waitModules() {
         if (!new File(Init.MAIN_DIR + C.MODULES_FILE).exists()) {
             // Wait for modules init
             LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
@@ -293,10 +301,7 @@ public class MainActivity extends AppCompatActivity
                 Utils.sleep(1);
             }
 
-            U.initModules();
             LoadingDialog.hide(MainActivity.this);
-        } else {
-            U.initModules();
         }
     }
 
@@ -589,22 +594,6 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    // Switch device to currentDevice
-    private void switchDevice() {
-        // Init modules
-        U.initModules();
-
-        // Reload menu
-        deviceTextView.setText(V.currentDevice.getName());
-        navigationView.getMenu().clear();
-        navigationView.inflateMenu(R.menu.activity_main_drawer);
-        navigationView.getMenu().getItem(0).setChecked(true);
-
-        deviceMenuActive = false;
-
-        loadFragment(infoFragment);
     }
 
     private void addCallbacks() {

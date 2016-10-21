@@ -16,6 +16,7 @@ public class C {
     public static final String NAME_FILE = "/name";
     public static final String MODULES_FILE = "/modules";
     public static final String SETTINGS_FILE = "/settings";
+    public static final String FEATURES_FILE = "/features";
     public static final String CONTROL_FILE = "/ctl";
     public static final String RESULT_FILE = "/result";
 

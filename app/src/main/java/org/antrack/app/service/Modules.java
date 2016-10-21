@@ -128,7 +128,7 @@ public class Modules {
             }
             writer.close();
         } catch (IOException e) {
-            Log.e(TAG, "filed to write modules file");
+            Log.e(TAG, "filed to write modules file: " + e.toString());
         }
         return "done";
     }
