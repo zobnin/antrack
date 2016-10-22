@@ -224,11 +224,10 @@ public class MainService extends Service {
         fileWatcher.removeCallback("service");
         cloudWatcher.removeCallback("service");
 
-        // FIXME проблема в том, что если сервис отключен из-за отсутствия интернета alarm будет его запускать
-//        String enabled = Settings.get(C.S_ENABLE_SERVICE);
-//        if (enabled == null || enabled.equals("false")) {
+        String enabled = Settings.get(C.S_ENABLE_SERVICE);
+        if (enabled == null || enabled.equals("false")) {
             Alarm.cancel(this);
-//        }
+        }
 
         Logger.stopped(this);
 

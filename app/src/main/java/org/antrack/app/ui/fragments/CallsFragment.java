@@ -53,7 +53,7 @@ public class CallsFragment extends BaseFragment {
 
         context = getActivity().getApplicationContext();
 
-        View view = inflater.inflate(R.layout.fragment_cardview, null);
+        View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
         RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);

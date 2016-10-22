@@ -62,7 +62,6 @@ public class ModulesAdapter extends RecyclerViewAnim.Adapter<ModulesAdapter.Modu
         viewHolder.moduleDesc.setText(module.desc);
         viewHolder.moduleVersion.setText("Version: " + module.version);
         viewHolder.moduleAuthor.setText("Author: " + module.author);
-        // FIXME disabled: причина, кнопка launch
     }
 
     private Object getElementByIndex(LinkedHashMap map, int index){

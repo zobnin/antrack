@@ -45,13 +45,12 @@ public class InfoFragment extends BaseFragment {
 
         context = getActivity().getApplicationContext();
 
-        View view = inflater.inflate(R.layout.fragment_cardview, null);
+        View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
         recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        // FIXME Now it is hardcoded, but in production must read modinfo
         infoFile = Mod.getFile(Mod.INFO);
         statusFile = Mod.getFile(Mod.STATUS);
 

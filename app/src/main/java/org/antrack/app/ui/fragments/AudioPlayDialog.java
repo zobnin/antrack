@@ -11,9 +11,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.antrack.app.libs.Media;
-import org.antrack.app.libs.Utils;
 
 import java.util.concurrent.TimeUnit;
+
+import app.R;
 
 class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
     private MediaPlayer mp;
@@ -45,8 +46,7 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
         linear.addView(seek);
         builder.setView(linear);
 
-        // FIXME translate
-        builder.setNegativeButton("Stop", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.stop, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 mp.stop();
                 dialog.dismiss();

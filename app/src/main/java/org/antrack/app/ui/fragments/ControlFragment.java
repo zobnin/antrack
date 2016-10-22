@@ -110,12 +110,9 @@ public class ControlFragment extends BaseFragment {
     }
 
     protected void showHideIconWarning(final Switch switchHideIcon) {
-        String title = getResources().getString(R.string.main_hide_icon_warning_title);
-        Spanned text = Html.fromHtml(getResources().getString(R.string.main_hide_icon_warning_text));
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title);
-        builder.setMessage(text);
+        builder.setTitle(R.string.warning);
+        builder.setMessage(R.string.hide_icon_warning);
 
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {

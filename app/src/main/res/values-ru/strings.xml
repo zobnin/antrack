@@ -2,7 +2,7 @@
 <resources>
     <string name="main_enable_service">Активировать службу</string>
     <string name="main_start_at_boot">Запуск при загрузке</string>
-    <string name="main_hide_icon">Скрыть иконку </string>
+    <string name="main_hide_icon">Скрыть иконку</string>
     <string name="main_update_interval">Интервал обновления</string>
     <string name="wizard_admin_text">Чтобы получить возможность удаленно установить PIN-код или стереть данные с устройства нужны права администратора</string>
     <string name="wizard_close_button">Закрыть</string>
@@ -11,8 +11,8 @@
     <string name="wizard_root_button">Дать права root</string>
     <string name="wizard_root_text">Функции снятия скриншота требует права root</string>
 
-    <string name="main_hide_icon_warning_title">Внимание</string>
-    <string name="main_hide_icon_warning_text"><![CDATA[
+    <string name="warning">Внимание</string>
+    <string name="hide_icon_warning"><![CDATA[
 Включив данную опцию и свернув приложение вы уже не сможете вернуться назад.
 Вам придется либо удалять приложение, либо деактивировать опцию с помощью записи команды <i>hide off</i> в файл <i>control</i>.
 Скрыть иконку?
@@ -104,4 +104,15 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="trial_is_expired">Срок действия пробной версии истёк</string>
     <string name="cant_load_device">Не удалось получить данные устройства</string>
     <string name="root_rights_granted">Права root получены</string>
+    <string name="delete_files_warning">Файлы будут удалены с этого устройства и из облака</string>
+    <string name="record_audio_title">Запись с микрофона</string>
+    <string name="record_audio_text">Как долго вы хотите записывать</string>
+    <string name="cancel">Отмена</string>
+    <string name="record">Запись</string>
+    <string name="stop">Стоп</string>
+    <string name="make_call_title">Звонок</string>
+    <string name="make_call_number">Номер:</string>
+    <string name="make_call_error">Пожалйста, укажите номер</string>
+    <string name="send_sms">Отправить СМС</string>
+    <string name="send_sms_text">Текст:</string>
 </resources>

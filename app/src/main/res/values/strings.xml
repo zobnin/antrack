@@ -17,8 +17,8 @@
     <string name="wizard_close_button">Close</string>
     <string name="wizard_admin_text">Remote wipe and lock with PIN-code functions requires admin rights</string>
 
-    <string name="main_hide_icon_warning_title">Warning</string>
-    <string name="main_hide_icon_warning_text"><![CDATA[
+    <string name="warning">Warning</string>
+    <string name="hide_icon_warning"><![CDATA[
 If you hide icon and press \"Home\" button you can\'t return back.
 You either need to remove the application or unhide icon using the command <i>hide off</i> in the file <i>control</i>.
 Hide icon?
@@ -42,4 +42,15 @@ Coming soon
     <string name="trial_is_expired">Trial is Expired</string>
     <string name="cant_load_device">Can\'t load device settings</string>
     <string name="root_rights_granted">Root rights granted</string>
+    <string name="delete_files_warning">Files will be deleted from this device and from the cloud</string>
+    <string name="record_audio_title">Record audio</string>
+    <string name="record_audio_text">How long will be record</string>
+    <string name="cancel">Cancel</string>
+    <string name="record">Record</string>
+    <string name="stop">Stop</string>
+    <string name="make_call_title">Dial</string>
+    <string name="make_call_number">Number:</string>
+    <string name="make_call_error">Fill \"number\" field</string>
+    <string name="send_sms">Send SMS</string>
+    <string name="send_sms_text">Text:</string>
 </resources>

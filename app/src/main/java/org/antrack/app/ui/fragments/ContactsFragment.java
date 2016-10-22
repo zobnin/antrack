@@ -43,7 +43,7 @@ public class ContactsFragment extends BaseFragment {
         contactsFile = Mod.getFile(Mod.CONTACTS);
         contactsCmd = Mod.getCommand(Mod.CONTACTS);
 
-        View view = inflater.inflate(R.layout.fragment_cardview, null);
+        View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
         Context context = getActivity().getApplicationContext();
         RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);

@@ -127,13 +127,9 @@ public class ImagesFragment extends BaseFragment {
     }
 
     protected void showRemoveDialog() {
-        String title = getResources().getString(R.string.main_hide_icon_warning_title);
-        // FIXME translate
-        String text = "bla-bla-bla";
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title);
-        builder.setMessage(text);
+        builder.setTitle(R.string.warning);
+        builder.setMessage(R.string.delete_files_warning);
 
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {

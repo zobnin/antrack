@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -17,7 +18,7 @@ import org.antrack.app.libs.Utils;
 
 import app.R;
 
-public class WizardActivity extends ActionBarActivity {
+public class WizardActivity extends AppCompatActivity {
     boolean pluginChoise = false;
     Admin aTools;
 

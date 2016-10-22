@@ -81,13 +81,6 @@ public class U {
             return;
         }
 
-        // Audio and images must be deleted after upload to save space
-        // FIXME расширения вынести в массив в C.java
-        //boolean delete = false;
-        //if (path.endsWith(".jpg") || path.endsWith(".png") || path.endsWith(".3gp")) {
-        //    delete = true;
-        //}
-
         pw.putFile(path, "/" + path.replace(Init.DEVICES_DIR, ""), false);
     }
 }

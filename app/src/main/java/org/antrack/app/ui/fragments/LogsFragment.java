@@ -24,9 +24,7 @@ public class LogsFragment extends BaseFragment {
     final String TAG = "LogsFragment";
 
     Context context;
-
-    String logsFile;
-
+    String logsFile = "/logs";
     TextView textView;
 
     @Override
@@ -35,13 +33,8 @@ public class LogsFragment extends BaseFragment {
         setRetainInstance(true);
 
         context = getActivity().getApplicationContext();
-
         View view = inflater.inflate(R.layout.fragment_textview, container, false);
-
         textView = (TextView) view.findViewById(R.id.fragment_textview_text);
-
-        // FIXME Now it is hardcoded, but in production must read module info
-        logsFile = "/logs";
 
         onFileUpdate();
 

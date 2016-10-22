@@ -54,7 +54,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         audioDir = Mod.getFile(MOD);
         audioCmd = Mod.getCommand(MOD);
 
-        View view = inflater.inflate(R.layout.fragment_cardview, null);
+        View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
         Context context = getActivity().getApplicationContext();
         RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
@@ -173,13 +173,9 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
     TextView current;
 
     protected void showRemoveDialog() {
-        String title = getResources().getString(R.string.main_hide_icon_warning_title);
-        // FIXME translate
-        String text = "bla-bla-bla";
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title);
-        builder.setMessage(text);
+        builder.setTitle(R.string.warning);
+        builder.setMessage(R.string.delete_files_warning);
 
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -201,13 +197,9 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
     }
 
     protected void showRecordDialog() {
-        // FIXME translate
-        String title = "Record audio";
-        String text = "How long you want record?";
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title);
-        builder.setMessage(text);
+        builder.setTitle(R.string.record_audio_title);
+        builder.setMessage(R.string.record_audio_text);
 
         int p = getDpInPixels(20);
 
@@ -228,8 +220,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         linear.addView(seek);
         builder.setView(linear);
 
-        // FIXME translate
-        builder.setPositiveButton("Record", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.record, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String seconds = String.valueOf(seek.getProgress());
                 U.runCommandAsync(audioCmd + " " + seconds);
@@ -237,7 +228,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }

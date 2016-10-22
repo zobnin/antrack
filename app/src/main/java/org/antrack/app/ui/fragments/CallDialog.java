@@ -12,11 +12,12 @@ import android.widget.TextView;
 import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.U;
 
+import app.R;
+
 class CallDialog {
     public static void show(final Activity activity, String number) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        // FIXME translate
-        builder.setTitle("Make call");
+        builder.setTitle(R.string.make_call_title);
 
         int p = getDpInPixels(activity, 20);
 
@@ -25,8 +26,7 @@ class CallDialog {
         linear.setPadding(p,p,p,p);
 
         final TextView textNumber = new TextView(activity);
-        // FIXME translate
-        textNumber.setText("Number:");
+        textNumber.setText(R.string.make_call_number);
 
         final EditText editNumber = new EditText(activity);
         editNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -38,14 +38,12 @@ class CallDialog {
         linear.addView(editNumber);
         builder.setView(linear);
 
-        // FIXME translate
-        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.make_call_title, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String number = editNumber.getText().toString();
 
                 if (number.equals("")) {
-                    // FIXME translate
-                    Utils.showToast(activity, "Fill number field");
+                    Utils.showToast(activity, activity.getResources().getString(R.string.make_call_error));
                     return;
                 }
 
@@ -57,8 +55,7 @@ class CallDialog {
             }
         });
 
-        // FIXME translate
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }

@@ -71,7 +71,6 @@ class AppsAdapter extends RecyclerViewAnim.Adapter<AppsAdapter.ModuleViewHolder>
                 }
             }
         });
-        // FIXME иконка
     }
 
     @Override

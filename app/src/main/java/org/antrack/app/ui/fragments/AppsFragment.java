@@ -43,7 +43,7 @@ public class AppsFragment extends BaseFragment {
         modFile = Mod.getFile(Mod.APPS);
         modCmd  = Mod.getCommand(Mod.APPS);
 
-        View view = inflater.inflate(R.layout.fragment_cardview, null);
+        View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
         Context context = getActivity().getApplicationContext();
         RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
