@@ -11,7 +11,7 @@ import java.util.Properties;
 public class Settings {
     private static final String TAG = "Settings";
 
-    private static Properties prop;
+    private static Properties prop = null;
     private static String settingsFile = null;
 
     public static void init() {

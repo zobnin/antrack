@@ -41,6 +41,11 @@ public class SmsFragment extends BaseFragment {
             return null;
         }
 
+        if (!V.features.phone) {
+            showNoPhone();
+            return null;
+        }
+
         smsDir = Mod.getFile(Mod.DUMPSMS);
         smsCmd = Mod.getCommand(Mod.DUMPSMS);
 

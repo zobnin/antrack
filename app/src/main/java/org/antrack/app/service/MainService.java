@@ -86,8 +86,8 @@ public class MainService extends Service {
 
                 /*** Save device features ***/
 
-                Features feat = new Features(MainService.this);
-                feat.write();
+                Features feat = new Features();
+                feat.write(MainService.this, Init.MAIN_DIR + C.FEATURES_FILE);
 
                 /*** Bootstrap modules ***/
 

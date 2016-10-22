@@ -12,22 +12,15 @@ import java.io.FileWriter;
 public class Features {
     private static final String TAG = "Features";
 
-    private Context context;
-
     public boolean root = false;
     public boolean admin = false;
     public boolean backCamera = false;
     public boolean frontCamera = false;
     public boolean phone = false;
 
-    public Features(Context context) {
-        this.context = context;
-        read();
-    }
-
-    private void read() {
+    public void read(String path) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(Init.MAIN_DIR + C.FEATURES_FILE));
+            BufferedReader reader = new BufferedReader(new FileReader(path));
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] pair = line.split(":");
@@ -53,11 +46,11 @@ public class Features {
         }
     }
 
-    public void write() {
-        getFeatures();
+    public void write(Context context, String path) {
+        getFeatures(context);
 
         try {
-            FileWriter writer = new FileWriter(Init.MAIN_DIR + C.FEATURES_FILE);
+            FileWriter writer = new FileWriter(path);
 
             String feat = "";
             if (root) feat += "root\n";
@@ -73,17 +66,19 @@ public class Features {
         }
     }
 
-    private void getFeatures() {
+    private void getFeatures(Context context) {
         Settings.init();
 
         // Do we have root?
-        if (Settings.get(C.S_USE_ROOT).equals("true")) {
+        String haveRoot = Settings.get(C.S_USE_ROOT);
+        if (haveRoot != null && !haveRoot.equals(C.TRUE)) {
             root = true;
         }
 
         // Do we have admin?
-        if (Settings.get(C.S_USE_ADMIN).equals("true")) {
-            admin = true;
+        String haveAdmin = Settings.get(C.S_USE_ADMIN);
+        if (haveAdmin != null && !haveAdmin.equals(C.TRUE)) {
+            root = true;
         }
 
         // Do we have cameras?

@@ -72,6 +72,22 @@
             android:text="No root rights."
             android:textSize="20sp" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/nophone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+
+        <TextView android:id="@id/android:empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No phone function."
+            android:textSize="20sp" />
+    </RelativeLayout>
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

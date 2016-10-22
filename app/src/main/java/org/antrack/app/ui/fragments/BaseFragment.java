@@ -36,6 +36,7 @@ public class BaseFragment extends Fragment {
             });
     }
 
+    // FIXME Module name
     protected void showNoModule(String modName) {
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
@@ -74,4 +75,50 @@ public class BaseFragment extends Fragment {
             });
     }
 
+    protected void hideNoRoot() {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().findViewById(R.id.noroot).setVisibility(View.GONE);
+                }
+            });
+    }
+
+    protected void showNoPhone() {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getActivity() == null) return;
+                    View noModule = getActivity().findViewById(R.id.nophone);
+                    noModule.setAlpha(0);
+                    noModule.setVisibility(View.VISIBLE);
+                    noModule.animate().alpha(1);
+                }
+            });
+    }
+
+    protected void hideNoPhone() {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().findViewById(R.id.nophone).setVisibility(View.GONE);
+                }
+            });
+    }
+
+    public void hideAll() {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().findViewById(R.id.nodata).setVisibility(View.GONE);
+                    getActivity().findViewById(R.id.nomodule).setVisibility(View.GONE);
+                    getActivity().findViewById(R.id.noroot).setVisibility(View.GONE);
+                    getActivity().findViewById(R.id.nophone).setVisibility(View.GONE);
+                }
+            });
+    }
 }

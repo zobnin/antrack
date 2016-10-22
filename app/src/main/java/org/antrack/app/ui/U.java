@@ -3,6 +3,7 @@ package org.antrack.app.ui;
 import android.util.Log;
 
 import org.antrack.app.C;
+import org.antrack.app.Features;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
 import org.antrack.app.libs.Files;
@@ -171,6 +172,11 @@ public class U {
                 Log.e(TAG, "Can't run command " + cmd + ": " + e);
             }
         }
+    }
+
+    static void readFeatures() {
+        V.features = new Features();
+        V.features.read(U.getLocalPath(C.FEATURES_FILE));
     }
 
     // Read modules and save in V.modules

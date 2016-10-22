@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import org.antrack.app.C;
 import org.antrack.app.CloudWatcher;
-import org.antrack.app.Features;
 import org.antrack.app.FileWatcher;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
@@ -108,6 +107,9 @@ public class MainActivity extends AppCompatActivity
     boolean firstRun = true;
     boolean initDone = false;
 
+    boolean modulesCallbackActive = false;
+    boolean featuresCallbackActive = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity
         /*** Start wizard ***/
 
         String wizard = Settings.get(C.S_LAUNCH_WIZARD);
-        if (wizard == null || wizard.equals("true")) {
+        if (wizard == null || wizard.equals(C.TRUE)) {
             Intent intent = new Intent(this, WizardActivity.class);
             startActivityForResult(intent, 1);
         } else {
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity
 
         final String serviceEnabled = Settings.get(C.S_ENABLE_SERVICE);
 
-        if (serviceEnabled == null || serviceEnabled.equals("true")) {
+        if (serviceEnabled == null || serviceEnabled.equals(C.TRUE)) {
             startService();
         }
 
@@ -211,7 +213,6 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         /*** Drawer header ***/
 
         deviceTextView = (TextView) findViewById(R.id.nav_header_main_text1);
@@ -239,7 +240,7 @@ public class MainActivity extends AppCompatActivity
 
         /*** Load default fragment ***/
 
-        if (firstRun) waitModules();
+        if (firstRun) waitFiles();
         switchDevice();
 
         Log.d(TAG, "Initialization done");
@@ -278,8 +279,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        // Read features
-        V.features = new Features(this);
+        U.readFeatures();
 
         // Reload menu
         deviceTextView.setText(V.currentDevice.getName());
@@ -292,13 +292,15 @@ public class MainActivity extends AppCompatActivity
         loadFragment(infoFragment);
     }
 
-    // When app loads first time its takes time to save modules file
-    private void waitModules() {
-        if (!new File(Init.MAIN_DIR + C.MODULES_FILE).exists()) {
-            // Wait for modules init
+    // When app loads first time its takes time to save modules/features file
+    private void waitFiles() {
+        if (!new File(U.getLocalPath(C.MODULES_FILE)).exists() ||
+                !new File(U.getLocalPath(C.FEATURES_FILE)).exists()) {
+
             LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 
-            while (!new File(Init.MAIN_DIR + C.MODULES_FILE).exists()) {
+            while (!new File(U.getLocalPath(C.MODULES_FILE)).exists() ||
+                    !new File(U.getLocalPath(C.FEATURES_FILE)).exists()) {
                 Utils.sleep(1);
             }
 
@@ -480,8 +482,15 @@ public class MainActivity extends AppCompatActivity
 
     // Callback for update modules
     public class FileUpdatedModulesCallback implements FileWatcher.Callback {
+        FileUpdatedModulesCallback() {
+            modulesCallbackActive = true;
+        }
+
         public void onFileUpdate(String path) {
             fileWatcher.removeCallback("modules");
+            modulesCallbackActive = false;
+
+            if (featuresCallbackActive) return;
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -494,6 +503,32 @@ public class MainActivity extends AppCompatActivity
 
         public String getWatchFile() {
             return "/" + V.currentDevice.getDir() + C.MODULES_FILE;
+        }
+    }
+
+    // Callback for update features
+    public class FileUpdatedFeaturesCallback implements FileWatcher.Callback {
+        FileUpdatedFeaturesCallback() {
+            featuresCallbackActive = true;
+        }
+
+        public void onFileUpdate(String path) {
+            fileWatcher.removeCallback("features");
+            featuresCallbackActive = false;
+
+            if (modulesCallbackActive) return;
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run () {
+                    switchDevice();
+                    LoadingDialog.hide(MainActivity.this);
+                }
+            });
+        }
+
+        public String getWatchFile() {
+            return "/" + V.currentDevice.getDir() + C.FEATURES_FILE;
         }
     }
 
@@ -632,13 +667,19 @@ public class MainActivity extends AppCompatActivity
     private void selectDevice(int deviceId) {
         V.currentDevice = devices.get(deviceId);
 
-        // Get modules list if not exist
+        // Get modules list and features if not exist
         if (!V.currentDevice.isMain()) {
             String modulesFile = U.getLocalPath(C.MODULES_FILE);
-            if (!new File(modulesFile).exists()) {
+            String featuresFile = U.getLocalPath(C.FEATURES_FILE);
+
+            if (!new File(modulesFile).exists() || !new File(featuresFile).exists()) {
                 fileWatcher = FileWatcher.getInstance();
                 fileWatcher.addCallback("modules", new FileUpdatedModulesCallback());
+                fileWatcher.addCallback("features", new FileUpdatedFeaturesCallback());
+
                 U.getFileAsync(C.MODULES_FILE);
+                U.getFileAsync(C.FEATURES_FILE);
+
                 LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 
                 // Workaround to stop loading dialog if don't get modules
@@ -720,9 +761,8 @@ public class MainActivity extends AppCompatActivity
         if (item.isChecked()) item.setChecked(false);
         else item.setChecked(true);
 
-        // Hide "No data." and "No module."
-        findViewById(R.id.nodata).setVisibility(View.GONE);
-        findViewById(R.id.nomodule).setVisibility(View.GONE);
+        // Hide "No data.", "No module." and so on
+        selectedFragment.hideAll();
 
         // Fade out container
         fragmentContainer = findViewById(R.id.container);

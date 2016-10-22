@@ -43,6 +43,11 @@ public class CallsFragment extends BaseFragment {
             return null;
         }
 
+        if (!V.features.phone) {
+            showNoPhone();
+            return null;
+        }
+
         modFile = Mod.getFile(Mod.LOGCALLS);
         modCmd  = Mod.getCommand(Mod.LOGCALLS);
 
