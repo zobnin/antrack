@@ -7,13 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 
+import org.antrack.app.C;
+
 public class Alarm extends BroadcastReceiver {
     private static PendingIntent pIntent = null;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent sIntent = new Intent(context, MainService.class);
-        sIntent.setAction("alarm");
+        sIntent.setAction(C.ACTION_ALARM);
 
         context.startService(sIntent);
     }

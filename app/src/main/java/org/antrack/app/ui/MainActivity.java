@@ -254,8 +254,7 @@ public class MainActivity extends AppCompatActivity
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            // FIXME translate
-                            Utils.showToast(MainActivity.this, "Trial is expired");
+                            Utils.showToast(MainActivity.this, getResources().getString(R.string.trial_is_expired));
                             //System.exit(-1);
                         }
                     });
@@ -274,8 +273,10 @@ public class MainActivity extends AppCompatActivity
 
     // Switch device to currentDevice
     private void switchDevice() {
-        // FIXME если нет файла выбрасываеть modules not found и возвращаться
-        U.readModules();
+        if (!U.readModules()) {
+            Utils.showToast(this, getResources().getString(R.string.cant_load_device));
+            return;
+        }
 
         // Read features
         V.features = new Features(this);

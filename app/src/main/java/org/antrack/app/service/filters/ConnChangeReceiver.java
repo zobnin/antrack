@@ -20,7 +20,7 @@ public class ConnChangeReceiver extends BroadcastReceiver {
         Settings.init();
 
         String enabled = Settings.get(C.S_ENABLE_SERVICE);
-        if (enabled != null && enabled.equals("false")) {
+        if (enabled != null && enabled.equals(C.FALSE)) {
             return;
         }
 

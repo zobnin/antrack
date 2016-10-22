@@ -1,7 +1,6 @@
 package org.antrack.app.plugins;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.util.Log;
 
 import com.dropbox.core.DbxRequestConfig;
@@ -18,14 +17,11 @@ import org.antrack.app.C;
 import org.antrack.app.libs.Utils;
 import org.apache.http.HttpStatus;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import org.antrack.app.C;
 import org.antrack.app.service.MainService;
 
 public class ScreenOnReceiver extends BroadcastReceiver {
@@ -13,7 +14,7 @@ public class ScreenOnReceiver extends BroadcastReceiver {
         Log.d("ScreenOnReceiver", "Screen On");
 
         Intent myIntent = new Intent(context, MainService.class);
-        myIntent.setAction("screenOn");
+        myIntent.setAction(C.ACTION_SCREENON);
         context.startService(myIntent);
     }
 }

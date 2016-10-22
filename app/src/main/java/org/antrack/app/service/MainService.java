@@ -179,32 +179,32 @@ public class MainService extends Service {
                     String action = intent.getAction();
                     if (action != null) {
                         switch (action) {
-                            case "boot":
+                            case C.ACTION_BOOT:
                                 Log.d(TAG, "Get boot");
-                                V.cc.runModules("boot", null);
+                                V.cc.runModules(C.ACTION_BOOT, null);
                                 break;
-                            case "alarm":
+                            case C.ACTION_ALARM:
                                 Log.d(TAG, "Get alarm");
                                 Logger.alarm(context);
-                                V.cc.runModules("alarm", null);
+                                V.cc.runModules(C.ACTION_ALARM, null);
                                 break;
-                            case "screenOn":
+                            case C.ACTION_SCREENON:
                                 Log.d(TAG, "Get screenOn");
-                                V.cc.runModules("screenOn", null);
+                                V.cc.runModules(C.ACTION_SCREENON, null);
                                 break;
-                            case "outgoingCall":
+                            case C.ACTION_OUTGOINGCALL:
                                 Log.d(TAG, "Get outgoingCall");
                                 String outNumber = intent.getStringExtra("phoneNumber");
                                 if (outNumber != null)
-                                    V.cc.runModules("outgoingCall", outNumber);
+                                    V.cc.runModules(C.ACTION_OUTGOINGCALL, outNumber);
                                 break;
-                            case "incomingCall":
+                            case C.ACTION_INCOMINGCALL:
                                 Log.d(TAG, "Get incomingCall");
                                 String number = intent.getStringExtra("phoneNumber");
                                 if (number != null)
-                                    V.cc.runModules("incomingCall", number);
+                                    V.cc.runModules(C.ACTION_INCOMINGCALL, number);
                                 break;
-                            case "command":
+                            case C.ACTION_COMMAND:
                                 Log.d(TAG, "Get command");
                                 V.cc.parseCommand(intent.getStringExtra("command"));
                                 break;

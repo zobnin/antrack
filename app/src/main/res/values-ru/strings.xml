@@ -101,4 +101,7 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="cant_get_devices_list">Невозможно получить список устройств</string>
     <string name="cant_connect">Нет соединения. Попробуйте позже.</string>
     <string name="delete">Удалить</string>
+    <string name="trial_is_expired">Срок действия пробной версии истёк</string>
+    <string name="cant_load_device">Не удалось получить данные устройства</string>
+    <string name="root_rights_granted">Права root получены</string>
 </resources>

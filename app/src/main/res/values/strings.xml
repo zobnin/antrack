@@ -39,4 +39,7 @@ Coming soon
     <string name="cant_get_devices_list">Can\'t get devices list</string>
     <string name="cant_connect">Can\'t connect. Try later.</string>
     <string name="delete">Delete</string>
+    <string name="trial_is_expired">Trial is Expired</string>
+    <string name="cant_load_device">Can\'t load device settings</string>
+    <string name="root_rights_granted">Root rights granted</string>
 </resources>

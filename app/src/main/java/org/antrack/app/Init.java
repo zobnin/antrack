@@ -46,7 +46,7 @@ public class Init {
         }
     }
 
-    public static void makeDirs(Context context) {
+    private static void makeDirs(Context context) {
         APP_DIR = context.getApplicationInfo().dataDir;
         DEVICES_DIR = APP_DIR + C.DEVICES_DIR;
 
@@ -68,12 +68,12 @@ public class Init {
         Shell.runCommand("touch " + CONTROL_Q_FILE);
     }
 
-    public static void getIMEI(Context context) {
+    private static void getIMEI(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         DEVICE_IMEI = tm.getDeviceId();
     }
 
-    public static void writeName() {
+    private static void writeName() {
         try {
             Files.writeTextFile(MAIN_DIR + C.NAME_FILE,
                     android.os.Build.BRAND + " " + android.os.Build.MODEL);
@@ -82,7 +82,7 @@ public class Init {
         }
     }
 
-    public static void initSettings(Context context) {
+    private static void initSettings(Context context) {
         Settings.init();
 
         if (Settings.get(C.S_UPDATE_INTERVAL) == null) {
@@ -100,7 +100,7 @@ public class Init {
         }
     }
 
-    public static void initLastCmdTime() {
+    private static void initLastCmdTime() {
         if (Settings.get(C.S_LAST_CMD_TIME) == null) {
             String currentTime = Utils.date(C.LAST_CMD_TIME_FORMAT);
             Settings.put(C.S_LAST_CMD_TIME, currentTime);

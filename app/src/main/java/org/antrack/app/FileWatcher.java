@@ -25,7 +25,7 @@ public class FileWatcher {
         return localInstance;
     }
 
-    HashMap<String, Watcher> watchers;
+    private HashMap<String, Watcher> watchers;
 
     private FileWatcher() {
         watchers = new HashMap<>();
@@ -40,20 +40,20 @@ public class FileWatcher {
     private class Watcher extends RecursiveFileObserver {
         private HashMap<String, Callback> callbacks;
 
-        public Watcher(String device) {
+        Watcher(String device) {
             super(Init.DEVICES_DIR + device);
             callbacks = new HashMap<>();
         }
 
-        public HashMap<String, Callback> getCallbacks() {
+        HashMap<String, Callback> getCallbacks() {
             return callbacks;
         }
 
-        public void addCallback(String name, Callback callback) {
+        void addCallback(String name, Callback callback) {
             callbacks.put(name, callback);
         }
 
-        public void removeCallback(String name) {
+        void removeCallback(String name) {
             callbacks.remove(name);
         }
 

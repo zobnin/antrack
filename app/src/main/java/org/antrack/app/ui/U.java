@@ -3,7 +3,6 @@ package org.antrack.app.ui;
 import android.util.Log;
 
 import org.antrack.app.C;
-import org.antrack.app.Features;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
 import org.antrack.app.libs.Files;
@@ -18,7 +17,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 public class U {
-    final static String TAG = "U";
+    private final static String TAG = "U";
 
     // Get full dir name with main dir and current device name
     public static String getLocalPath(String path) {
@@ -57,7 +56,6 @@ public class U {
             Pw pw = Pw.getInstance();
             if (pw.isConnected())
                 pw.getFile(getLocalPath(file), getCloudPath(file));
-            // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't get file " + file + ":" + e);
         }
@@ -78,7 +76,6 @@ public class U {
             Pw pw = Pw.getInstance();
             if (pw.isConnected())
                 pw.getDir(getLocalPath(dir), getCloudPath(dir));
-            // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't get dir " + dir + ": " + e);
         }
@@ -90,7 +87,6 @@ public class U {
             Pw pw = Pw.getInstance();
             if (pw.isConnected())
                 pw.putFile(getLocalPath(file), getCloudPath(file), false);
-            // FIXME else throw...
         } catch (Exception e) {
             Log.e(TAG, "Can't put file " + file + ": " + e);
         }
@@ -116,7 +112,6 @@ public class U {
                     Pw pw = Pw.getInstance();
                     if (pw.isConnected())
                         listDirResult = pw.listDir(dir);
-                    // FIXME else throw...
                 } catch (Exception e) {
                     Log.e(TAG, "Can't list dir " + dir + ": " + e);
                 }
@@ -169,7 +164,8 @@ public class U {
             String deviceControlFile = getLocalPath(C.CONTROL_Q_FILE);
 
             try {
-                Files.addLineToStack(deviceControlFile, Utils.date(C.LAST_CMD_TIME_FORMAT) + " " + cmd, C.CONTROL_Q_MAX_LENGTH);
+                Files.addLineToStack(deviceControlFile,
+                        Utils.date(C.LAST_CMD_TIME_FORMAT) + " " + cmd, C.CONTROL_Q_MAX_LENGTH);
                 putFileAsync(C.CONTROL_Q_FILE);
             } catch (IOException e) {
                 Log.e(TAG, "Can't run command " + cmd + ": " + e);

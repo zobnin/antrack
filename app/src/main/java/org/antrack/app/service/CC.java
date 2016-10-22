@@ -34,7 +34,7 @@ class CC {
 
     void parseBootstrap() {
         try {
-            InputStream is = context.getAssets().open("bootstrap");
+            InputStream is = context.getAssets().open(C.BOOTSTRAP_ASSET);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String line;
             while ((line = reader.readLine()) != null) {
@@ -122,11 +122,11 @@ class CC {
          * 4. Turn on setting "send SMS after sim change"
          */
 
-        if (pin.equals("off")) {
+        if (pin.equals(C.OFF)) {
             //hide("off");
 
-            Settings.put(C.S_SCREEN_ON_PHOTO, "false");
-            Settings.put(C.S_SMS_ON_SIM_CHANGE, "false");
+            Settings.put(C.S_SCREEN_ON_PHOTO, C.FALSE);
+            Settings.put(C.S_SMS_ON_SIM_CHANGE, C.FALSE);
 
             Logger.unlost(context);
         } else {
@@ -135,12 +135,12 @@ class CC {
 
             //hide("on");
 
-            Settings.put(C.S_SCREEN_ON_PHOTO, "true");
-            Settings.put(C.S_SMS_ON_SIM_CHANGE, "true");
+            Settings.put(C.S_SCREEN_ON_PHOTO, C.TRUE);
+            Settings.put(C.S_SMS_ON_SIM_CHANGE, C.TRUE);
 
             Logger.lost(context);
         }
 
-        return "done";
+        return C.DONE;
     }
 }

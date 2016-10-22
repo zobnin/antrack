@@ -20,6 +20,8 @@ public class C {
     public static final String CONTROL_FILE = "/ctl";
     public static final String RESULT_FILE = "/result";
 
+    public static final String BOOTSTRAP_ASSET = "bootstrap";
+
     public static final String CONTROL_Q_FILE = "/ctlq";
     public static final int CONTROL_Q_MAX_LENGTH = 10;
 
@@ -30,6 +32,19 @@ public class C {
     public static final String NOWIPE_FILE = "/.nowipe";
 
     public static final String LAST_CMD_TIME_FORMAT = "yyyyMMddHHmmssSSS";
+
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+    public static final String DONE = "done";
+    public static final String ON = "on";
+    public static final String OFF = "off";
+
+    public static final String ACTION_ALARM = "alarm";
+    public static final String ACTION_BOOT = "boot";
+    public static final String ACTION_SCREENON = "screenOn";
+    public static final String ACTION_OUTGOINGCALL = "outgoingCall";
+    public static final String ACTION_INCOMINGCALL = "incomingCall";
+    public static final String ACTION_COMMAND = "command";
 
     public static final String S_LAUNCH_WIZARD = "launchWizard"; // false
     public static final String S_USE_ADMIN = "useAdmin"; // false

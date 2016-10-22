@@ -6,15 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 // Watch for control file changes in cloud
 public class CloudWatcher {
-    private final String TAG = "CloudWatcher";
-
     private static volatile CloudWatcher instance;
-
     public static CloudWatcher getInstance() {
         CloudWatcher localInstance = instance;
         if (localInstance == null) {
@@ -28,11 +23,11 @@ public class CloudWatcher {
         return localInstance;
     }
 
-    ExecutorService executor;
-    HashMap<String, Watcher> watchers;
+    private final String TAG = "CloudWatcher";
 
-    public CloudWatcher() {
-        executor = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
+    private HashMap<String, Watcher> watchers;
+
+    private CloudWatcher() {
         watchers = new HashMap<>();
     }
 
@@ -48,25 +43,25 @@ public class CloudWatcher {
         private boolean active = false;
         private String device;
 
-        public Watcher(String dev) {
+        Watcher(String dev) {
             this.device = dev;
             callbacks = new HashMap<>();
 
         }
 
-        public HashMap<String, Callback> getCallbacks() {
+        HashMap<String, Callback> getCallbacks() {
             return callbacks;
         }
 
-        public void addCallback(String name, Callback callback) {
+        void addCallback(String name, Callback callback) {
             callbacks.put(name, callback);
         }
 
-        public void removeCallback(String name) {
+        void removeCallback(String name) {
             callbacks.remove(name);
         }
 
-        public void startWatching() {
+        void startWatching() {
             active = true;
             new Thread(new Runnable() {
                 @Override
@@ -98,7 +93,7 @@ public class CloudWatcher {
             }).start();
         }
 
-        public void stopWatching() {
+        void stopWatching() {
             active = false;
         }
     }
@@ -140,7 +135,6 @@ public class CloudWatcher {
             if (watcher.getCallbacks().containsKey(name)) {
                 watcher.removeCallback(name);
                 if (watcher.getCallbacks().isEmpty()) {
-                    // FIXME в разном порядке
                     watcher.stopWatching();
                     it.remove();
                 }

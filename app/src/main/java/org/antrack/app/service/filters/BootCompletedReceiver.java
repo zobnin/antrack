@@ -16,17 +16,17 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         Logger.booted(context);
 
         String startAtBoot = Settings.get(C.S_START_AT_BOOT);
-        if(startAtBoot != null && startAtBoot.equals("false")) {
+        if(startAtBoot != null && startAtBoot.equals(C.FALSE)) {
             return;
         }
 
         String enabled = Settings.get(C.S_ENABLE_SERVICE);
-        if(enabled != null && enabled.equals("false")) {
+        if(enabled != null && enabled.equals(C.FALSE)) {
             return;
         }
 
         Intent myIntent = new Intent(context, MainService.class);
-        myIntent.setAction("boot");
+        myIntent.setAction(C.ACTION_BOOT);
         context.startService(myIntent);
     }
 }

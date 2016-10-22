@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import org.antrack.app.C;
 import org.antrack.app.Init;
@@ -49,8 +48,8 @@ public class WizardActivity extends ActionBarActivity {
             button_root.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     if (Shell.checkSuRun()) {
-                        Settings.put(C.S_USE_ROOT, "true");
-                        Utils.showToast(context, "Root rights granted");
+                        Settings.put(C.S_USE_ROOT, C.TRUE);
+                        Utils.showToast(context, getResources().getString(R.string.root_rights_granted));
                     } else {
                         Utils.showToast(context, "No root rights");
                     }
@@ -78,7 +77,7 @@ public class WizardActivity extends ActionBarActivity {
         button_close.setEnabled(false);
         button_close.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Settings.put("launchWizard", "false");
+                Settings.put(C.S_LAUNCH_WIZARD, C.TRUE);
                 finish();
             }
         });
@@ -90,7 +89,7 @@ public class WizardActivity extends ActionBarActivity {
             // FIXME translate
             Utils.showToast(WizardActivity.this, "Authentication is required");
         } else {
-            Settings.put("launchWizard", "false");
+            Settings.put(C.S_LAUNCH_WIZARD, C.FALSE);
             finish();
         }
     }
@@ -104,7 +103,7 @@ public class WizardActivity extends ActionBarActivity {
             Pw pw = Pw.getInstance();
             String token = pw.resume();
             if (token != null) {
-                Settings.put("token", token);
+                Settings.put(C.S_TOKEN, token);
                 button_close.setEnabled(true);
             } else {
                 // FIXME здесь надо как-то обрабатывать ситуацию если нет токена

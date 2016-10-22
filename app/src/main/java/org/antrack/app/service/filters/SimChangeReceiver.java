@@ -19,6 +19,8 @@ import org.antrack.app.Settings;
    3. если imsi изменился алертуем
 */
 
+// FIXME Здесь надо автоматически включать режим lost
+
 public class SimChangeReceiver extends BroadcastReceiver {
 
     @Override
@@ -43,7 +45,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
                     Logger.simChanged(context);
                     String needSms = Settings.get(C.S_SMS_ON_SIM_CHANGE);
 
-                    if (needSms != null && needSms.equals("true")) {
+                    if (needSms != null && needSms.equals(C.TRUE)) {
                         String number = Settings.get(C.S_BACKUP_PHONE);
                         if (number != null) {
                             String model = android.os.Build.MODEL;
