@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity
 
         /*** Load default fragment ***/
 
-        if (firstRun) waitFiles();
+        //if (firstRun) waitFiles();
         switchDevice();
 
         Log.d(TAG, "Initialization done");
@@ -294,18 +294,24 @@ public class MainActivity extends AppCompatActivity
 
     // When app loads first time its takes time to save modules/features file
     private void waitFiles() {
-        if (!new File(U.getLocalPath(C.MODULES_FILE)).exists() ||
-                !new File(U.getLocalPath(C.FEATURES_FILE)).exists()) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (!new File(U.getLocalPath(C.MODULES_FILE)).exists() ||
+                        !new File(U.getLocalPath(C.FEATURES_FILE)).exists()) {
 
-            LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
+                    LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 
-            while (!new File(U.getLocalPath(C.MODULES_FILE)).exists() ||
-                    !new File(U.getLocalPath(C.FEATURES_FILE)).exists()) {
-                Utils.sleep(1);
+                    while (!new File(U.getLocalPath(C.MODULES_FILE)).exists() ||
+                            !new File(U.getLocalPath(C.FEATURES_FILE)).exists()) {
+                        Utils.sleep(1);
+                    }
+
+                    switchDevice();
+                    LoadingDialog.hide(MainActivity.this);
+                }
             }
-
-            LoadingDialog.hide(MainActivity.this);
-        }
+        }).start();
     }
 
     private void loadFragment(BaseFragment fragment) {
@@ -762,7 +768,11 @@ public class MainActivity extends AppCompatActivity
         else item.setChecked(true);
 
         // Hide "No data.", "No module." and so on
-        selectedFragment.hideAll();
+        //selectedFragment.hideAll();
+        findViewById(R.id.nodata).setVisibility(View.GONE);
+        findViewById(R.id.nomodule).setVisibility(View.GONE);
+        findViewById(R.id.noroot).setVisibility(View.GONE);
+        findViewById(R.id.nophone).setVisibility(View.GONE);
 
         // Fade out container
         fragmentContainer = findViewById(R.id.container);

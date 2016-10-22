@@ -78,7 +78,7 @@ public class WizardActivity extends AppCompatActivity {
         button_close.setEnabled(false);
         button_close.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Settings.put(C.S_LAUNCH_WIZARD, C.TRUE);
+                Settings.put(C.S_LAUNCH_WIZARD, C.FALSE);
                 finish();
             }
         });

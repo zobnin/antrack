@@ -34,7 +34,6 @@ public class Dropbox {
     private HashMap<String, String> cursors;
     private DbxClientV2 client;
 
-
     public Dropbox() {
     }
 

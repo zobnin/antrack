@@ -46,11 +46,9 @@ public class Pw {
         }
 
         if (Settings.get(C.S_PLUGIN).equals("dropbox")) {
-            if (token != null) {
-                dPlugin = new Dropbox(token);
-                connected = true;
-                Log.d(TAG, "Connected to dropbox");
-            }
+            dPlugin = new Dropbox(token);
+            connected = true;
+            Log.d(TAG, "Connected to dropbox");
         }
     }
 
