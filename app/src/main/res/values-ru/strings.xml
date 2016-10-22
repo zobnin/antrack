@@ -115,4 +115,8 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="make_call_error">Пожалйста, укажите номер</string>
     <string name="send_sms">Отправить СМС</string>
     <string name="send_sms_text">Текст:</string>
+    <string name="device_info">Устройство</string>
+    <string name="current_status">Статус</string>
+    <string name="trial_status">Пробная версия</string>
+    <string name="days_remaining">Осталось дней:</string>
 </resources>

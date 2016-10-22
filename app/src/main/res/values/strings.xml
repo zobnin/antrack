@@ -53,4 +53,8 @@ Coming soon
     <string name="make_call_error">Fill \"number\" field</string>
     <string name="send_sms">Send SMS</string>
     <string name="send_sms_text">Text:</string>
+    <string name="device_info">Device info</string>
+    <string name="current_status">Current status</string>
+    <string name="trial_status">Trial Status</string>
+    <string name="days_remaining">Days remaining:</string>
 </resources>

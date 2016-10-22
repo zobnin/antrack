@@ -76,24 +76,24 @@ public class InfoFragment extends BaseFragment {
             public void run() {
                 infos = new ArrayList<>();
 
-                // FIXME translate
-                Info info = readFile(infoFile, "Device Info");
+                Info info = readFile(infoFile,
+                        getString(R.string.device_info));
                 if (info == null) {
                     showNoData();
                     return;
                 }
 
-                // FIXME translate
-                Info status = readFile(statusFile, "Current status");
+                Info status = readFile(statusFile,
+                        getString(R.string.current_status));
                 if (status == null) {
                     showNoData();
                     return;
                 }
 
                 Info trial = new Info();
-                // FIXME translate
-                trial.title = "Trial status";
-                trial.data = "Days remaining: " + Trial.getRemainingDays();
+                trial.title = getString(R.string.trial_status);
+                trial.data = getString(R.string.days_remaining) +
+                        " " + Trial.getRemainingDays();
 
                 infos.add(info);
                 infos.add(status);
