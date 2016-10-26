@@ -4,4 +4,5 @@ class Sms {
     String from;
     String date;
     String body;
+    String direction;
 }

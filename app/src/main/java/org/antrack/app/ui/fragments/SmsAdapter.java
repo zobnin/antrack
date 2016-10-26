@@ -19,6 +19,7 @@ class SmsAdapter extends RecyclerViewAnim.Adapter<SmsAdapter.ModuleViewHolder> {
         TextView from;
         TextView date;
         TextView body;
+        TextView direction;
 
         ModuleViewHolder(View itemView) {
             super(itemView);
@@ -26,6 +27,7 @@ class SmsAdapter extends RecyclerViewAnim.Adapter<SmsAdapter.ModuleViewHolder> {
             from = (TextView)itemView.findViewById(R.id.cardview_sms_from);
             date = (TextView)itemView.findViewById(R.id.cardview_sms_date);
             body = (TextView)itemView.findViewById(R.id.cardview_sms_body);
+            direction = (TextView)itemView.findViewById(R.id.cardview_sms_direction);
         }
     }
 
@@ -55,6 +57,22 @@ class SmsAdapter extends RecyclerViewAnim.Adapter<SmsAdapter.ModuleViewHolder> {
         viewHolder.from.setText(smses.get(i).from);
         viewHolder.date.setText(smses.get(i).date);
         viewHolder.body.setText(smses.get(i).body);
+
+        int direction;
+        switch (smses.get(i).direction) {
+            case "Outgoing":
+                direction = R.string.outgoing;
+                break;
+            case "Answered":
+                direction = R.string.answered;
+                break;
+            case "Incoming":
+                direction = R.string.incoming;
+                break;
+            default:
+                direction = R.string.incoming;
+        }
+        viewHolder.direction.setText(direction);
     }
 
     @Override

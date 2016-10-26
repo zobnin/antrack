@@ -93,9 +93,6 @@ public class CallsFragment extends BaseFragment {
                     return;
                 }
 
-                // We need calls from last
-                Collections.reverse(calls);
-
                 if (getActivity() == null) return;
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -135,6 +132,10 @@ public class CallsFragment extends BaseFragment {
             Log.e(TAG, "Can't read apps file: " + e);
             return false;
         }
+
+        // We need calls from last
+        Collections.reverse(calls);
+
         return true;
     }
 }

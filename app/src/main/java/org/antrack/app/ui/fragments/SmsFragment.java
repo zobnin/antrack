@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.antrack.app.C;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
 import org.antrack.app.ui.V;
@@ -16,7 +17,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import app.R;
@@ -88,7 +93,7 @@ public class SmsFragment extends BaseFragment {
             public void run() {
                 smses = new ArrayList<>();
 
-                if (!readFile() || smses.isEmpty()) {
+                if (!readFile()) {
                     showNoData();
                     return;
                 }
@@ -106,16 +111,47 @@ public class SmsFragment extends BaseFragment {
         }).start();
     }
 
+    public class SmsComaparator implements Comparator<Sms> {
+        @Override
+        public int compare(Sms o1, Sms o2) {
+            Date date1, date2;
+
+            SimpleDateFormat format = new SimpleDateFormat(C.DEFAULT_TIME_FORMAT);
+            try {
+                date1 = format.parse(o1.date);
+                date2 = format.parse(o2.date);
+            } catch (Exception e) {
+                Log.e(TAG, "DateComparator exception: " + e.toString());
+                return -1;
+            }
+            return date1.compareTo(date2);
+        }
+    }
+
     private boolean readFile() {
         // FIXME
-        String path = U.getLocalPath(smsDir + "inbox");
+        String pathIn = U.getLocalPath(smsDir + "inbox");
+        String pathOut = U.getLocalPath(smsDir + "sent");
 
-        if (!new File(path).exists()) {
+        if (!new File(pathIn).exists() || !new File(pathOut).exists()) {
             return false;
         }
 
+        ReadBox(pathIn, true);
+        ReadBox(pathOut, false);
+
+        if (smses.isEmpty()) {
+            return false;
+        }
+
+        Collections.sort(smses, new SmsComaparator());
+        Collections.reverse(smses);
+        return true;
+    }
+
+    private boolean ReadBox(String path, final boolean inbox) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(U.getLocalPath(smsDir + "inbox")));
+            BufferedReader reader = new BufferedReader(new FileReader(path));
             String line;
             Sms sms = new Sms();
             while ((line = reader.readLine()) != null) {
@@ -131,6 +167,11 @@ public class SmsFragment extends BaseFragment {
                         sms.body = line.replaceAll(pair[0] + ":", "").trim();
                         break;
                     default:
+                        if (inbox) {
+                            sms.direction = "Incoming";
+                        } else {
+                            sms.direction = "Outgoing";
+                        }
                         smses.add(sms);
                         sms = new Sms();
                 }
