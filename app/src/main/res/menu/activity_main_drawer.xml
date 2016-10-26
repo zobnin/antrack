@@ -4,69 +4,69 @@
             <item
                 android:id="@+id/nav_info"
                 android:icon="@drawable/ic_menu_info"
-                android:title="Device Info" />
+                android:title="@string/menu_device_info" />
             <item
                 android:id="@+id/nav_map"
                 android:icon="@drawable/ic_menu_location"
-                android:title="Location" />
+                android:title="@string/menu_location" />
             <item
                 android:id="@+id/nav_apps"
                 android:icon="@drawable/ic_menu_apps"
-                android:title="Applications" />
+                android:title="@string/menu_apps" />
             <item
                 android:id="@+id/nav_contacts"
                 android:icon="@drawable/ic_menu_contacts"
-                android:title="Contacts" />
+                android:title="@string/menu_contacts" />
             <item
                 android:id="@+id/nav_calls"
                 android:icon="@drawable/ic_menu_calls"
-                android:title="Calls" />
+                android:title="@string/menu_calls" />
             <item
                 android:id="@+id/nav_sms"
                 android:icon="@drawable/ic_menu_sms"
-                android:title="SMS" />
+                android:title="@string/menu_sms" />
             <item
                 android:id="@+id/nav_screenshots"
                 android:icon="@drawable/ic_menu_screenshots"
-                android:title="Screenshots" />
+                android:title="@string/menu_screens" />
             <item
                 android:id="@+id/nav_photos"
                 android:icon="@drawable/ic_menu_photos"
-                android:title="Photos" />
+                android:title="@string/menu_photos" />
             <item
                 android:id="@+id/nav_audio"
                 android:icon="@drawable/ic_menu_audio"
-                android:title="Audio" />
+                android:title="@string/menu_audio" />
             <item
                 android:id="@+id/nav_control"
                 android:icon="@drawable/ic_menu_control"
-                android:title="Control" />
+                android:title="@string/menu_control" />
             <item
                 android:id="@+id/nav_shell"
                 android:icon="@drawable/ic_menu_shell"
-                android:title="Shell" />
+                android:title="@string/menu_shell" />
             <item
                 android:id="@+id/nav_logs"
                 android:icon="@drawable/ic_menu_logs"
-                android:title="Logs" />
+                android:title="@string/menu_logs" />
             <item
                 android:id="@+id/nav_modules"
                 android:icon="@drawable/ic_menu_modules"
-                android:title="Installed modules" />
-    <item android:title="About">
+                android:title="@string/menu_modules" />
+    <item android:title="@string/menu_about">
         <menu>
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_menu_settings"
-                android:title="Settings" />
+                android:title="@string/menu_settings" />
             <item
                 android:id="@+id/nav_howto"
                 android:icon="@drawable/ic_menu_howto"
-                android:title="How to use app" />
+                android:title="@string/menu_howto" />
             <item
                 android:id="@+id/nav_site"
                 android:icon="@drawable/ic_menu_site"
-                android:title="Web site" />
+                android:title="@string/menu_website" />
         </menu>
     </item>
 

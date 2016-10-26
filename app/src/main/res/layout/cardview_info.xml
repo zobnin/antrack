@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/cardview_info_data"
                 android:layout_below="@+id/cardview_info_title"
-                android:text="Wait..."
+                android:text=""
                 android:textColor="@color/primary_material_dark" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>

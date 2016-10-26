@@ -58,14 +58,13 @@ class SendSmsDialog {
         builder.setView(linear);
 
         // FIXME translate
-        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String number = editNumber.getText().toString();
                 String text = editText.getText().toString();
 
                 if (number.equals("") || text.equals("")) {
-                    // FIXME translate
-                    Utils.showToast(activity, "Fill number and message fields");
+                    Utils.showToast(activity, activity.getResources().getString(R.string.message_fill_number_and_text));
                     return;
                 }
 
@@ -77,7 +76,6 @@ class SendSmsDialog {
             }
         });
 
-        // FIXME translate
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

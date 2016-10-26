@@ -13,8 +13,8 @@ import java.util.List;
 
 import app.R;
 
-public class CallsAdapter extends RecyclerViewAnim.Adapter<CallsAdapter.ModuleViewHolder> {
-    public static class ModuleViewHolder extends RecyclerView.ViewHolder {
+class CallsAdapter extends RecyclerViewAnim.Adapter<CallsAdapter.ModuleViewHolder> {
+    static class ModuleViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView callTime;
         TextView callDirection;
@@ -29,7 +29,7 @@ public class CallsAdapter extends RecyclerViewAnim.Adapter<CallsAdapter.ModuleVi
         }
     }
 
-    List<Call> calls;
+    private List<Call> calls;
 
     CallsAdapter(List<Call> calls){
         this.calls = calls;
@@ -53,8 +53,23 @@ public class CallsAdapter extends RecyclerViewAnim.Adapter<CallsAdapter.ModuleVi
     @Override
     public void onBindViewHolder(ModuleViewHolder viewHolder, int i) {
         viewHolder.callTime.setText(calls.get(i).date + " " + calls.get(i).time);
-        viewHolder.callDirection.setText(calls.get(i).direction);
         viewHolder.callNumber.setText(calls.get(i).number);
+
+        int direction;
+        switch (calls.get(i).direction) {
+            case "Outgoing":
+                direction = R.string.outgoing;
+                break;
+            case "Answered":
+                direction = R.string.answered;
+                break;
+            case "Incoming":
+                direction = R.string.incoming;
+                break;
+            default:
+                direction = R.string.incoming;
+        }
+        viewHolder.callDirection.setText(direction);
     }
 
     @Override

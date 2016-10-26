@@ -8,7 +8,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -19,7 +19,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hide application"
+        android:text="@string/hide_application"
         android:textSize="18sp"
         android:gravity="center"
         android:layout_marginTop="5dp" />
@@ -27,7 +27,7 @@
     <Switch
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Hide AnTrack icon"
+        android:text="@string/hide_icon"
         android:id="@+id/fragment_control_hide"
         android:checked="false"
         android:textStyle="bold"
@@ -37,7 +37,7 @@
     <Switch
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Move app to system partition"
+        android:text="@string/move_to_system"
         android:id="@+id/fragment_control_system"
         android:checked="false"
         android:textStyle="bold"
@@ -47,7 +47,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="If device lost"
+        android:text="@string/if_device_lost"
         android:textSize="18sp"
         android:gravity="center"
         android:layout_marginTop="5dp" />
@@ -55,7 +55,7 @@
     <Switch
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Mark as lost"
+        android:text="@string/mark_as_lost"
         android:id="@+id/fragment_control_lost"
         android:checked="false"
         android:textStyle="bold"
@@ -71,7 +71,7 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Wipe"
+            android:text="@string/wipe"
             android:id="@+id/fragment_control_wipe"
             android:layout_weight="0.33"
             />
@@ -79,7 +79,7 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Lock"
+            android:text="@string/lock"
             android:id="@+id/fragment_control_lock"
             android:layout_weight="0.33"
             />
@@ -87,7 +87,7 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Alarm"
+            android:text="@string/alarm"
             android:id="@+id/fragment_control_alarm"
             android:layout_weight="0.33"
             />
@@ -97,7 +97,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SMS / Calls"
+        android:text="@string/sms_calls"
         android:textSize="18sp"
         android:gravity="center"
         android:layout_marginTop="5dp" />
@@ -112,7 +112,7 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Send SMS"
+            android:text="@string/send_sms"
             android:id="@+id/fragment_control_sms"
             android:layout_weight="0.5"
             />
@@ -120,7 +120,7 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Make call"
+            android:text="@string/dial"
             android:id="@+id/fragment_control_call"
             android:layout_weight="0.5"
             />

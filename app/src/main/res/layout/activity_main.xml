@@ -39,7 +39,7 @@
         <TextView android:id="@id/android:empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No data."
+            android:text="@string/message_nodata"
             android:textSize="20sp" />
     </RelativeLayout>
 
@@ -54,7 +54,7 @@
         <TextView android:id="@id/android:empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No module."
+            android:text="@string/message_nomodule"
             android:textSize="20sp" />
     </RelativeLayout>
 
@@ -69,7 +69,7 @@
         <TextView android:id="@id/android:empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No root rights."
+            android:text="@string/message_noroot"
             android:textSize="20sp" />
     </RelativeLayout>
 
@@ -84,7 +84,7 @@
         <TextView android:id="@id/android:empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No phone function."
+            android:text="@string/message_nophone"
             android:textSize="20sp" />
     </RelativeLayout>
 

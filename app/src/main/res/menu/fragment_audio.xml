@@ -4,7 +4,7 @@
     <item
         android:id="@+id/toolbar_action_record"
         android:icon="@drawable/ic_menu_audio"
-        android:title="Record audio"
+        android:title="@string/record_audio"
         app:showAsAction="always"/>
 
     <item

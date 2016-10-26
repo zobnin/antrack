@@ -4,13 +4,13 @@
     <item
         android:id="@+id/toolbar_action_front_camera"
         android:icon="@drawable/ic_action_front_camera"
-        android:title="Front camera"
+        android:title="@string/front_camera"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/toolbar_action_back_camera"
         android:icon="@drawable/ic_action_back_camera"
-        android:title="Back camera"
+        android:title="@string/back_camera"
         app:showAsAction="always"/>
 
     <item
