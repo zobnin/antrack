@@ -76,15 +76,13 @@ public class InfoFragment extends BaseFragment {
             public void run() {
                 infos = new ArrayList<>();
 
-                Info info = readFile(infoFile,
-                        getString(R.string.device_info));
+                Info info = readFile(infoFile, getString(R.string.device_info));
                 if (info == null) {
                     showNoData();
                     return;
                 }
 
-                Info status = readFile(statusFile,
-                        getString(R.string.current_status));
+                Info status = readFile(statusFile, getString(R.string.current_status));
                 if (status == null) {
                     showNoData();
                     return;
@@ -92,8 +90,7 @@ public class InfoFragment extends BaseFragment {
 
                 Info trial = new Info();
                 trial.title = getString(R.string.trial_status);
-                trial.data = getString(R.string.days_remaining) +
-                        " " + Trial.getRemainingDays();
+                trial.data = getString(R.string.days_remaining) + " " + Trial.getRemainingDays();
 
                 infos.add(info);
                 infos.add(status);

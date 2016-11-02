@@ -1,7 +1,5 @@
 package org.antrack.app.ui;
 
-import android.view.MenuItem;
-
 import org.antrack.app.Features;
 import org.antrack.app.ui.fragments.BaseFragment;
 

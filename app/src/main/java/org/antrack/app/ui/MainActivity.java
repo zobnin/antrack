@@ -26,7 +26,6 @@ import org.antrack.app.Init;
 import org.antrack.app.Pw;
 import org.antrack.app.Trial;
 import org.antrack.app.libs.Checks;
-import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Keyboard;
 import org.antrack.app.libs.LoadingDialog;
 import org.antrack.app.libs.Utils;
@@ -48,9 +47,9 @@ import org.antrack.app.ui.fragments.ScreensFragment;
 import org.antrack.app.ui.fragments.SettingsFragment;
 import org.antrack.app.ui.fragments.ShellFragment;
 import org.antrack.app.ui.fragments.SmsFragment;
+import org.antrack.app.ui.callbacks.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -100,9 +99,6 @@ public class MainActivity extends AppCompatActivity
     // For Drawer
     BaseFragment selectedFragment;
     int selectedDevice = -1;
-
-    boolean modulesCallbackActive = false;
-    boolean featuresCallbackActive = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +187,8 @@ public class MainActivity extends AppCompatActivity
                     loadFragment(selectedFragment);
                 } else if (selectedDevice != -1) {
                     fragmentContainer.animate().alpha(1);
-                    selectDevice(selectedDevice);
+                    State.device = devices.get(selectedDevice);
+                    waitModules();
                 }
                 selectedFragment = null;
                 selectedDevice = -1;
@@ -266,7 +263,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Switch device to currentDevice
-    private void switchDevice(boolean reload) {
+    public void switchDevice(boolean reload) {
         if (!U.readModules()) {
             Utils.showToast(this, getResources().getString(R.string.cant_load_device));
             return;
@@ -286,40 +283,10 @@ public class MainActivity extends AppCompatActivity
         if (reload) {
             State.menuItemTitle = getResources().getString(R.string.menu_device_info);
             loadFragment(infoFragment);
+            State.initDone = true;
         }
 
         addCallbacks();
-    }
-
-    // When app loads first time its takes time to save modules/features file
-    private void waitModules() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (!new File(U.getLocalPath(C.MODULES_FILE)).exists() ||
-                        !new File(U.getLocalPath(C.FEATURES_FILE)).exists()) {
-
-                    LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
-
-                    while (!new File(U.getLocalPath(C.MODULES_FILE)).exists() ||
-                            !new File(U.getLocalPath(C.FEATURES_FILE)).exists()) {
-                        Utils.sleep(1);
-                    }
-
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            switchDevice(true);
-                            LoadingDialog.hide(MainActivity.this);
-                        }
-                    });
-
-                    State.initDone = true;
-                } else {
-                    switchDevice(true);
-                }
-            }
-        }).start();
     }
 
     private void loadFragment(BaseFragment fragment) {
@@ -449,132 +416,6 @@ public class MainActivity extends AppCompatActivity
         }).start();
     }
 
-    // Callback for update fragments on file changes
-    public class FileUpdatedFragmentCallback implements FileWatcher.Callback {
-        String watchFile = null;
-
-        public void onFileUpdate(String path) {
-            if (State.fragment != null) {
-                State.fragment.onFileUpdate();
-                Log.d(TAG, "Fragment updated");
-            }
-        }
-
-        public String getWatchFile() {
-            if (State.fragment != null) {
-                watchFile = "/" + State.device.getDir() + State.fragment.getWatchFile();
-            }
-            return watchFile;
-        }
-    }
-
-    // Callback watching for result file
-    public class FileUpdatedResultCallback implements FileWatcher.Callback {
-        public void onFileUpdate(String path) {
-            Log.d(TAG, "RESULT UPDATED!!!");
-            String result = "";
-            try {
-                result = Files.readTextFile(path);
-            } catch (IOException e) {
-                Log.e(TAG, "Can't read result file: " + e);
-            }
-
-            final String result2 = result;
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Utils.showToast(getApplicationContext(), result2);
-                }
-            });
-        }
-
-        public String getWatchFile() {
-            return "/" + State.device.getDir() + C.RESULT_FILE;
-        }
-    }
-
-    // Callback for update modules
-    public class FileUpdatedModulesCallback implements FileWatcher.Callback {
-        FileUpdatedModulesCallback() {
-            modulesCallbackActive = true;
-        }
-
-        public void onFileUpdate(String path) {
-            fileWatcher.removeCallback("modules");
-            modulesCallbackActive = false;
-
-            if (featuresCallbackActive) return;
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run () {
-                    switchDevice(true);
-                    LoadingDialog.hide(MainActivity.this);
-                }
-            });
-        }
-
-        public String getWatchFile() {
-            return "/" + State.device.getDir() + C.MODULES_FILE;
-        }
-    }
-
-    // Callback for update features
-    public class FileUpdatedFeaturesCallback implements FileWatcher.Callback {
-        FileUpdatedFeaturesCallback() {
-            featuresCallbackActive = true;
-        }
-
-        public void onFileUpdate(String path) {
-            fileWatcher.removeCallback("features");
-            featuresCallbackActive = false;
-
-            if (modulesCallbackActive) return;
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run () {
-                    switchDevice(true);
-                    LoadingDialog.hide(MainActivity.this);
-                }
-            });
-        }
-
-        public String getWatchFile() {
-            return "/" + State.device.getDir() + C.FEATURES_FILE;
-        }
-    }
-
-    // Callback for update files from cloud
-    public class CloudUpdatedCallback implements CloudWatcher.Callback {
-        public void onFileUpdate(final String path) {
-            if (State.fragment != null) {
-                String watchFile = State.fragment.getWatchFile();
-                if (watchFile != null) {
-                    if (path.contains(watchFile)) {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Pw pw = Pw.getInstance();
-                                    if (pw.isConnected())
-                                        pw.getFile(Init.DEVICES_DIR + path, path);
-                                } catch (Exception e) {
-                                    Log.d(TAG, "CloudUpdatedCallback: error downloading file: " + e);
-                                }
-                            }
-                        }).start();
-                    }
-                }
-            }
-        }
-
-        public String getWatchFile() {
-            return "/" + State.device.getDir() + "/";
-        }
-    }
-
     private void startService() {
         serviceIntent = new Intent(this, MainService.class);
         startService(serviceIntent);
@@ -654,10 +495,10 @@ public class MainActivity extends AppCompatActivity
         cloudWatcher.removeCallback("ui");
         fileWatcher.removeCallback("ui");
 
-        fileWatcher.addCallback("ui", new FileUpdatedFragmentCallback());
+        fileWatcher.addCallback("ui", new FragmentCallback());
 
         if (!State.device.isMain())
-            cloudWatcher.addCallback("ui", new CloudUpdatedCallback());
+            cloudWatcher.addCallback("ui", new CloudCallback());
 
     }
 
@@ -681,36 +522,35 @@ public class MainActivity extends AppCompatActivity
     // Called when devices selected from menu
     private void selectDevice(int deviceId) {
         State.device = devices.get(deviceId);
+        waitModules();
+    }
 
+    private void waitModules() {
         // Get modules list and features if not exist
-        if (!State.device.isMain()) {
-            String modulesFile = U.getLocalPath(C.MODULES_FILE);
-            String featuresFile = U.getLocalPath(C.FEATURES_FILE);
+        String modulesFile = U.getLocalPath(C.MODULES_FILE);
+        String featuresFile = U.getLocalPath(C.FEATURES_FILE);
 
-            if (!new File(modulesFile).exists() || !new File(featuresFile).exists()) {
-                fileWatcher = FileWatcher.getInstance();
-                fileWatcher.addCallback("modules", new FileUpdatedModulesCallback());
-                fileWatcher.addCallback("features", new FileUpdatedFeaturesCallback());
+        if (!new File(modulesFile).exists() || !new File(featuresFile).exists()) {
+            fileWatcher = FileWatcher.getInstance();
+            fileWatcher.addCallback("modules", new ModulesCallback(this));
+            fileWatcher.addCallback("features", new FeaturesCallback(this));
 
-                U.getFileAsync(C.MODULES_FILE);
-                U.getFileAsync(C.FEATURES_FILE);
+            U.getFileAsync(C.MODULES_FILE);
+            U.getFileAsync(C.FEATURES_FILE);
 
-                LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
+            LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 
-                // Workaround to stop loading dialog if don't get modules
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Utils.sleep(15);
-                        if (LoadingDialog.isShown()) {
-                            LoadingDialog.hide(MainActivity.this);
-                            showToast(MainActivity.this, getResources().getString(R.string.cant_connect));
-                        }
+            // Workaround to stop loading dialog if don't get modules
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Utils.sleep(15);
+                    if (LoadingDialog.isShown()) {
+                        LoadingDialog.hide(MainActivity.this);
+                        showToast(MainActivity.this, getResources().getString(R.string.cant_connect));
                     }
-                }).start();
-            } else {
-                switchDevice(true);
-            }
+                }
+            }).start();
         } else {
             switchDevice(true);
         }
