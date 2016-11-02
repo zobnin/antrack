@@ -37,26 +37,31 @@ public class Pw {
     private String token;
     private boolean connected = false;
 
-    public Pw() {
+    private Pw() {
+        connect();
+    }
+
+    public boolean connect() {
         Settings.init();
 
         token = Settings.get(C.S_TOKEN);
         if (token == null || token.equals("")) {
-            return;
+            return false;
         }
 
         if (Settings.get(C.S_PLUGIN).equals("dropbox")) {
             dPlugin = new Dropbox(token);
             connected = true;
-            Log.d(TAG, "Connected to dropbox");
+            Log.d(TAG, "Connected to cloud");
         }
+
+        return true;
     }
 
     public boolean isConnected() {
-        if (Net.isOnline() && connected) {
+        if (connected) {
             return true;
-        }
-        else {
+        } else {
             Log.d(TAG, "No connection to cloud");
             return false;
         }
@@ -152,7 +157,7 @@ public class Pw {
 
     public synchronized void waitOnline() throws InterruptedException {
         int i = 10;
-        while (!isConnected()) {
+        while (!Net.isOnline()) {
             Log.d(TAG, "No internet, sleep " + i + " seconds");
             Thread.sleep(i * 1000);
             if (i < MAX_SLEEP)

@@ -3,14 +3,13 @@ package org.antrack.app.ui.fragments;
 import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.antrack.app.service.U;
 import org.antrack.app.ui.RecyclerViewAnim;
+import org.antrack.app.ui.U;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -70,7 +69,7 @@ class AudioAdapter extends RecyclerViewAnim.Adapter<AudioAdapter.ModuleViewHolde
         viewHolder.cv.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 AudioPlayDialog aplayDialog = new AudioPlayDialog(activity);
-                aplayDialog.show(date, U.getFullPath(AudioFragment.audioDir + audios.get(i).file));
+                aplayDialog.show(date, U.getLocalPath(AudioFragment.audioDir + audios.get(i).file));
             }
         });
     }

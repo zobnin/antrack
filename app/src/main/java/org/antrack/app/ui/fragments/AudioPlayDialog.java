@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -17,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 import app.R;
 
 class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
+    private static final String TAG = "AudioPlayDialog";
+
     private MediaPlayer mp;
     private Activity activity;
 
@@ -56,6 +59,8 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
         builder.show();
 
         play(file);
+
+        Log.d(TAG, "Start playing: " + file);
 
         new Thread(new Runnable() {
             @Override

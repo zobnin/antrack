@@ -189,14 +189,12 @@ public class MainActivity extends AppCompatActivity
                 if (selectedFragment != null) {
                     fragmentContainer.animate().alpha(1);
                     loadFragment(selectedFragment);
-                    selectedFragment = null;
-                    return;
-                }
-                if (selectedDevice != -1) {
+                } else if (selectedDevice != -1) {
                     fragmentContainer.animate().alpha(1);
                     selectDevice(selectedDevice);
-                    selectedDevice = -1;
                 }
+                selectedFragment = null;
+                selectedDevice = -1;
             }
         };
 
@@ -234,11 +232,12 @@ public class MainActivity extends AppCompatActivity
 
         /*** Load default fragment ***/
 
-        //if (State.firstRun) waitFiles();
-        switchDevice();
-
-        Log.d(TAG, "Initialization done");
-        State.initDone = true;
+        if (State.firstRun) {
+            waitModules();
+        } else {
+            switchDevice(false);
+            State.initDone = true;
+        }
 
         /*** Check trial and integrity ***/
 
@@ -267,7 +266,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Switch device to currentDevice
-    private void switchDevice() {
+    private void switchDevice(boolean reload) {
         if (!U.readModules()) {
             Utils.showToast(this, getResources().getString(R.string.cant_load_device));
             return;
@@ -283,16 +282,17 @@ public class MainActivity extends AppCompatActivity
 
         State.deviceMenuActive = false;
 
-        // If this is just screen orientation change Android reload fragment himself
-        if (State.firstRun) {
-            //State.menuItemTitle = (String) navigationView.getMenu().getItem(0).getTitle();
+        // If this is just screen orientation change fragment reloaded in onResume()
+        if (reload) {
             State.menuItemTitle = getResources().getString(R.string.menu_device_info);
             loadFragment(infoFragment);
         }
+
+        addCallbacks();
     }
 
     // When app loads first time its takes time to save modules/features file
-    private void waitFiles() {
+    private void waitModules() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -306,8 +306,17 @@ public class MainActivity extends AppCompatActivity
                         Utils.sleep(1);
                     }
 
-                    switchDevice();
-                    LoadingDialog.hide(MainActivity.this);
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            switchDevice(true);
+                            LoadingDialog.hide(MainActivity.this);
+                        }
+                    });
+
+                    State.initDone = true;
+                } else {
+                    switchDevice(true);
                 }
             }
         }).start();
@@ -500,7 +509,7 @@ public class MainActivity extends AppCompatActivity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run () {
-                    switchDevice();
+                    switchDevice(true);
                     LoadingDialog.hide(MainActivity.this);
                 }
             });
@@ -526,7 +535,7 @@ public class MainActivity extends AppCompatActivity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run () {
-                    switchDevice();
+                    switchDevice(true);
                     LoadingDialog.hide(MainActivity.this);
                 }
             });
@@ -594,6 +603,7 @@ public class MainActivity extends AppCompatActivity
         if (!State.initDone) {
             return;
         }
+
         if (!State.firstRun) {
             reloadCurrentFragment();
         }
@@ -699,12 +709,10 @@ public class MainActivity extends AppCompatActivity
                     }
                 }).start();
             } else {
-                switchDevice();
-                addCallbacks();
+                switchDevice(true);
             }
         } else {
-            switchDevice();
-            addCallbacks();
+            switchDevice(true);
         }
     }
 
@@ -767,7 +775,7 @@ public class MainActivity extends AppCompatActivity
         //else item.setChecked(true);
         item.setChecked(true);
 
-        // Save menu info in State
+        // Save menu title in State
         State.menuItemTitle = (String) item.getTitle();
 
         // Hide "No data.", "No module." and so on

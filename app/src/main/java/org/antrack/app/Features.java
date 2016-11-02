@@ -71,13 +71,13 @@ public class Features {
 
         // Do we have root?
         String haveRoot = Settings.get(C.S_USE_ROOT);
-        if (haveRoot != null && !haveRoot.equals(C.TRUE)) {
+        if (haveRoot != null && haveRoot.equals(C.TRUE)) {
             root = true;
         }
 
         // Do we have admin?
         String haveAdmin = Settings.get(C.S_USE_ADMIN);
-        if (haveAdmin != null && !haveAdmin.equals(C.TRUE)) {
+        if (haveAdmin != null && haveAdmin.equals(C.TRUE)) {
             root = true;
         }
 

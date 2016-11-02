@@ -20,7 +20,9 @@ import app.R;
 
 public class WizardActivity extends AppCompatActivity {
     boolean pluginChoise = false;
+
     Admin aTools;
+    Pw pw;
 
     Button button_close;
 
@@ -66,7 +68,7 @@ public class WizardActivity extends AppCompatActivity {
                 Settings.put(C.S_PLUGIN, "dropbox");
                 try {
                     pluginChoise = true;
-                    Pw pw = Pw.getInstance();
+                    pw = Pw.getInstance();
                     pw.auth(activity);
                 } catch (InterruptedException e) {
                     Utils.showToast(WizardActivity.this, "No internet, try later");
@@ -78,10 +80,16 @@ public class WizardActivity extends AppCompatActivity {
         button_close.setEnabled(false);
         button_close.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Settings.put(C.S_LAUNCH_WIZARD, C.FALSE);
-                finish();
+                exit();
             }
         });
+    }
+
+    private void exit() {
+        Settings.put(C.S_LAUNCH_WIZARD, C.FALSE);
+        // Pw is singleton and will be used by service and activity
+        pw.connect();
+        finish();
     }
 
     @Override

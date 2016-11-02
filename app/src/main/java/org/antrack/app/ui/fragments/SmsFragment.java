@@ -73,6 +73,7 @@ public class SmsFragment extends BaseFragment {
         if (!State.device.isMain()) {
             // FIXME
             U.getFileAsync(smsDir + "inbox");
+            U.getFileAsync(smsDir + "sent");
         }
 
         return view;
@@ -130,7 +131,7 @@ public class SmsFragment extends BaseFragment {
         String pathIn = U.getLocalPath(smsDir + "inbox");
         String pathOut = U.getLocalPath(smsDir + "sent");
 
-        if (!new File(pathIn).exists() || !new File(pathOut).exists()) {
+        if (!new File(pathIn).exists() && !new File(pathOut).exists()) {
             return false;
         }
 
@@ -143,6 +144,7 @@ public class SmsFragment extends BaseFragment {
 
         Collections.sort(smses, new SmsComaparator());
         Collections.reverse(smses);
+
         return true;
     }
 
