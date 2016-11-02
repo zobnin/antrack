@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import org.antrack.app.Trial;
 import org.antrack.app.libs.Files;
 import org.antrack.app.ui.RecyclerViewAnim;
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class InfoFragment extends BaseFragment {
         onFileUpdate();
 
         U.runCommandAsync("info; status");
-        if (!V.currentDevice.isMain()) {
+        if (!State.device.isMain()) {
             U.getFileAsync(infoFile);
             U.getFileAsync(statusFile);
         }
@@ -112,9 +112,6 @@ public class InfoFragment extends BaseFragment {
             }
         }).start();
     }
-
-    @Override
-    public String getName() { return "Device info"; }
 
     @Override
     public String getWatchFile() {

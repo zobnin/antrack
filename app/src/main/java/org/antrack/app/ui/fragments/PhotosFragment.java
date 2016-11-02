@@ -16,8 +16,6 @@ import app.R;
 public class PhotosFragment extends ImagesFragment {
     @Override
     public String getMod() { return Mod.CAMERA; }
-    @Override
-    public String getName() { return "Photos"; }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.antrack.app.ui.RecyclerViewAnim;
-import org.antrack.app.ui.V;
+import org.antrack.app.ui.State;
 
 import app.R;
 
@@ -23,7 +23,7 @@ public class ModulesFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getActivity().getApplicationContext();
 
-        if (V.modules.isEmpty())
+        if (State.modules.isEmpty())
             showNoData();
 
         View view = inflater.inflate(R.layout.fragment_cardview, null);
@@ -32,12 +32,9 @@ public class ModulesFragment extends BaseFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        modulesAdapter = new ModulesAdapter(V.modules);
+        modulesAdapter = new ModulesAdapter(State.modules);
         recyclerView.setAdapter(modulesAdapter);
 
         return view;
     }
-
-    @Override
-    public String getName() { return "Mod"; }
 }

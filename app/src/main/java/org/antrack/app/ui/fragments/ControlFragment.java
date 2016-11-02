@@ -3,8 +3,6 @@ package org.antrack.app.ui.fragments;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +12,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import org.antrack.app.C;
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.io.FileInputStream;
 import java.util.Properties;
@@ -34,7 +32,7 @@ public class ControlFragment extends BaseFragment {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
-        if (!V.currentDevice.isMain())
+        if (!State.device.isMain())
             U.getFile(settingsFile);
 
         // в конце вызывать onfileupdate, он просто будет расставлять значения кнопочек
@@ -84,9 +82,6 @@ public class ControlFragment extends BaseFragment {
 
         return view;
     }
-
-    @Override
-    public String getName() { return "Control"; }
 
     @Override
     public String getWatchFile() {

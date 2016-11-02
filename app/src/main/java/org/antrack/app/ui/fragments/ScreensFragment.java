@@ -8,20 +8,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import app.R;
 
 public class ScreensFragment extends ImagesFragment {
     @Override
     public String getMod() { return Mod.SCREENSHOT; }
-    @Override
-    public String getName() { return "Screenshots"; }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (!V.features.root) {
+        if (!State.features.root) {
             showNoRoot();
             return null;
         }

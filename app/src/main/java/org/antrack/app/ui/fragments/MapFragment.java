@@ -15,8 +15,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -64,15 +64,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         onFileUpdate();
 
         U.runCommandAsync(locationCmd);
-        if (!V.currentDevice.isMain()) {
+        if (!State.device.isMain()) {
             U.getFileAsync(locationFile);
         }
 
         return view;
     }
-
-    @Override
-    public String getName() { return "Location"; }
 
     @Override
     public String getWatchFile() {

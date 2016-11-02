@@ -6,8 +6,8 @@ import android.util.Log;
 import org.antrack.app.Pw;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Utils;
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 class Mod {
     static final String APPS = "apps";
@@ -33,15 +33,15 @@ class Mod {
     static final String WIPESD = "wipesd";
 
     static boolean check(String module) {
-        return V.modules.containsKey(module);
+        return State.modules.containsKey(module);
     }
 
     static String getCommand(String module) {
-        return V.modules.get(module).name;
+        return State.modules.get(module).name;
     }
 
     static String getFile(String module) {
-        return V.modules.get(module).result;
+        return State.modules.get(module).result;
     }
 
     static void showNoModule(final Activity activity, final String modName) {

@@ -19,8 +19,8 @@ import android.widget.TextView;
 
 import org.antrack.app.libs.Media;
 import org.antrack.app.ui.RecyclerViewAnim;
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         audioAdapter = new AudioAdapter(getActivity(), audios);
         recyclerView.setAdapter(audioAdapter);
 
-        if (!V.currentDevice.isMain()) {
+        if (!State.device.isMain()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -117,9 +117,6 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         }
         return false;
     }
-
-    @Override
-    public String getName() { return "Audio"; }
 
     @Override
     public String getWatchFile() {

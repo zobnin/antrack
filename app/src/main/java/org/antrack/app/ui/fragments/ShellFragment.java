@@ -15,8 +15,8 @@ import android.widget.TextView;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Keyboard;
 import org.antrack.app.libs.Utils;
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.io.IOException;
 
@@ -64,7 +64,7 @@ public class ShellFragment extends BaseFragment {
         });
 
         ps1 = (TextView) view.findViewById(R.id.fragment_shell_ps1);
-        String text = V.currentDevice.getName() + "$ ";
+        String text = State.device.getName() + "$ ";
         ps1.setText(text);
 
         editText = (EditText) view.findViewById(R.id.fragment_shell_edittext);
@@ -99,7 +99,7 @@ public class ShellFragment extends BaseFragment {
     }
 
     private void sendCommand(String cmd) {
-        U.runCommandAsync(cmdCmd + cmd);
+        U.runCommandAsync(cmdCmd + " " + cmd);
     }
 
     private void addText(final String text) {
@@ -114,7 +114,7 @@ public class ShellFragment extends BaseFragment {
     }
 
     private void showProgress() {
-        if (V.currentDevice.isMain())
+        if (State.device.isMain())
             return;
 
         progress = true;
@@ -158,9 +158,6 @@ public class ShellFragment extends BaseFragment {
             Log.e(TAG, "Can't read cmdout: " + e);
         }
     }
-
-    @Override
-    public String getName() { return "Shell"; }
 
     @Override
     public String getWatchFile() {

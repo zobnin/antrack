@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Utils;
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class LogsFragment extends BaseFragment {
 
         onFileUpdate();
 
-        if (!V.currentDevice.isMain()) {
+        if (!State.device.isMain()) {
             U.getFileAsync(logsFile);
         }
 
@@ -84,9 +84,6 @@ public class LogsFragment extends BaseFragment {
             }
         }).start();
     }
-
-    @Override
-    public String getName() { return "Logs"; }
 
     @Override
     public String getWatchFile() {

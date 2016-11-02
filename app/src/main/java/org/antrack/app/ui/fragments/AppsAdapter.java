@@ -9,10 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.util.List;
 

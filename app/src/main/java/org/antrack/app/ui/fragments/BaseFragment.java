@@ -3,12 +3,9 @@ package org.antrack.app.ui.fragments;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import org.antrack.app.ui.V;
-
 import app.R;
 
 public class BaseFragment extends Fragment {
-    public String getName() { return null; }
     public void onFileUpdate() {}
     public String getWatchFile() { return null; }
 

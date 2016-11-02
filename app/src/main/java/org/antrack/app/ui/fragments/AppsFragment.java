@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.antrack.app.ui.RecyclerViewAnim;
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -57,15 +57,12 @@ public class AppsFragment extends BaseFragment {
         onFileUpdate();
 
         U.runCommandAsync(modCmd);
-        if (!V.currentDevice.isMain()) {
+        if (!State.device.isMain()) {
             U.getFileAsync(modFile);
         }
 
         return view;
     }
-
-    @Override
-    public String getName() { return "Applications"; }
 
     @Override
     public String getWatchFile() {

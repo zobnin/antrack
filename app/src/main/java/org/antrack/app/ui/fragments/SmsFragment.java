@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 
 import org.antrack.app.C;
 import org.antrack.app.ui.RecyclerViewAnim;
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -46,7 +46,7 @@ public class SmsFragment extends BaseFragment {
             return null;
         }
 
-        if (!V.features.phone) {
+        if (!State.features.phone) {
             showNoPhone();
             return null;
         }
@@ -70,16 +70,13 @@ public class SmsFragment extends BaseFragment {
 
         U.runCommandAsync(smsCmd);
 
-        if (!V.currentDevice.isMain()) {
+        if (!State.device.isMain()) {
             // FIXME
             U.getFileAsync(smsDir + "inbox");
         }
 
         return view;
     }
-
-    @Override
-    public String getName() { return "SMS"; }
 
     @Override
     public String getWatchFile() {

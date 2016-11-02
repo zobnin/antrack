@@ -101,12 +101,6 @@ public class MainActivity extends AppCompatActivity
     BaseFragment selectedFragment;
     int selectedDevice = -1;
 
-    // For CreateDeviceMenu
-    boolean deviceMenuActive = false;
-
-    boolean firstRun = true;
-    boolean initDone = false;
-
     boolean modulesCallbackActive = false;
     boolean featuresCallbackActive = false;
 
@@ -119,10 +113,10 @@ public class MainActivity extends AppCompatActivity
         Init.all(this);
 
         if (savedInstanceState != null) {
-            firstRun = false;
-            V.currentDevice = new Device(savedInstanceState.getString(CURRENT_DEVICE));
+            State.firstRun = false;
+            State.device = new Device(savedInstanceState.getString(CURRENT_DEVICE));
         } else {
-            V.currentDevice = new Device(Init.DEVICE_NAME_IMEI);
+            State.device = new Device(Init.DEVICE_NAME_IMEI);
         }
 
         Log.d(TAG, "Running on: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
@@ -240,11 +234,11 @@ public class MainActivity extends AppCompatActivity
 
         /*** Load default fragment ***/
 
-        //if (firstRun) waitFiles();
+        //if (State.firstRun) waitFiles();
         switchDevice();
 
         Log.d(TAG, "Initialization done");
-        initDone = true;
+        State.initDone = true;
 
         /*** Check trial and integrity ***/
 
@@ -282,14 +276,19 @@ public class MainActivity extends AppCompatActivity
         U.readFeatures();
 
         // Reload menu
-        deviceTextView.setText(V.currentDevice.getName());
+        deviceTextView.setText(State.device.getName());
         navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.activity_main_drawer);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        deviceMenuActive = false;
+        State.deviceMenuActive = false;
 
-        loadFragment(infoFragment);
+        // If this is just screen orientation change Android reload fragment himself
+        if (State.firstRun) {
+            //State.menuItemTitle = (String) navigationView.getMenu().getItem(0).getTitle();
+            State.menuItemTitle = getResources().getString(R.string.menu_device_info);
+            loadFragment(infoFragment);
+        }
     }
 
     // When app loads first time its takes time to save modules/features file
@@ -315,7 +314,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadFragment(BaseFragment fragment) {
-        if (fragment.equals(V.currentFragment)) {
+        if (fragment.equals(State.fragment)) {
             reloadCurrentFragment();
             return;
         }
@@ -323,7 +322,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.container, fragment, "fragment");
         ft.commitAllowingStateLoss();
-        V.currentFragment = fragment;
+        State.fragment = fragment;
 
         setToolbarTitle();
 
@@ -342,14 +341,14 @@ public class MainActivity extends AppCompatActivity
 
     private void setToolbarTitle() {
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(V.currentFragment.getName());
+            getSupportActionBar().setTitle(State.menuItemTitle);
 
             String lastUpdate = U.getLastUpdate();
             if (lastUpdate == null) {
-                getSupportActionBar().setSubtitle(V.currentDevice.getName());
+                getSupportActionBar().setSubtitle(State.device.getName());
             } else {
                 getSupportActionBar().setSubtitle(
-                        V.currentDevice.getName() + " (" + lastUpdate + ")");
+                        State.device.getName() + " (" + lastUpdate + ")");
             }
 
         }
@@ -382,7 +381,7 @@ public class MainActivity extends AppCompatActivity
             i = i + 1;
         }
 
-        deviceMenuActive = true;
+        State.deviceMenuActive = true;
 
         /*** Show devices from cloud ***/
 
@@ -425,7 +424,7 @@ public class MainActivity extends AppCompatActivity
                                 new File(Init.DEVICES_DIR + deviceDir).mkdir();
 
                                 // Workaround: if device menu is not shown don't redraw it
-                                if (deviceMenuActive) {
+                                if (State.deviceMenuActive) {
                                     navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE, device.getName())
                                             .setIcon(R.drawable.ic_menu_device);
                                 }
@@ -446,15 +445,15 @@ public class MainActivity extends AppCompatActivity
         String watchFile = null;
 
         public void onFileUpdate(String path) {
-            if (V.currentFragment != null) {
-                V.currentFragment.onFileUpdate();
+            if (State.fragment != null) {
+                State.fragment.onFileUpdate();
                 Log.d(TAG, "Fragment updated");
             }
         }
 
         public String getWatchFile() {
-            if (V.currentFragment != null) {
-                watchFile = "/" + V.currentDevice.getDir() + V.currentFragment.getWatchFile();
+            if (State.fragment != null) {
+                watchFile = "/" + State.device.getDir() + State.fragment.getWatchFile();
             }
             return watchFile;
         }
@@ -482,7 +481,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         public String getWatchFile() {
-            return "/" + V.currentDevice.getDir() + C.RESULT_FILE;
+            return "/" + State.device.getDir() + C.RESULT_FILE;
         }
     }
 
@@ -508,7 +507,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         public String getWatchFile() {
-            return "/" + V.currentDevice.getDir() + C.MODULES_FILE;
+            return "/" + State.device.getDir() + C.MODULES_FILE;
         }
     }
 
@@ -534,15 +533,15 @@ public class MainActivity extends AppCompatActivity
         }
 
         public String getWatchFile() {
-            return "/" + V.currentDevice.getDir() + C.FEATURES_FILE;
+            return "/" + State.device.getDir() + C.FEATURES_FILE;
         }
     }
 
     // Callback for update files from cloud
     public class CloudUpdatedCallback implements CloudWatcher.Callback {
         public void onFileUpdate(final String path) {
-            if (V.currentFragment != null) {
-                String watchFile = V.currentFragment.getWatchFile();
+            if (State.fragment != null) {
+                String watchFile = State.fragment.getWatchFile();
                 if (watchFile != null) {
                     if (path.contains(watchFile)) {
                         new Thread(new Runnable() {
@@ -563,7 +562,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         public String getWatchFile() {
-            return "/" + V.currentDevice.getDir() + "/";
+            return "/" + State.device.getDir() + "/";
         }
     }
 
@@ -592,23 +591,23 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        if (!initDone) {
+        if (!State.initDone) {
             return;
         }
-        if (!firstRun) {
+        if (!State.firstRun) {
             reloadCurrentFragment();
         }
 
         addCallbacks();
 
-        firstRun = false;
+        State.firstRun = false;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        if (!initDone)
+        if (!State.initDone)
             return;
 
         removeCallbacks();
@@ -616,7 +615,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(CURRENT_DEVICE, V.currentDevice.getDir());
+        savedInstanceState.putString(CURRENT_DEVICE, State.device.getDir());
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -647,7 +646,7 @@ public class MainActivity extends AppCompatActivity
 
         fileWatcher.addCallback("ui", new FileUpdatedFragmentCallback());
 
-        if (!V.currentDevice.isMain())
+        if (!State.device.isMain())
             cloudWatcher.addCallback("ui", new CloudUpdatedCallback());
 
     }
@@ -671,10 +670,10 @@ public class MainActivity extends AppCompatActivity
 
     // Called when devices selected from menu
     private void selectDevice(int deviceId) {
-        V.currentDevice = devices.get(deviceId);
+        State.device = devices.get(deviceId);
 
         // Get modules list and features if not exist
-        if (!V.currentDevice.isMain()) {
+        if (!State.device.isMain()) {
             String modulesFile = U.getLocalPath(C.MODULES_FILE);
             String featuresFile = U.getLocalPath(C.FEATURES_FILE);
 
@@ -764,8 +763,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Select item
-        if (item.isChecked()) item.setChecked(false);
-        else item.setChecked(true);
+        //if (item.isChecked()) item.setChecked(false);
+        //else item.setChecked(true);
+        item.setChecked(true);
+
+        // Save menu info in State
+        State.menuItemTitle = (String) item.getTitle();
 
         // Hide "No data.", "No module." and so on
         //selectedFragment.hideAll();

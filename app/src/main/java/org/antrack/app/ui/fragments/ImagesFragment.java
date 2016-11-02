@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class ImagesFragment extends BaseFragment {
             }
         });
 
-        if (!V.currentDevice.isMain()) {
+        if (!State.device.isMain()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -87,11 +87,6 @@ public class ImagesFragment extends BaseFragment {
     }
 
     public String getMod() { return null; }
-
-    @Override
-    public String getName() {
-        return "Screenshots";
-    }
 
     @Override
     public String getWatchFile() {

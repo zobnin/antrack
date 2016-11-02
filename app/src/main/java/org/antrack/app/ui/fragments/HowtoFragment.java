@@ -26,7 +26,4 @@ public class HowtoFragment extends BaseFragment {
 
         return view;
     }
-
-    @Override
-    public String getName() { return "Howto"; }
 }

@@ -22,12 +22,12 @@ public class U {
 
     // Get full dir name with main dir and current device name
     public static String getLocalPath(String path) {
-        return Init.DEVICES_DIR + V.currentDevice.getDir() + path;
+        return Init.DEVICES_DIR + State.device.getDir() + path;
     }
 
     // Get full path in cloud
     public static String getCloudPath(String path) {
-        return "/" + V.currentDevice.getDir() + path;
+        return "/" + State.device.getDir() + path;
     }
 
     static String getLastUpdate() {
@@ -45,7 +45,7 @@ public class U {
             return null;
         }
 
-        V.currentDevice.lastUpdate = ret;
+        State.device.lastUpdate = ret;
         return ret;
     }
 
@@ -133,7 +133,7 @@ public class U {
     public static ArrayList<String> compareDirs(String dir) {
         ArrayList<String> remoteDir, localDir, notInlocal;
 
-        remoteDir = listDir("/" + V.currentDevice.getDir() + dir);
+        remoteDir = listDir("/" + State.device.getDir() + dir);
         if (remoteDir == null) return null;
 
         localDir = new ArrayList<>(Arrays.asList(new File(getLocalPath(dir)).list()));
@@ -150,7 +150,7 @@ public class U {
     }
 
     public static void runCommandAsync(String cmd) {
-        if (V.currentDevice.isMain()) {
+        if (State.device.isMain()) {
             cmd = "!" + cmd;
 
             String deviceControlFile = getLocalPath(C.CONTROL_FILE);
@@ -175,8 +175,8 @@ public class U {
     }
 
     static void readFeatures() {
-        V.features = new Features();
-        V.features.read(U.getLocalPath(C.FEATURES_FILE));
+        State.features = new Features();
+        State.features.read(U.getLocalPath(C.FEATURES_FILE));
     }
 
     // Read modules and save in V.modules
@@ -217,7 +217,7 @@ public class U {
                         // Make dirs for module
                         if (result.endsWith("/")) {
                             //noinspection ResultOfMethodCallIgnored
-                            new File(Init.DEVICES_DIR + V.currentDevice.getDir() + result).mkdir();
+                            new File(Init.DEVICES_DIR + State.device.getDir() + result).mkdir();
                         }
                         break;
                     case "Start when":
@@ -233,7 +233,7 @@ public class U {
             return false;
         }
 
-        V.modules = modules;
+        State.modules = modules;
         return true;
     }
 }

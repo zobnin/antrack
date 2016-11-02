@@ -2,6 +2,7 @@ package org.antrack.app.ui;
 
 import android.util.Log;
 
+import org.antrack.app.Features;
 import org.antrack.app.Init;
 import org.antrack.app.libs.Files;
 

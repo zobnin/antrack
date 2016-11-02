@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.antrack.app.ui.RecyclerViewAnim;
+import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
-import org.antrack.app.ui.V;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -43,7 +43,7 @@ public class CallsFragment extends BaseFragment {
             return null;
         }
 
-        if (!V.features.phone) {
+        if (!State.features.phone) {
             showNoPhone();
             return null;
         }
@@ -66,15 +66,12 @@ public class CallsFragment extends BaseFragment {
         onFileUpdate();
 
         // Call getFile when view created, view will be updated when files downloaded
-        if (!V.currentDevice.isMain()) {
+        if (!State.device.isMain()) {
             U.getFileAsync(modFile);
         }
 
         return view;
     }
-
-    @Override
-    public String getName() { return "Calls"; }
 
     @Override
     public String getWatchFile() {
