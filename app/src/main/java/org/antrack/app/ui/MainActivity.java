@@ -263,12 +263,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Switch device to currentDevice
-    public void switchDevice(boolean reload) {
+    public void switchDevice(boolean bootstrap) {
+        /*
         if (!U.readModules()) {
             Utils.showToast(this, getResources().getString(R.string.cant_load_device));
             return;
         }
+        */
 
+        U.readModules();
         U.readFeatures();
 
         // Reload menu
@@ -280,13 +283,12 @@ public class MainActivity extends AppCompatActivity
         State.deviceMenuActive = false;
 
         // If this is just screen orientation change fragment reloaded in onResume()
-        if (reload) {
+        if (bootstrap) {
             State.menuItemTitle = getResources().getString(R.string.menu_device_info);
             loadFragment(infoFragment);
             State.initDone = true;
         }
 
-        addCallbacks();
     }
 
     private void loadFragment(BaseFragment fragment) {
@@ -298,9 +300,13 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.container, fragment, "fragment");
         ft.commitAllowingStateLoss();
-        State.fragment = fragment;
 
+        // We want attach fragment immediately, otherwise getFiles() may return null
+        fragmentManager.executePendingTransactions();
+
+        State.fragment = fragment;
         setToolbarTitle();
+        addCallbacks();
 
         Log.d(TAG, "Fragment loaded");
     }

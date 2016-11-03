@@ -113,6 +113,7 @@ public class FileWatcher {
         Log.d(TAG, "removeCallback name: " + name);
     }
 
+    // FIXME колбэк может быть удален пока выполняется эта функция
     private void processFile(String path) {
         path = path.replace("//", "/");
         String device = path.replace(Init.DEVICES_DIR, "/").split("/")[1];

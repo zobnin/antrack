@@ -34,6 +34,14 @@ public class InfoFragment extends BaseFragment {
     String statusFile;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        infoFile = Mod.getFile(Mod.INFO);
+        statusFile = Mod.getFile(Mod.STATUS);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
@@ -50,9 +58,6 @@ public class InfoFragment extends BaseFragment {
         recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-        infoFile = Mod.getFile(Mod.INFO);
-        statusFile = Mod.getFile(Mod.STATUS);
 
         infos = new ArrayList<>();
         infoAdapter = new InfoAdapter(infos);
