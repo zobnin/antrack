@@ -11,7 +11,6 @@ import android.view.View;
  */
 public class RecyclerViewAnim extends RecyclerView {
     private boolean mScrollable;
-    private boolean mFirstRun = true;
 
     public RecyclerViewAnim(Context context) {
         this(context, null);
@@ -36,7 +35,7 @@ public class RecyclerViewAnim extends RecyclerView {
         super.onLayout(changed, l, t, r, b);
 
         // Workaround for not redraw animation second time
-        if (!mFirstRun) {
+        if (mScrollable) {
             return;
         }
 
@@ -48,7 +47,6 @@ public class RecyclerViewAnim extends RecyclerView {
                     @Override
                     public void run() {
                         mScrollable = true;
-                        mFirstRun = false;
                     }
                 }, i * 100);
             }

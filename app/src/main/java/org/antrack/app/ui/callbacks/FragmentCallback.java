@@ -17,7 +17,7 @@ public class FragmentCallback implements FileWatcher.Callback {
     }
 
     public String getWatchFile() {
-        if (State.fragment != null) {
+        if (State.fragment != null && State.fragment.getWatchFile() != null) {
             watchFile = "/" + State.device.getDir() + State.fragment.getWatchFile();
         }
         return watchFile;

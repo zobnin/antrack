@@ -30,15 +30,28 @@ public class CallsFragment extends BaseFragment {
     private List<Call> calls;
     CallsAdapter callsAdapter;
 
+    private boolean moduleIsPresent = false;
+
     String modFile;
     String modCmd;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (Mod.check(Mod.LOGCALLS)) {
+            moduleIsPresent = true;
+            modFile = Mod.getFile(Mod.LOGCALLS);
+            modCmd  = Mod.getCommand(Mod.LOGCALLS);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
-        if (!Mod.check(Mod.LOGCALLS)) {
+        if (!moduleIsPresent) {
             showNoModule(Mod.LOGCALLS);
             return null;
         }
@@ -47,9 +60,6 @@ public class CallsFragment extends BaseFragment {
             showNoPhone();
             return null;
         }
-
-        modFile = Mod.getFile(Mod.LOGCALLS);
-        modCmd  = Mod.getCommand(Mod.LOGCALLS);
 
         context = getActivity().getApplicationContext();
 
@@ -94,7 +104,6 @@ public class CallsFragment extends BaseFragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        hideNoData();
                         callsAdapter.update(calls);
                         callsAdapter.notifyDataSetChanged();
                         hideNoData();

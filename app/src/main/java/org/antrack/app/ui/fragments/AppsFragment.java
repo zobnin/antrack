@@ -27,21 +27,31 @@ public class AppsFragment extends BaseFragment {
     private List<App> apps;
     private AppsAdapter appsAdapter;
 
+    private boolean moduleIsPresent = false;
+
     private String modFile;
     private String modCmd;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (Mod.check(Mod.APPS)) {
+            moduleIsPresent = true;
+            modFile = Mod.getFile(Mod.APPS);
+            modCmd  = Mod.getCommand(Mod.APPS);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
-        if (!Mod.check(Mod.APPS)) {
+        if (!moduleIsPresent) {
             showNoModule(Mod.APPS);
             return null;
         }
-
-        modFile = Mod.getFile(Mod.APPS);
-        modCmd  = Mod.getCommand(Mod.APPS);
 
         View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
@@ -86,7 +96,6 @@ public class AppsFragment extends BaseFragment {
                     @Override
                     public void run() {
                         appsAdapter.update(apps);
-                        appsAdapter.notifyDataSetChanged();
                         hideNoData();
                     }
                 });

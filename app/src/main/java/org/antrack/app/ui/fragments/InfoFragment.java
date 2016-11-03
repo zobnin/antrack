@@ -30,6 +30,8 @@ public class InfoFragment extends BaseFragment {
 
     List<Info> infos;
 
+    private boolean moduleIsPresent = false;
+
     String infoFile;
     String statusFile;
 
@@ -37,8 +39,11 @@ public class InfoFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        infoFile = Mod.getFile(Mod.INFO);
-        statusFile = Mod.getFile(Mod.STATUS);
+        if (Mod.check(Mod.INFO) && Mod.check(Mod.STATUS)) {
+            moduleIsPresent = true;
+            infoFile = Mod.getFile(Mod.INFO);
+            statusFile = Mod.getFile(Mod.STATUS);
+        }
     }
 
     @Override
@@ -46,7 +51,7 @@ public class InfoFragment extends BaseFragment {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
-        if (!Mod.check(Mod.INFO) && !Mod.check(Mod.STATUS)) {
+        if (!moduleIsPresent) {
             showNoModule(Mod.INFO + ", " + Mod.STATUS);
             return null;
         }

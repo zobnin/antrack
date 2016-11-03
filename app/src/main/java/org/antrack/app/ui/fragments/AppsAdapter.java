@@ -32,8 +32,8 @@ class AppsAdapter extends RecyclerViewAnim.Adapter<AppsAdapter.ModuleViewHolder>
         }
     }
 
-    Activity activity;
-    List<App> apps;
+    private Activity activity;
+    private List<App> apps;
 
     AppsAdapter(Activity activity, List<App> apps){
         this.activity = activity;
@@ -42,11 +42,7 @@ class AppsAdapter extends RecyclerViewAnim.Adapter<AppsAdapter.ModuleViewHolder>
 
     public void update(List<App> apps) {
         this.apps = apps;
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
+        notifyDataSetChanged();
     }
 
     @Override
