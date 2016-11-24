@@ -33,7 +33,7 @@ class Mod {
     static final String WIPESD = "wipesd";
 
     static boolean check(String module) {
-        return State.modules.containsKey(module);
+        return State.modules != null && State.modules.containsKey(module);
     }
 
     static String getCommand(String module) {

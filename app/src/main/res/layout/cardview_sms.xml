@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:paddingBottom="16dp">
+    android:paddingBottom="8dp">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -8,35 +8,46 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
             >
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/cardview_sms_from"
-                android:layout_alignParentTop="true"
-                android:textSize="18sp"
-                android:textColor="@color/primary_material_dark" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/cardview_sms_date"
-                android:layout_below="@+id/cardview_sms_from"
-                android:textColor="@color/primary_material_dark" />
+                android:padding="@dimen/cardview_title_padding"
+                android:orientation="vertical"
+                android:background="@color/cardview_title_bg"
+                android:id="@+id/sms_summary"
+                android:elevation="@dimen/cardview_title_elevation"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cardview_sms_from"
+                    android:textSize="20sp"
+                    android:textColor="@color/primary_material_dark" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cardview_sms_date"
+                    android:textColor="@color/primary_material_dark" />
+            </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/cardview_sms_body"
-                android:layout_below="@+id/cardview_sms_date"
-                android:textColor="@color/primary_material_dark" />
+                android:layout_below="@id/sms_summary"
+                android:textColor="@color/primary_material_dark"
+                android:padding="@dimen/cardview_text_padding"
+                />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/cardview_sms_direction"
-                android:textColor="@color/primary_material_dark"
+                android:textColor="@color/secondary_text"
                 android:text="@string/incoming"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
+                android:padding="@dimen/cardview_title_padding"
+                android:elevation="@dimen/cardview_title_elevation"
                 />
         </RelativeLayout>
     </android.support.v7.widget.CardView>

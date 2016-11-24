@@ -298,7 +298,13 @@ public class MainActivity extends AppCompatActivity
         }
 
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.container, fragment, "fragment");
+
+        if (State.fragment == null) {
+            ft.add(R.id.container, fragment, "fragment");
+        } else {
+            ft.replace(R.id.container, fragment, "fragment");
+        }
+
         ft.commitAllowingStateLoss();
 
         // We want attach fragment immediately, otherwise getFiles() may return null

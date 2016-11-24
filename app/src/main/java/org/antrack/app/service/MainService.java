@@ -92,9 +92,7 @@ public class MainService extends Service {
                 /*** Bootstrap modules ***/
 
                 // Generate /modules file
-                if (!new File(Init.MAIN_DIR + C.MODULES_FILE).exists()) {
-                    V.cc.parseCommand("!modules");
-                }
+                V.cc.parseCommand("!modules");
 
                 V.cc.runModules("load", null);
                 V.cc.parseBootstrap();

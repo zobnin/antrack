@@ -16,12 +16,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
-public class Modules {
+class Modules {
     private String TAG = "Mod";
     private Context context;
     private Map<String, ModuleInterface> modules = null;
 
-    public Modules(Context context) {
+    Modules(Context context) {
         this.context = context;
 
         String modulesDir = Init.APP_DIR + C.MODULES_DIR;

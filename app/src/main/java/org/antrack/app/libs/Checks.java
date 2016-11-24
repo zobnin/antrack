@@ -12,7 +12,7 @@ import java.security.MessageDigest;
 
 public class Checks {
     private static final String TAG = "Checks";
-    private static final String SIGNATURE = "";
+    private static final String SIGNATURE = "12ipEc/gZgHTZ30XFnRGJirdsXo=";
     private static final String PLAY_STORE_APP_ID = "com.android.vending";
 
     public static boolean all(Context context) {
