@@ -9,6 +9,7 @@
     tools:context="org.antrack.app.ui.MainActivity"
     android:orientation="vertical">
 
+
     <Switch
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
