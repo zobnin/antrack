@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity
                 } else if (selectedDevice != -1) {
                     fragmentContainer.animate().alpha(1);
                     State.device = devices.get(selectedDevice);
-                    waitModules();
+                    waitModulesAndSwitchDevice();
                 }
                 selectedFragment = null;
                 selectedDevice = -1;
@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity
         /*** Load default fragment ***/
 
         if (State.firstRun) {
-            waitModules();
+            waitModulesAndSwitchDevice();
         } else {
             switchDevice(false);
             State.initDone = true;
@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity
 
         ft.commitAllowingStateLoss();
 
-        // We want attach fragment immediately, otherwise getFiles() may return null
+        // We must attach fragment immediately, otherwise getFiles() may return null
         fragmentManager.executePendingTransactions();
 
         State.fragment = fragment;
@@ -531,13 +531,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    // Called when devices selected from menu
-    private void selectDevice(int deviceId) {
-        State.device = devices.get(deviceId);
-        waitModules();
-    }
-
-    private void waitModules() {
+    private void waitModulesAndSwitchDevice() {
         // Get modules list and features if not exist
         String modulesFile = U.getLocalPath(C.MODULES_FILE);
         String featuresFile = U.getLocalPath(C.FEATURES_FILE);

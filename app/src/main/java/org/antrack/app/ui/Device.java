@@ -12,7 +12,7 @@ public class Device {
     private String dirName;
     String lastUpdate = null;
 
-    public Device(String dir) {
+    Device(String dir) {
         dirName = dir;
     }
 

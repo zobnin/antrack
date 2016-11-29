@@ -29,6 +29,7 @@ public class MainService extends Service {
     CloudWatcher cloudWatcher;
     Context context;
     Pw pw;
+    CC cc;
 
     @Override
     public void onCreate() {
@@ -48,7 +49,7 @@ public class MainService extends Service {
                 // Cloud connection
                 pw = Pw.getInstance();
                 // Control Center
-                V.cc = new CC(context);
+                cc = new CC(context);
 
                 /*** Check trial and integrity ***/
 
@@ -92,10 +93,10 @@ public class MainService extends Service {
                 /*** Bootstrap modules ***/
 
                 // Generate /modules file
-                V.cc.parseCommand("!modules");
+                cc.parseCommand("!modules");
 
-                V.cc.runModules("load", null);
-                V.cc.parseBootstrap();
+                cc.runModules("load", null);
+                cc.parseBootstrap();
 
                 /*** Get ctlq ***/
 
@@ -121,7 +122,7 @@ public class MainService extends Service {
             // Current device ctl changed -> read and execute command
             if (path.endsWith(C.CONTROL_FILE)) {
                 try {
-                    U.parseCtl();
+                    U.parseCtl(cc);
                 } catch (IOException e) {
                     Log.e(TAG, "Can't read ctl file: " + e.toString());
                 }
@@ -129,7 +130,7 @@ public class MainService extends Service {
             // Current device ctlq changed -> read and execute commands
             else if (path.endsWith(C.CONTROL_Q_FILE)) {
                 try {
-                    U.parseCtlq();
+                    U.parseCtlq(cc);
                 } catch (IOException e) {
                     Log.e(TAG, "Can't read ctlq file: " + e.toString());
                 }
@@ -179,32 +180,32 @@ public class MainService extends Service {
                         switch (action) {
                             case C.ACTION_BOOT:
                                 Log.d(TAG, "Get boot");
-                                V.cc.runModules(C.ACTION_BOOT, null);
+                                cc.runModules(C.ACTION_BOOT, null);
                                 break;
                             case C.ACTION_ALARM:
                                 Log.d(TAG, "Get alarm");
                                 Logger.alarm(context);
-                                V.cc.runModules(C.ACTION_ALARM, null);
+                                cc.runModules(C.ACTION_ALARM, null);
                                 break;
                             case C.ACTION_SCREENON:
                                 Log.d(TAG, "Get screenOn");
-                                V.cc.runModules(C.ACTION_SCREENON, null);
+                                cc.runModules(C.ACTION_SCREENON, null);
                                 break;
                             case C.ACTION_OUTGOINGCALL:
                                 Log.d(TAG, "Get outgoingCall");
                                 String outNumber = intent.getStringExtra("phoneNumber");
                                 if (outNumber != null)
-                                    V.cc.runModules(C.ACTION_OUTGOINGCALL, outNumber);
+                                    cc.runModules(C.ACTION_OUTGOINGCALL, outNumber);
                                 break;
                             case C.ACTION_INCOMINGCALL:
                                 Log.d(TAG, "Get incomingCall");
                                 String number = intent.getStringExtra("phoneNumber");
                                 if (number != null)
-                                    V.cc.runModules(C.ACTION_INCOMINGCALL, number);
+                                    cc.runModules(C.ACTION_INCOMINGCALL, number);
                                 break;
                             case C.ACTION_COMMAND:
                                 Log.d(TAG, "Get command");
-                                V.cc.parseCommand(intent.getStringExtra("command"));
+                                cc.parseCommand(intent.getStringExtra("command"));
                                 break;
                             }
                         }

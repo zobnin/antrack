@@ -16,21 +16,21 @@ import java.util.Arrays;
 
 public class U {
     // Get full local dir path
-    public static String getFullPath(String path) {
+    private static String getFullPath(String path) {
         return Init.MAIN_DIR + path;
     }
 
     // Get full cloud dir path
-    public static String getCloudPath(String path) {
+    private static String getCloudPath(String path) {
         return "/" + Init.DEVICE_NAME_IMEI + path;
     }
 
-    public static void parseCtl() throws IOException {
+    static void parseCtl(CC cc) throws IOException {
         String command = Files.readTextFile(getFullPath(C.CONTROL_FILE)).trim();
-        V.cc.parseCommand(command);
+        cc.parseCommand(command);
     }
 
-    public static void parseCtlq() throws IOException {
+    static void parseCtlq(CC cc) throws IOException {
         ArrayList<String> cmds = Files.textFileToArray(getFullPath(C.CONTROL_Q_FILE));
 
         long lastCmdTime = Long.parseLong(Settings.get(C.S_LAST_CMD_TIME));
@@ -43,7 +43,7 @@ public class U {
             cmdName = Utils.arrayToString(Arrays.copyOfRange(cmdA, 1, cmdA.length));
 
             if (Long.parseLong(cmdTime) > lastCmdTime) {
-                V.cc.parseCommand(cmdName);
+                cc.parseCommand(cmdName);
             }
         }
 
@@ -65,7 +65,7 @@ public class U {
     }
 
     // Upload file with full path
-    public static void uploadFile(String path) throws InterruptedException {
+    static void uploadFile(String path) throws InterruptedException {
         Pw pw = Pw.getInstance();
         if (!pw.isConnected())
             return;
