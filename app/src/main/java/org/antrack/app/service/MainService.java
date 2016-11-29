@@ -19,7 +19,6 @@ import org.antrack.app.Trial;
 import org.antrack.app.libs.Checks;
 import org.antrack.app.libs.Utils;
 
-import java.io.File;
 import java.io.IOException;
 
 public class MainService extends Service {

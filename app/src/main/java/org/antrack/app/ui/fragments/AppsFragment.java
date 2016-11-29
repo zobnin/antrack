@@ -1,5 +1,6 @@
 package org.antrack.app.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,14 +19,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import app.R;
 
 public class AppsFragment extends BaseFragment {
     private final String TAG = "AppsFragment";
 
+    private ExecutorService executor;
+
     private List<App> apps;
     private AppsAdapter appsAdapter;
+    private RecyclerViewAnim recyclerView;
 
     private boolean moduleIsPresent = false;
 
@@ -56,13 +62,15 @@ public class AppsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
         Context context = getActivity().getApplicationContext();
-        RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         apps = new ArrayList<>();
         appsAdapter = new AppsAdapter(getActivity(), apps);
         recyclerView.setAdapter(appsAdapter);
+
+        executor = Executors.newFixedThreadPool(1);
 
         onFileUpdate();
 
@@ -81,9 +89,11 @@ public class AppsFragment extends BaseFragment {
 
     @Override
     public void onFileUpdate() {
-        new Thread(new Runnable() {
+        executor.submit(new Runnable() {
             @Override
             public void run() {
+                waitCardsDrawn(recyclerView);
+
                 apps = new ArrayList<>();
 
                 if (!readFile() || apps.isEmpty()) {
@@ -91,8 +101,10 @@ public class AppsFragment extends BaseFragment {
                     return;
                 }
 
-                if (getActivity() == null) return;
-                getActivity().runOnUiThread(new Runnable() {
+                Activity activity = getActivity();
+                if (activity == null) return;
+
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         appsAdapter.update(apps);
@@ -100,7 +112,7 @@ public class AppsFragment extends BaseFragment {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     private boolean readFile() {
