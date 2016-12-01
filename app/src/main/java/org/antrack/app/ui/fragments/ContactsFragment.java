@@ -18,17 +18,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import app.R;
 
 public class ContactsFragment extends BaseFragment {
     private final String TAG = "AppsFragment";
 
+    private ExecutorService executor;
+
     private List<Contact> contacts;
     private ContactsAdapter contactsAdapter;
+    private RecyclerViewAnim recyclerView;
 
-    private String contactsFile;
-    private String contactsCmd;
+    String contactsFile;
+    String contactsCmd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,13 +51,15 @@ public class ContactsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
         Context context = getActivity().getApplicationContext();
-        RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         contacts = new ArrayList<>();
         contactsAdapter = new ContactsAdapter(getActivity(), contacts);
         recyclerView.setAdapter(contactsAdapter);
+
+        executor = Executors.newFixedThreadPool(1);
 
         onFileUpdate();
 
@@ -71,9 +78,11 @@ public class ContactsFragment extends BaseFragment {
 
     @Override
     public void onFileUpdate() {
-        new Thread(new Runnable() {
+        executor.submit(new Runnable() {
             @Override
             public void run() {
+                waitCardsDrawn(recyclerView);
+
                 contacts = new ArrayList<>();
                 readFile();
 
@@ -92,7 +101,7 @@ public class ContactsFragment extends BaseFragment {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     private void readFile() {

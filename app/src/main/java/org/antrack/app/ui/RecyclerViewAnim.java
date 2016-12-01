@@ -10,7 +10,8 @@ import android.view.View;
  * @author Leo on 2015/09/03
  */
 public class RecyclerViewAnim extends RecyclerView {
-    private boolean mScrollable;
+    public boolean mScrollable;
+    public boolean mFirstUpdate;
 
     public RecyclerViewAnim(Context context) {
         this(context, null);
@@ -23,6 +24,7 @@ public class RecyclerViewAnim extends RecyclerView {
     public RecyclerViewAnim(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mScrollable = false;
+        mFirstUpdate = true;
     }
 
     @Override
@@ -34,21 +36,28 @@ public class RecyclerViewAnim extends RecyclerView {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
-        // Workaround for not redraw animation second time
+        // Workaround for not redraw animation on update
         if (mScrollable) {
             return;
         }
 
-        for (int i = 0; i < getChildCount(); i++) {
+        int childCount = getChildCount();
+
+        // If there is no children it is not update
+        if (childCount > 0) {
+            mFirstUpdate = false;
+        }
+
+        for (int i = 0; i < childCount; i++) {
             animate(getChildAt(i), i);
 
-            if (i == getChildCount() - 1) {
+            if (i == childCount - 1) {
                 getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         mScrollable = true;
                     }
-                }, i * 100);
+                }, i * 100 + 200);
             }
         }
     }

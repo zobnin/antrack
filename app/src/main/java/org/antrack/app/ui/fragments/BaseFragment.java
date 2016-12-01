@@ -3,11 +3,27 @@ package org.antrack.app.ui.fragments;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import org.antrack.app.ui.RecyclerViewAnim;
+
 import app.R;
 
 public class BaseFragment extends Fragment {
     public void onFileUpdate() {}
     public String getWatchFile() { return null; }
+
+    protected void waitCardsDrawn(RecyclerViewAnim rv) {
+        while (true) {
+            if (!rv.mScrollable && !rv.mFirstUpdate) {
+                try {
+                    Thread.sleep(100);
+                } catch (Exception e) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+    }
 
     protected void showNoData() {
         if (getActivity() != null)

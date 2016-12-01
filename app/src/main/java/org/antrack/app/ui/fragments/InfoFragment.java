@@ -18,22 +18,26 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import app.R;
 
 public class InfoFragment extends BaseFragment {
-    final String TAG = "InfoFragment";
-    Context context;
+    private final String TAG = "InfoFragment";
+    private Context context;
 
-    RecyclerViewAnim recyclerView;
-    InfoAdapter infoAdapter;
+    private ExecutorService executor;
 
-    List<Info> infos;
+    private RecyclerViewAnim recyclerView;
+    private InfoAdapter infoAdapter;
+
+    private List<Info> infos;
 
     private boolean moduleIsPresent = false;
 
-    String infoFile;
-    String statusFile;
+    private String infoFile;
+    private String statusFile;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,8 @@ public class InfoFragment extends BaseFragment {
         infoAdapter = new InfoAdapter(infos);
         recyclerView.setAdapter(infoAdapter);
 
+        executor = Executors.newFixedThreadPool(1);
+
         onFileUpdate();
 
         U.runCommandAsync("info; status");
@@ -81,9 +87,11 @@ public class InfoFragment extends BaseFragment {
 
     @Override
     public void onFileUpdate() {
-        new Thread(new Runnable() {
+        executor.submit(new Runnable() {
             @Override
             public void run() {
+                waitCardsDrawn(recyclerView);
+
                 infos = new ArrayList<>();
 
                 Info info = readFile(infoFile, getString(R.string.device_info));
@@ -117,7 +125,7 @@ public class InfoFragment extends BaseFragment {
                     });
                 }
             }
-        }).start();
+        });
     }
 
     @Override

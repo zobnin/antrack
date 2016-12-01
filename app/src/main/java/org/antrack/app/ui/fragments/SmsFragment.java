@@ -23,15 +23,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import app.R;
 
 public class SmsFragment extends BaseFragment {
-    final String TAG = "AppsFragment";
-    Context context;
+    private final String TAG = "AppsFragment";
+    private Context context;
+
+    private ExecutorService executor;
 
     private List<Sms> smses;
-    SmsAdapter smsAdapter;
+    private SmsAdapter smsAdapter;
+    private RecyclerViewAnim recyclerView;
 
     String smsDir;
     String smsCmd;
@@ -58,13 +63,15 @@ public class SmsFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
-        RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         smses = new ArrayList<>();
         smsAdapter = new SmsAdapter(smses);
         recyclerView.setAdapter(smsAdapter);
+
+        executor = Executors.newFixedThreadPool(1);
 
         onFileUpdate();
 
@@ -86,9 +93,11 @@ public class SmsFragment extends BaseFragment {
 
     @Override
     public void onFileUpdate() {
-        new Thread(new Runnable() {
+        executor.submit(new Runnable() {
             @Override
             public void run() {
+                waitCardsDrawn(recyclerView);
+
                 smses = new ArrayList<>();
 
                 if (!readFile()) {
@@ -106,7 +115,7 @@ public class SmsFragment extends BaseFragment {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     public class SmsComaparator implements Comparator<Sms> {

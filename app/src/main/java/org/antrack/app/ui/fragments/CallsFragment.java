@@ -19,16 +19,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import app.R;
 
 public class CallsFragment extends BaseFragment {
     final String TAG = "CallsFragment";
 
-    Context context;
+    private ExecutorService executor;
+
+    private Context context;
 
     private List<Call> calls;
-    CallsAdapter callsAdapter;
+    private CallsAdapter callsAdapter;
+    private RecyclerViewAnim recyclerView;
 
     private boolean moduleIsPresent = false;
 
@@ -65,13 +70,15 @@ public class CallsFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
-        RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         calls = new ArrayList<>();
         callsAdapter = new CallsAdapter(calls);
         recyclerView.setAdapter(callsAdapter);
+
+        executor = Executors.newFixedThreadPool(1);
 
         onFileUpdate();
 
@@ -90,9 +97,11 @@ public class CallsFragment extends BaseFragment {
 
     @Override
     public void onFileUpdate() {
-        new Thread(new Runnable() {
+        executor.submit(new Runnable() {
             @Override
             public void run() {
+                waitCardsDrawn(recyclerView);
+
                 calls = new ArrayList<>();
 
                 if (!readFile() || calls.isEmpty()) {
@@ -110,7 +119,7 @@ public class CallsFragment extends BaseFragment {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     private boolean readFile() {

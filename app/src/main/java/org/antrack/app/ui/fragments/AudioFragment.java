@@ -1,5 +1,6 @@
 package org.antrack.app.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import org.antrack.app.ui.U;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import app.R;
@@ -34,8 +37,11 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
 
     private final int MAX_LENGTH = 600;
 
+    private ExecutorService executor;
+
     private ArrayList<Audio> audios;
     private AudioAdapter audioAdapter;
+    private RecyclerViewAnim recyclerView;
 
     static String audioDir;
     static String audioCmd;
@@ -57,13 +63,15 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
         View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
         Context context = getActivity().getApplicationContext();
-        RecyclerViewAnim recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
+        recyclerView = (RecyclerViewAnim) view.findViewById(R.id.fragment_cardview_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         audios = new ArrayList<>();
         audioAdapter = new AudioAdapter(getActivity(), audios);
         recyclerView.setAdapter(audioAdapter);
+
+        executor = Executors.newFixedThreadPool(1);
 
         if (!State.device.isMain()) {
             new Thread(new Runnable() {
@@ -125,9 +133,11 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
 
     @Override
     public void onFileUpdate() {
-        new Thread(new Runnable() {
+        executor.submit(new Runnable() {
             @Override
             public void run() {
+                waitCardsDrawn(recyclerView);
+
                 audios = new ArrayList<>();
 
                 if(!readFiles() || audios.isEmpty()) {
@@ -135,8 +145,10 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
                     return;
                 }
 
-                if (getActivity() == null) return;
-                getActivity().runOnUiThread(new Runnable() {
+                Activity activity = getActivity();
+                if (activity == null) return;
+
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         audioAdapter.update(audios);
@@ -145,7 +157,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
                     }
                 });
             }
-        }).start();
+        });
     }
 
     private boolean readFiles() {
