@@ -1,26 +1,17 @@
 package org.antrack.app.ui.fragments;
 
-import android.app.Fragment;
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.antrack.app.libs.Images;
-import org.antrack.app.ui.MainActivity;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import app.R;
 
@@ -29,13 +20,13 @@ public class ImagesAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
 
-    private FragmentActivity activity;
+    private Activity activity;
 
     private String   imageDir;
     private String[] images;
     private DisplayMetrics metrics;
 
-    public ImagesAdapter(FragmentActivity activity, String imageDir, String[] images) {
+    public ImagesAdapter(Activity activity, String imageDir, String[] images) {
         this.activity = activity;
         this.imageDir = imageDir;
         this.images = images;
