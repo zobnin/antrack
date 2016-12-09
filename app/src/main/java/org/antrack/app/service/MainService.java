@@ -35,21 +35,21 @@ public class MainService extends Service {
         super.onCreate();
         context = this;
 
+        /*** Init ***/
+
+        // Error reporting
+        Mint.initAndStartSession(MainService.this, "8af105a4");
+
+        // Dirs and settings
+        Init.all(context);
+        // Cloud connection
+        pw = Pw.getInstance();
+        // Control Center / load modules
+        cc = new CC(context);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                /*** Init ***/
-
-                // Error reporting
-                Mint.initAndStartSession(MainService.this, "8af105a4");
-
-                // Dirs and settings
-                Init.all(context);
-                // Cloud connection
-                pw = Pw.getInstance();
-                // Control Center
-                cc = new CC(context);
-
                 /*** Check trial and integrity ***/
 
                 new Thread(new Runnable() {
