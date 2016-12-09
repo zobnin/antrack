@@ -44,6 +44,21 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+
+        <TextView android:id="@id/android:empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/message_loading"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/nomodule"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -160,4 +160,5 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="message_fill_number_and_text">Заполните поля Номер и Текст</string>
     <string name="outgoing">Исходящий</string>
     <string name="answered">Отвеченный</string>
+    <string name="message_loading">Подождите...</string>
 </resources>

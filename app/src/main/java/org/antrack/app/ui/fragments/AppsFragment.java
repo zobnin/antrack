@@ -108,7 +108,7 @@ public class AppsFragment extends BaseFragment {
                     @Override
                     public void run() {
                         appsAdapter.update(apps);
-                        hideNoData();
+                        hideAllMessages();
                     }
                 });
             }

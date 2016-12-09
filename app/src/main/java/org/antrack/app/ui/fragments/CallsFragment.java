@@ -115,7 +115,7 @@ public class CallsFragment extends BaseFragment {
                     public void run() {
                         callsAdapter.update(calls);
                         callsAdapter.notifyDataSetChanged();
-                        hideNoData();
+                        hideAllMessages();
                     }
                 });
             }

@@ -114,7 +114,7 @@ public class ImagesFragment extends BaseFragment {
                         imagesAdapter.update(imageList);
                         imagesAdapter.notifyDataSetChanged();
                         gridview.smoothScrollToPosition(imageList.length-1);
-                        hideNoData();
+                        hideAllMessages();
                     }
                 });
             }

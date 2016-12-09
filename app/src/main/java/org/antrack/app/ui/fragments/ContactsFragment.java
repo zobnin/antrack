@@ -97,7 +97,7 @@ public class ContactsFragment extends BaseFragment {
                     public void run() {
                         contactsAdapter.update(contacts);
                         contactsAdapter.notifyDataSetChanged();
-                        hideNoData();
+                        hideAllMessages();
                     }
                 });
             }

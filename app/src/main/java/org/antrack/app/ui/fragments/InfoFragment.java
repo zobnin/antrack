@@ -120,7 +120,7 @@ public class InfoFragment extends BaseFragment {
                         public void run() {
                             infoAdapter.updateInfos(infos);
                             infoAdapter.notifyDataSetChanged();
-                            hideNoData();
+                            hideAllMessages();
                         }
                     });
                 }

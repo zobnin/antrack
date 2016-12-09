@@ -153,7 +153,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
                     public void run() {
                         audioAdapter.update(audios);
                         audioAdapter.notifyDataSetChanged();
-                        hideNoData();
+                        hideAllMessages();
                     }
                 });
             }

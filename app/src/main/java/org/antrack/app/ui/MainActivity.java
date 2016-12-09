@@ -627,6 +627,7 @@ public class MainActivity extends AppCompatActivity
         // Hide "No data.", "No module." and so on
         //selectedFragment.hideAll();
         findViewById(R.id.nodata).setVisibility(View.GONE);
+        findViewById(R.id.loading).setVisibility(View.GONE);
         findViewById(R.id.nomodule).setVisibility(View.GONE);
         findViewById(R.id.noroot).setVisibility(View.GONE);
         findViewById(R.id.nophone).setVisibility(View.GONE);
