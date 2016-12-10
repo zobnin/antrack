@@ -76,6 +76,7 @@ public class LogsFragment extends BaseFragment {
                         public void run() {
                             textView.setText(logsText);
                             textView.setMovementMethod(new ScrollingMovementMethod());
+                            hideAllMessages();
                         }
                     });
                 } catch (IOException e) {

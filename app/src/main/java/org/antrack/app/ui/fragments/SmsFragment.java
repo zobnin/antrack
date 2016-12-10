@@ -111,7 +111,7 @@ public class SmsFragment extends BaseFragment {
                     public void run() {
                         smsAdapter.update(smses);
                         smsAdapter.notifyDataSetChanged();
-                        hideNoData();
+                        hideAllMessages();
                     }
                 });
             }

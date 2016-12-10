@@ -440,7 +440,8 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //moveTaskToBack(true);
+            drawer.openDrawer(GravityCompat.START);
         }
     }
 
@@ -617,9 +618,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Select item
-        //if (item.isChecked()) item.setChecked(false);
-        //else item.setChecked(true);
-        item.setChecked(true);
+        if (item.isChecked()) item.setChecked(false);
+        else item.setChecked(true);
 
         // Save menu title in State
         State.menuItemTitle = (String) item.getTitle();
@@ -627,6 +627,7 @@ public class MainActivity extends AppCompatActivity
         // Hide "No data.", "No module." and so on
         //selectedFragment.hideAll();
         findViewById(R.id.nodata).setVisibility(View.GONE);
+        findViewById(R.id.loading).setVisibility(View.GONE);
         findViewById(R.id.nomodule).setVisibility(View.GONE);
         findViewById(R.id.noroot).setVisibility(View.GONE);
         findViewById(R.id.nophone).setVisibility(View.GONE);

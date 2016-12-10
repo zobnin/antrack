@@ -99,4 +99,5 @@ Coming soon
     <string name="message_fill_number_and_text">Fill number and text fields</string>
     <string name="outgoing">Outgoing</string>
     <string name="answered">Answered</string>
+    <string name="message_loading">Loading...</string>
 </resources>

@@ -1,13 +1,18 @@
 package org.antrack.app.ui.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.view.View;
 
+import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.RecyclerViewAnim;
+import org.antrack.app.ui.State;
 
 import app.R;
 
 public class BaseFragment extends Fragment {
+    private Thread waitThread;
+
     public void onFileUpdate() {}
     public String getWatchFile() { return null; }
 
@@ -25,16 +30,42 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    private void setVisible(View v) {
+        v.setAlpha(0);
+        v.setVisibility(View.VISIBLE);
+        v.animate().alpha(1);
+    }
+
     protected void showNoData() {
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (getActivity() == null) return;
-                    View noData = getActivity().findViewById(R.id.nodata);
-                    noData.setAlpha(0);
-                    noData.setVisibility(View.VISIBLE);
-                    noData.animate().alpha(1);
+                    if (!State.device.isMain()) {
+                        final View loading = getActivity().findViewById(R.id.loading);
+                        setVisible(loading);
+                        waitThread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Utils.sleep(15);
+                                if (loading.getVisibility() != View.GONE) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            View noData = getActivity().findViewById(R.id.nodata);
+                                            setVisible(noData);
+                                            loading.setVisibility(View.GONE);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                        waitThread.start();
+                    } else {
+                        View noData = getActivity().findViewById(R.id.nodata);
+                        setVisible(noData);
+                    }
                 }
             });
     }
@@ -57,9 +88,7 @@ public class BaseFragment extends Fragment {
                 public void run() {
                     if (getActivity() == null) return;
                     View noModule = getActivity().findViewById(R.id.nomodule);
-                    noModule.setAlpha(0);
-                    noModule.setVisibility(View.VISIBLE);
-                    noModule.animate().alpha(1);
+                    setVisible(noModule);
                 }
             });
     }
@@ -81,9 +110,7 @@ public class BaseFragment extends Fragment {
                 public void run() {
                     if (getActivity() == null) return;
                     View noModule = getActivity().findViewById(R.id.noroot);
-                    noModule.setAlpha(0);
-                    noModule.setVisibility(View.VISIBLE);
-                    noModule.animate().alpha(1);
+                    setVisible(noModule);
                 }
             });
     }
@@ -105,9 +132,7 @@ public class BaseFragment extends Fragment {
                 public void run() {
                     if (getActivity() == null) return;
                     View noModule = getActivity().findViewById(R.id.nophone);
-                    noModule.setAlpha(0);
-                    noModule.setVisibility(View.VISIBLE);
-                    noModule.animate().alpha(1);
+                    setVisible(noModule);
                 }
             });
     }
@@ -122,15 +147,19 @@ public class BaseFragment extends Fragment {
             });
     }
 
-    public void hideAll() {
+    public void hideAllMessages() {
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    getActivity().findViewById(R.id.nodata).setVisibility(View.GONE);
-                    getActivity().findViewById(R.id.nomodule).setVisibility(View.GONE);
-                    getActivity().findViewById(R.id.noroot).setVisibility(View.GONE);
-                    getActivity().findViewById(R.id.nophone).setVisibility(View.GONE);
+                    Activity a = getActivity();
+                    a.findViewById(R.id.nodata).setVisibility(View.GONE);
+                    a.findViewById(R.id.loading).setVisibility(View.GONE);
+                    a.findViewById(R.id.nomodule).setVisibility(View.GONE);
+                    a.findViewById(R.id.noroot).setVisibility(View.GONE);
+                    a.findViewById(R.id.nophone).setVisibility(View.GONE);
+                    if (waitThread != null)
+                        waitThread.interrupt();
                 }
             });
     }
