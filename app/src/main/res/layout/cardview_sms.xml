@@ -16,7 +16,6 @@
                 android:orientation="vertical"
                 android:background="@color/cardview_title_bg"
                 android:id="@+id/sms_summary"
-                android:elevation="@dimen/cardview_title_elevation"
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -47,7 +46,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:padding="@dimen/cardview_title_padding"
-                android:elevation="@dimen/cardview_title_elevation"
                 />
         </RelativeLayout>
     </android.support.v7.widget.CardView>

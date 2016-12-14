@@ -94,7 +94,6 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private int getDpInPixels(Context context, int dp) {

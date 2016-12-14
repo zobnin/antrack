@@ -1,5 +1,7 @@
 package org.antrack.app.ui.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -8,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 
 import org.antrack.app.C;
@@ -22,6 +26,17 @@ import app.R;
 
 public class ControlFragment extends BaseFragment {
     final String TAG = "ControlFragment";
+
+    private Switch hideSwitch;
+    private Switch systemSwitch;
+    private Switch lostSwitch;
+
+    private Button lostButton;
+    private Button wipeButton;
+    private Button lockButton;
+    private Button alarmButton;
+    private Button smsButton;
+    private Button callButton;
 
     Properties prop;
 
@@ -39,22 +54,32 @@ public class ControlFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_control, null);
 
-        final Switch hideSwitch = (Switch) view.findViewById(R.id.fragment_control_hide);
+        /*** Hide switch ***/
+
+        hideSwitch = (Switch) view.findViewById(R.id.fragment_control_hide);
         hideSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (Mod.check(Mod.HIDE)) {
-                    if (isChecked) {
-                        showHideIconWarning(hideSwitch);
-                    } else {
-                        U.runCommandAsync("hide off");
-                    }
+                if (isChecked) {
+                    showHideIconWarning();
                 } else {
-                    Mod.showNoModule(getActivity(), Mod.HIDE);
+                    U.runCommandAsync("hide off");
                 }
             }
         });
 
-        Switch lostSwitch = (Switch) view.findViewById(R.id.fragment_control_lost);
+        if (!Mod.check(Mod.HIDE)) {
+            hideSwitch.setEnabled(false);
+        }
+
+        /*** System switch ***/
+
+        // TODO
+        systemSwitch = (Switch) view.findViewById(R.id.fragment_control_system);
+        systemSwitch.setEnabled(false);
+
+        /*** Lost switch ***/
+
+        lostSwitch = (Switch) view.findViewById(R.id.fragment_control_lost);
         lostSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // FIXME Mod.LOST not exist
@@ -66,14 +91,51 @@ public class ControlFragment extends BaseFragment {
             }
         });
 
-        Button smsButton = (Button) view.findViewById(R.id.fragment_control_sms);
+        /*** Wipe button ***/
+
+        // TODO проверка прав админа
+
+        wipeButton = (Button) view.findViewById(R.id.fragment_control_wipe);
+        wipeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showWipeWarning();
+            }
+        });
+
+        if (!Mod.check(Mod.WIPE)) {
+            wipeButton.setEnabled(false);
+        }
+
+        /*** Lock button ***/
+
+        // TODO проверка прав админа
+
+        lockButton = (Button) view.findViewById(R.id.fragment_control_lock);
+        lockButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showLockWarning();
+            }
+        });
+
+        if (!Mod.check(Mod.LOCK)) {
+            lockButton.setEnabled(false);
+        }
+
+        /*** Alarm button ***/
+
+        // диалог с кнопкой включения звукового сигнала
+        // FIXME: модуля alarm нет (положить звуковой файл в assets)
+
+        /*** SMS / Calls ***/
+
+        smsButton = (Button) view.findViewById(R.id.fragment_control_sms);
         smsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 SendSmsDialog.show(getActivity(), null, null);
             }
         });
 
-        Button callButton = (Button) view.findViewById(R.id.fragment_control_call);
+        callButton = (Button) view.findViewById(R.id.fragment_control_call);
         callButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 CallDialog.show(getActivity(), null);
@@ -104,13 +166,14 @@ public class ControlFragment extends BaseFragment {
         }).start();
     }
 
-    protected void showHideIconWarning(final Switch switchHideIcon) {
+    protected void showHideIconWarning() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.warning);
         builder.setMessage(R.string.hide_icon_warning);
 
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                // FIXME
                 U.runCommandAsync("hide on");
                 dialog.dismiss();
             }
@@ -118,7 +181,7 @@ public class ControlFragment extends BaseFragment {
 
         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                switchHideIcon.setChecked(false);
+                hideSwitch.setChecked(false);
                 dialog.dismiss();
             }
         });
@@ -126,4 +189,61 @@ public class ControlFragment extends BaseFragment {
         builder.show();
     }
 
+    protected void showWipeWarning() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.warning);
+
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View v = inflater.inflate(R.layout.dialog_wipe, null, false);
+
+        builder.setView(v);
+
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkbox);
+                if (checkBox.isChecked()) {
+                    // FIXME
+                    //U.runCommandAsync("wipesd; wipe");
+                } else {
+                    //U.runCommandAsync("wipe");
+                }
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
+    }
+
+    protected void showLockWarning() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.warning);
+
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View v = inflater.inflate(R.layout.dialog_lock, null, false);
+
+        builder.setView(v);
+
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                EditText editText = (EditText) v.findViewById(R.id.editText);
+                // FIXME
+                U.runCommandAsync("lock " + editText.getText());
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
+    }
 }

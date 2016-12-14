@@ -99,5 +99,8 @@ Coming soon
     <string name="message_fill_number_and_text">Fill number and text fields</string>
     <string name="outgoing">Outgoing</string>
     <string name="answered">Answered</string>
-    <string name="message_loading">Loading...</string>
+    <string name="message_loading">One second...</string>
+    <string name="wipe_warning">This action will delete all data on the device.</string>
+    <string name="wipe_sd_checkbox">Wipe SD card</string>
+    <string name="lock_warning">This action will lock device with given PIN-code.</string>
 </resources>

@@ -17,7 +17,6 @@
                 android:padding="8dp"
                 android:orientation="vertical"
                 android:background="@color/cardview_title_bg"
-                android:elevation="@dimen/cardview_title_elevation"
                 >
                 <TextView
                     android:layout_width="wrap_content"

@@ -31,7 +31,6 @@
                 android:padding="8dp"
                 android:orientation="vertical"
                 android:background="@color/cardview_title_bg"
-                android:elevation="@dimen/cardview_title_elevation"
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,7 +84,6 @@
                 android:padding="8dp"
                 android:orientation="vertical"
                 android:background="@color/cardview_title_bg"
-                android:elevation="@dimen/cardview_title_elevation"
                 >
                 <TextView
                     android:layout_width="match_parent"
@@ -122,6 +120,7 @@
                         android:text="@string/wipe"
                         android:id="@+id/fragment_control_wipe"
                         android:layout_weight="0.33"
+                        android:stateListAnimator="@null"
                         />
 
                     <Button
@@ -130,6 +129,7 @@
                         android:text="@string/lock"
                         android:id="@+id/fragment_control_lock"
                         android:layout_weight="0.33"
+                        android:stateListAnimator="@null"
                         />
 
                     <Button
@@ -138,6 +138,7 @@
                         android:text="@string/alarm"
                         android:id="@+id/fragment_control_alarm"
                         android:layout_weight="0.33"
+                        android:stateListAnimator="@null"
                         />
                 </LinearLayout>
             </LinearLayout>
@@ -159,7 +160,6 @@
                 android:padding="8dp"
                 android:orientation="vertical"
                 android:background="@color/cardview_title_bg"
-                android:elevation="@dimen/cardview_title_elevation"
                 >
                 <TextView
                     android:layout_width="match_parent"
@@ -187,6 +187,7 @@
                     android:text="@string/send_sms"
                     android:id="@+id/fragment_control_sms"
                     android:layout_weight="0.5"
+                    android:stateListAnimator="@null"
                     />
 
                 <Button
@@ -195,6 +196,7 @@
                     android:text="@string/dial"
                     android:id="@+id/fragment_control_call"
                     android:layout_weight="0.5"
+                    android:stateListAnimator="@null"
                     />
             </LinearLayout>
         </LinearLayout>
