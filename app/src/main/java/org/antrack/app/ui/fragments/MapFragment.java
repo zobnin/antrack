@@ -92,7 +92,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                     public void run() {
                         mapView.setVisibility(View.VISIBLE);
                         mapView.getMapAsync(MapFragment.this);
-                        hideNoData();
+                        hideAllMessages();
                     }
                 });
             }

@@ -124,6 +124,7 @@ public class FileWatcher {
         if (watcher == null)
             return;
 
+        // FIXME Unhandled exception in FileObserver org.antrack.app.libs.RecursiveFileObserver$SingleFileObserver@5850edd
         for (Callback callback : watcher.getCallbacks().values()) {
             // проблема в том, что к моменту вызова callback'а фрагмент просто может быть еще не загружен
             if (callback.getWatchFile() != null) {
