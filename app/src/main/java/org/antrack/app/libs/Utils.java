@@ -1,18 +1,49 @@
 package org.antrack.app.libs;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
+import org.antrack.app.Init;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class Utils {
+    private final static String TAG = "Utils";
+
+    public static void unpackAsset(Context context, String file) {
+        try {
+            BufferedInputStream bis;
+            OutputStream bos;
+            final int BUF_SIZE = 8 * 1024;
+
+            bis = new BufferedInputStream(context.getAssets().open(file));
+            bos = new BufferedOutputStream(new FileOutputStream(Init.APP_DIR + "/" + file));
+
+            byte[] buf = new byte[BUF_SIZE];
+            int len;
+            while((len = bis.read(buf, 0, BUF_SIZE)) > 0) {
+                bos.write(buf, 0, len);
+            }
+
+            bos.close();
+            bis.close();
+        } catch (IOException e) {
+            Log.e(TAG, "unpackAsset: " + e.toString());
+        }
+    }
+
     // Not thread safe
     public static void showToast(Context context, String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();

@@ -21,7 +21,7 @@ import dalvik.system.DexClassLoader;
 public class ModuleLoader {
     private static String TAG="ModuleLoader";
 
-    public Class<?> loadClass(File file, String odexDir) {
+    private Class<?> loadClass(File file, String odexDir) {
         DexClassLoader classLoader = new DexClassLoader(
                 file.getPath(), odexDir, null, getClass().getClassLoader());
         try {

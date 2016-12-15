@@ -31,6 +31,8 @@ class Mod {
     static final String UPLOAD = "upload";
     static final String WIPE = "wipe";
     static final String WIPESD = "wipesd";
+    static final String PLAY = "play";
+    static final String ALARM = "alarm";
 
     static boolean check(String module) {
         return State.modules != null && State.modules.containsKey(module);

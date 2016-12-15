@@ -97,6 +97,10 @@ public class MainService extends Service {
                 cc.runModules("load", null);
                 cc.parseBootstrap();
 
+                /*** Unpack assets ***/
+
+                Utils.unpackAsset(context, C.ALARM_ASSET);
+
                 /*** Get ctlq ***/
 
                 try {

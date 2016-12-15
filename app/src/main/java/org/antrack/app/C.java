@@ -21,6 +21,7 @@ public class C {
     public static final String RESULT_FILE = "/result";
 
     public static final String BOOTSTRAP_ASSET = "bootstrap";
+    public static final String ALARM_ASSET = "alarm.ogg";
 
     public static final String CONTROL_Q_FILE = "/ctlq";
     public static final int CONTROL_Q_MAX_LENGTH = 10;

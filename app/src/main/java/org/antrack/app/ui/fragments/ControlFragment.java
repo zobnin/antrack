@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 
 import org.antrack.app.C;
+import org.antrack.app.Init;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
 
@@ -123,8 +124,17 @@ public class ControlFragment extends BaseFragment {
 
         /*** Alarm button ***/
 
-        // диалог с кнопкой включения звукового сигнала
-        // FIXME: модуля alarm нет (положить звуковой файл в assets)
+        alarmButton = (Button) view.findViewById(R.id.fragment_control_alarm);
+        alarmButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // FIXME
+                U.runCommandAsync(Mod.getCommand(Mod.ALARM) + " " + Init.APP_DIR + "/" + C.ALARM_ASSET);
+            }
+        });
+
+        if (!Mod.check(Mod.ALARM)) {
+            alarmButton.setEnabled(false);
+        }
 
         /*** SMS / Calls ***/
 
@@ -202,10 +212,11 @@ public class ControlFragment extends BaseFragment {
             public void onClick(DialogInterface dialog, int which) {
                 CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkbox);
                 if (checkBox.isChecked()) {
-                    // FIXME
-                    //U.runCommandAsync("wipesd; wipe");
+                    //U.runCommandAsync(
+                    //        Mod.getCommand(Mod.WIPESD) + "; " +
+                    //        Mod.getCommand(Mod.WIPE));
                 } else {
-                    //U.runCommandAsync("wipe");
+                    //U.runCommandAsync(Mod.getCommand(Mod.WIPE));
                 }
                 dialog.dismiss();
             }
@@ -232,8 +243,7 @@ public class ControlFragment extends BaseFragment {
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 EditText editText = (EditText) v.findViewById(R.id.editText);
-                // FIXME
-                U.runCommandAsync("lock " + editText.getText());
+                U.runCommandAsync(Mod.getCommand(Mod.LOCK) + " " + editText.getText());
                 dialog.dismiss();
             }
         });
