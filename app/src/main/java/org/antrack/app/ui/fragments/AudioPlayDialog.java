@@ -103,8 +103,12 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser)
+        if (fromUser) {
             mp.seekTo(progress * 1000);
+            if (!mp.isPlaying()) {
+                mp.start();
+            }
+        }
     }
 
     @Override
