@@ -5,7 +5,7 @@ public class C {
 
     public static final String APP_NAME = "org.antrack.app";
     public static final String UPDATE_INTERVAL = "30";
-    public static final String[] INTERVALS = {"10", "30", "60", "120", "180"};
+    public static final String[] INTERVALS = {"15", "30", "60", "120", "180"};
     public static final int LOGS_MAX = 1000;
     public static final int DB_LONGPOLL_TIMEOUT = 300;
 

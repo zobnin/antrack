@@ -34,7 +34,7 @@
 
         <TextView
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:text="@string/main_update_interval"
             android:id="@+id/textView_update_interval"
             android:layout_weight="0.8"
@@ -43,13 +43,12 @@
             />
 
         <Spinner
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/spinner_update_interval"
             android:spinnerMode="dialog"
             android:layout_margin="10dp"
             android:layout_weight="0.2"
-            />
+            android:layout_width="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

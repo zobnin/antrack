@@ -84,19 +84,24 @@ public class SettingsFragment extends BaseFragment {
 
         int selection = Arrays.asList(C.INTERVALS).indexOf(Settings.get(C.S_UPDATE_INTERVAL));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, C.INTERVALS);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, C.INTERVALS);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        final Spinner spinnerUpdateInterval = (Spinner) view.findViewById(R.id.spinner_update_interval);
-        spinnerUpdateInterval.setAdapter(adapter);
-        // FIXME нужно выбрать именно тот, что указан в настройках
-        spinnerUpdateInterval.setSelection(selection);
+        final Spinner spinnerUpInt = (Spinner) view.findViewById(R.id.spinner_update_interval);
+        spinnerUpInt.setAdapter(adapter);
+        spinnerUpInt.setSelection(selection);
 
-        spinnerUpdateInterval.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerUpInt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected = spinnerUpdateInterval.getSelectedItem().toString();
+                String selected = spinnerUpInt.getSelectedItem().toString();
                 Settings.put(C.S_UPDATE_INTERVAL, selected);
+
+                if (serviceEnabled == null || serviceEnabled.equals("true")) {
+                    serviceIntent = new Intent(context, MainService.class);
+                    context.stopService(serviceIntent);
+                    context.startService(serviceIntent);
+                }
             }
 
             @Override
