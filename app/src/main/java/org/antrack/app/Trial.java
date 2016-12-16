@@ -54,6 +54,7 @@ public class Trial {
 
         try {
             Files.writeTextFile(lFile, String.valueOf(date));
+            Files.writeTextFile(sdFile, String.valueOf(date));
             Pw pw = Pw.getInstance();
             pw.putFile(lFile, rFile, true);
             pw.delete(rFile, true);

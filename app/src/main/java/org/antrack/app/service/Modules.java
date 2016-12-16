@@ -62,6 +62,7 @@ class Modules {
         return "error: no such module";
     }
 
+    // FIXME иногда modules может быть null, что делать в этом случае?
     public void run(String action, String extra) {
         Log.d(TAG, "Get action: " + action);
         boolean root = checkForRoot();
