@@ -22,12 +22,17 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
 
     private MediaPlayer mp;
     private Activity activity;
+    private SeekBar seek;
+    private TextView progress;
+    private String file;
 
     AudioPlayDialog(Activity activity) {
         this.activity = activity;
     }
 
     public void show(String title, String file) {
+        this.file = file;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(title);
 
@@ -37,11 +42,11 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
         linear.setOrientation(LinearLayout.VERTICAL);
         linear.setPadding(p,p,p,p);
 
-        final TextView progress = new TextView(activity);
+        progress = new TextView(activity);
         progress.setGravity(Gravity.CENTER_HORIZONTAL);
         progress.setText("0");
 
-        final SeekBar seek = new SeekBar(activity);
+        seek = new SeekBar(activity);
         seek.setMax((int) Media.getDuration(file));
         seek.setOnSeekBarChangeListener(this);
 
@@ -58,9 +63,21 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
 
         builder.show();
 
-        play(file);
+        play(this.file);
 
         Log.d(TAG, "Start playing: " + file);
+
+    }
+
+    private void play(String file) {
+        mp = new MediaPlayer();
+        try {
+            mp.setDataSource(file);
+            mp.prepare();
+            mp.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         new Thread(new Runnable() {
             @Override
@@ -85,17 +102,6 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
         }).start();
     }
 
-    private void play(String file) {
-        mp = new MediaPlayer();
-        try {
-            mp.setDataSource(file);
-            mp.prepare();
-            mp.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private int getDpInPixels(Context context, int dp) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
@@ -104,9 +110,11 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
-            mp.seekTo(progress * 1000);
-            if (!mp.isPlaying()) {
-                mp.start();
+            if (mp.isPlaying()) {
+                mp.seekTo(progress * 1000);
+            } else {
+                play(file);
+                mp.seekTo(progress * 1000);
             }
         }
     }
