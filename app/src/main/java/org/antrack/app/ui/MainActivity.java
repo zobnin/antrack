@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity
     // For Drawer
     BaseFragment selectedFragment;
     int selectedDevice = -1;
-    boolean isArrowDown = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,19 +265,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void rotateArrowUp() {
-        if (isArrowDown) {
-            Button arrow = (Button) findViewById(R.id.arrow);
-            arrow.animate().rotation(180);
-            isArrowDown = false;
-        }
+        Button arrow = (Button) findViewById(R.id.arrow);
+        arrow.animate().rotation(180);
     }
 
     public void rotateArrowDown() {
-        if (!isArrowDown) {
-            Button arrow = (Button) findViewById(R.id.arrow);
-            arrow.animate().rotation(0);
-            isArrowDown = true;
-        }
+        Button arrow = (Button) findViewById(R.id.arrow);
+        arrow.animate().rotation(0);
     }
 
     // Switch device to currentDevice
