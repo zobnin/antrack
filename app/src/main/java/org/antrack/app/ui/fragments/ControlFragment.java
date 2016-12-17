@@ -47,10 +47,6 @@ public class ControlFragment extends BaseFragment {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
-        if (!State.device.isMain()) {
-            U.getFile(settingsFile);
-        }
-
         View view = inflater.inflate(R.layout.fragment_control, container, false);
 
         /*** Hide switch ***/
@@ -149,6 +145,10 @@ public class ControlFragment extends BaseFragment {
                 CallDialog.show(getActivity(), null);
             }
         });
+
+        if (!State.device.isMain()) {
+            U.getFile(settingsFile);
+        }
 
         onFileUpdate();
 
