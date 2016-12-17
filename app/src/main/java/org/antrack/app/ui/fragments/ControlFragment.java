@@ -47,12 +47,11 @@ public class ControlFragment extends BaseFragment {
         // Otherwise GetActivity() return null after orientation change
         setRetainInstance(true);
 
-        if (!State.device.isMain())
+        if (!State.device.isMain()) {
             U.getFile(settingsFile);
+        }
 
-        // в конце вызывать onfileupdate, он просто будет расставлять значения кнопочек
-
-        View view = inflater.inflate(R.layout.fragment_control, null);
+        View view = inflater.inflate(R.layout.fragment_control, container, false);
 
         /*** Hide switch ***/
 
@@ -151,6 +150,8 @@ public class ControlFragment extends BaseFragment {
             }
         });
 
+        onFileUpdate();
+
         return view;
     }
 
@@ -167,9 +168,56 @@ public class ControlFragment extends BaseFragment {
                 try {
                     prop = new Properties();
                     prop.load(new FileInputStream(settingsFile));
+
+                    if (prop.getProperty(C.S_HIDDEN).equals("true")) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideSwitch.setChecked(true);
+                            }
+                        });
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideSwitch.setChecked(false);
+                            }
+                        });
+                    }
+
+                    if (prop.getProperty(C.S_SYSTEM_APP).equals("true")) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                systemSwitch.setChecked(true);
+                            }
+                        });
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                systemSwitch.setChecked(false);
+                            }
+                        });
+                    }
+
+                    if (prop.getProperty(C.S_LOST).equals("true")) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                lostSwitch.setChecked(true);
+                            }
+                        });
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                lostSwitch.setChecked(false);
+                            }
+                        });
+                    }
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());
-                    return;
                 }
             }
         }).start();
