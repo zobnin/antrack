@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity
     // For Drawer
     BaseFragment selectedFragment;
     int selectedDevice = -1;
+    boolean isArrowDown = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +209,7 @@ public class MainActivity extends AppCompatActivity
         deviceTextView = (TextView) findViewById(R.id.nav_header_main_text1);
         deviceTextView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                rotateArrowUp();
                 createDevicesMenu();
             }
         });
@@ -262,6 +265,22 @@ public class MainActivity extends AppCompatActivity
         }).start();
     }
 
+    public void rotateArrowUp() {
+        if (isArrowDown) {
+            Button arrow = (Button) findViewById(R.id.arrow);
+            arrow.animate().rotation(180);
+            isArrowDown = false;
+        }
+    }
+
+    public void rotateArrowDown() {
+        if (!isArrowDown) {
+            Button arrow = (Button) findViewById(R.id.arrow);
+            arrow.animate().rotation(0);
+            isArrowDown = true;
+        }
+    }
+
     // Switch device to currentDevice
     public void switchDevice(boolean bootstrap) {
         /*
@@ -279,6 +298,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.activity_main_drawer);
         navigationView.getMenu().getItem(0).setChecked(true);
+
+        // Rotate arrow
+        rotateArrowDown();
 
         State.deviceMenuActive = false;
 

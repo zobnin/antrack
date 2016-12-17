@@ -7,7 +7,8 @@
     android:paddingTop="16dp"
     android:background="@color/accent_material_dark"
     >
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="bottom"
@@ -16,17 +17,34 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        >
 
-        <TextView
-            android:id="@+id/nav_header_main_text1"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/primary_dark_material_dark"
-            android:textSize="32sp"
-            />
+            >
+            <TextView
+                android:id="@+id/nav_header_main_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Device"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/primary_dark_material_dark"
+                android:textSize="32sp"
+                />
+
+            <Button
+                android:id="@+id/arrow"
+                android:layout_width="32sp"
+                android:layout_height="match_parent"
+                android:text="▼"
+                android:textSize="16sp"
+                android:textColor="@color/primary_dark_material_dark"
+                android:background="#00000000"
+                />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/nav_header_main_text2"
             android:layout_width="wrap_content"
@@ -36,6 +54,7 @@
             />
 
     </LinearLayout>
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dip"
