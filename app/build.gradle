@@ -15,6 +15,10 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+
+        manifestPlaceholders = [onesignal_app_id: "90b00836-3c46-43ca-930d-1d4dca449771",
+                                // Project number pulled from dashboard, local value is ignored.
+                                onesignal_google_project_number: "REMOTE"]
     }
     buildTypes {
         release {
@@ -30,13 +34,21 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    //compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:cardview-v7:22.2.1'
     compile 'com.android.support:recyclerview-v7:22.2.1'
-    compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
     compile 'com.dropbox.core:dropbox-core-sdk:2.1.1'
     compile 'com.splunk.mint:mint:5.0.0'
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
-    //compile 'com.googlecode.json-simple:json-simple:1.1.1'
+
+    // OneSignal
+    compile 'com.onesignal:OneSignal:3.+@aar'
+    // Required for OneSignal, even if you have added FCM.
+    compile 'com.google.android.gms:play-services-gcm:+'
+    // Required for geotagging
+    compile "com.google.android.gms:play-services-location:+"
 }
+
