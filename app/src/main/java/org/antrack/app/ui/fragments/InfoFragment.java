@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import org.antrack.app.Trial;
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
@@ -151,7 +152,7 @@ public class InfoFragment extends BaseFragment {
             else
                 return null;
         } catch (IOException e) {
-            Log.e(TAG, "Can't read file: " + e.toString());
+            L.e(TAG, "Can't read file: " + e.toString());
         }
 
         return info;

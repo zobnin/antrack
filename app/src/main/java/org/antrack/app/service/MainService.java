@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.splunk.mint.Mint;
 
@@ -13,11 +12,14 @@ import org.antrack.app.CloudWatcher;
 import org.antrack.app.Features;
 import org.antrack.app.FileWatcher;
 import org.antrack.app.Init;
+import org.antrack.app.OSignal;
 import org.antrack.app.Pw;
 import org.antrack.app.Settings;
 import org.antrack.app.Trial;
 import org.antrack.app.libs.Checks;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
+import org.antrack.app.libs.WakeLocks;
 
 import java.io.IOException;
 
@@ -57,13 +59,13 @@ public class MainService extends Service {
                     public void run() {
                         if (!Trial.checkTrial()) {
                             //System.exit(-1);
-                            Log.e(TAG, "Trial is expired");
+                            L.e(TAG, "Trial is expired");
                         }
                         // Crash app
                         if (!Checks.all(MainService.this)) {
                             //Pw zz = null;
                             //zz.isConnected();
-                            Log.e(TAG, "Checks failed");
+                            L.e(TAG, "Checks failed");
                         }
 
                     }
@@ -88,10 +90,14 @@ public class MainService extends Service {
                 // FIXME
                 Utils.sleep(1);
 
-                /*** Save device features ***/
+                /*** Write device features ***/
 
                 Features feat = new Features();
                 feat.write(MainService.this, Init.MAIN_DIR + C.FEATURES_FILE);
+
+                /*** Write OneSignal Id ***/
+
+                OSignal.writeId();
 
                 /*** Bootstrap ***/
 
@@ -108,7 +114,7 @@ public class MainService extends Service {
                 try {
                     U.getFile(C.CONTROL_Q_FILE);
                 } catch (Exception e) {
-                    Log.d(TAG, "Can't parse ctlq file: " + e);
+                    L.d(TAG, "Can't parse ctlq file: " + e);
                 }
 
                 /*** Watch for remote file changes ***/
@@ -129,7 +135,7 @@ public class MainService extends Service {
                 try {
                     U.parseCtl(cc);
                 } catch (IOException e) {
-                    Log.e(TAG, "Can't read ctl file: " + e.toString());
+                    L.e(TAG, "Can't read ctl file: " + e.toString());
                 }
             }
             // Current device ctlq changed -> read and execute commands
@@ -137,7 +143,7 @@ public class MainService extends Service {
                 try {
                     U.parseCtlq(cc);
                 } catch (IOException e) {
-                    Log.e(TAG, "Can't read ctlq file: " + e.toString());
+                    L.e(TAG, "Can't read ctlq file: " + e.toString());
                 }
             }
             // Other file changed -> upload to cloud
@@ -145,7 +151,7 @@ public class MainService extends Service {
                 try {
                     U.uploadFile(path);
                 } catch (InterruptedException e) {
-                    Log.e(TAG, "processFile interrupted: " + e.toString());
+                    L.e(TAG, "processFile interrupted: " + e.toString());
                 }
             }
         }
@@ -155,7 +161,7 @@ public class MainService extends Service {
         }
     }
 
-    // Callback waits for /control changes
+    // Callback waits for ctl & ctlq changes
     public class CloudFileUpdated implements CloudWatcher.Callback {
         public void onFileUpdate(String path) {
             try {
@@ -163,7 +169,7 @@ public class MainService extends Service {
                 if (pw.isConnected())
                     pw.getFile(Init.DEVICES_DIR + path, path);
             } catch (Exception e) {
-                Log.e(TAG, "CloudFileUpdated exception: " + e);
+                L.e(TAG, "CloudFileUpdated exception: " + e);
             }
         }
 
@@ -177,44 +183,55 @@ public class MainService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "onStartCommand");
+                WakeLocks wl = new WakeLocks(MainService.this);
+                wl.lock();
+
+                L.d(TAG, "onStartCommand");
 
                 if (intent != null) {
                     String action = intent.getAction();
                     if (action != null) {
                         switch (action) {
                             case C.ACTION_BOOT:
-                                Log.d(TAG, "Get boot");
+                                L.d(TAG, "Get boot");
                                 cc.runModules(C.ACTION_BOOT, null);
                                 break;
                             case C.ACTION_ALARM:
-                                Log.d(TAG, "Get alarm");
+                                L.d(TAG, "Get alarm");
                                 Logger.alarm(context);
                                 cc.runModules(C.ACTION_ALARM, null);
                                 break;
                             case C.ACTION_SCREENON:
-                                Log.d(TAG, "Get screenOn");
+                                L.d(TAG, "Get screenOn");
                                 cc.runModules(C.ACTION_SCREENON, null);
                                 break;
                             case C.ACTION_OUTGOINGCALL:
-                                Log.d(TAG, "Get outgoingCall");
+                                L.d(TAG, "Get outgoingCall");
                                 String outNumber = intent.getStringExtra("phoneNumber");
                                 if (outNumber != null)
                                     cc.runModules(C.ACTION_OUTGOINGCALL, outNumber);
                                 break;
                             case C.ACTION_INCOMINGCALL:
-                                Log.d(TAG, "Get incomingCall");
+                                L.d(TAG, "Get incomingCall");
                                 String number = intent.getStringExtra("phoneNumber");
                                 if (number != null)
                                     cc.runModules(C.ACTION_INCOMINGCALL, number);
                                 break;
                             case C.ACTION_COMMAND:
-                                Log.d(TAG, "Get command");
+                                L.d(TAG, "Get command");
                                 cc.parseCommand(intent.getStringExtra("command"));
+                                break;
+                            case C.ACTION_WAKEUP:
+                                L.d(TAG, "Get awake");
+                                try {
+                                    pw.getFile(Init.DEVICES_DIR + Init.DEVICE_NAME_IMEI + C.CONTROL_Q_FILE,
+                                            "/" + Init.DEVICE_NAME_IMEI + C.CONTROL_Q_FILE);
+                                } catch (Exception e) {}
                                 break;
                             }
                         }
                 }
+                wl.unlock();
             }
         }).start();
 

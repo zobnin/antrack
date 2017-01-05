@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.antrack.app.C;
+import org.antrack.app.libs.L;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
@@ -128,7 +129,7 @@ public class SmsFragment extends BaseFragment {
                 date1 = format.parse(o1.date);
                 date2 = format.parse(o2.date);
             } catch (Exception e) {
-                Log.e(TAG, "DateComparator exception: " + e.toString());
+                L.e(TAG, "DateComparator exception: " + e.toString());
                 return -1;
             }
             return date1.compareTo(date2);
@@ -186,7 +187,7 @@ public class SmsFragment extends BaseFragment {
                 }
             }
         } catch (IOException e) {
-            Log.e(TAG, "Can't read sms file: " + e);
+            L.e(TAG, "Can't read sms file: " + e);
             return false;
         }
         return true;

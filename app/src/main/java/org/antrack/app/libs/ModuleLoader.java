@@ -27,7 +27,7 @@ public class ModuleLoader {
         try {
             return classLoader.loadClass(C.APP_NAME + ".modules." + file.getName().replace(".jar", "") + ".Module");
         } catch (Exception e) {
-            Log.e(TAG, "Load class error: " + e.toString());
+            L.e(TAG, "Load class error: " + e.toString());
             return null;
         }
     }
@@ -36,7 +36,7 @@ public class ModuleLoader {
         File[] files = new File(jarDir).listFiles();
 
         if (files == null) {
-            Log.e(TAG, "getObjects: There was no files in " + jarDir);
+            L.e(TAG, "getObjects: There was no files in " + jarDir);
             return null;
         }
 
@@ -49,7 +49,7 @@ public class ModuleLoader {
                 ModuleInterface obj = (ModuleInterface) loadedClass.newInstance();
                 hashmap.put(file.getName().replace(".jar", ""), obj);
             } catch (Exception e) {
-                Log.d(TAG, "getObjects error: " + e.toString());
+                L.d(TAG, "getObjects error: " + e.toString());
             }
         }
         return hashmap;
@@ -69,7 +69,7 @@ public class ModuleLoader {
             String[] moduleList = context.getAssets().list("modules");
 
             if (moduleList.length == 0) {
-                Log.d(TAG, "unpackModules: no modules");
+                L.d(TAG, "unpackModules: no modules");
                 return false;
             }
 
@@ -78,7 +78,7 @@ public class ModuleLoader {
             final int BUF_SIZE = 8 * 1024;
 
             for (String module : moduleList) {
-                Log.d(TAG, "unpackModules: unpacking " + module);
+                L.d(TAG, "unpackModules: unpacking " + module);
                 try {
                     bis = new BufferedInputStream(context.getAssets().open("modules/" + module));
                     dexWriter = new BufferedOutputStream(
@@ -92,12 +92,12 @@ public class ModuleLoader {
                     bis.close();
 
                 } catch (Exception e) {
-                    Log.e(TAG, "unpackModules error: " + e.toString());
+                    L.e(TAG, "unpackModules error: " + e.toString());
                 }
             }
 
         } catch (IOException e) {
-            Log.e(TAG, "unpackModules error: " + e.toString());
+            L.e(TAG, "unpackModules error: " + e.toString());
         }
         return true;
     }

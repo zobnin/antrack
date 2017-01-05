@@ -1,15 +1,15 @@
 package org.antrack.app.ui;
 
-import android.util.Log;
-
-import org.antrack.app.Features;
+import org.antrack.app.C;
 import org.antrack.app.Init;
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 
 import java.io.IOException;
 
 public class Device {
     private String dirName;
+    private String OSId = null;
     String lastUpdate = null;
 
     Device(String dir) {
@@ -28,12 +28,23 @@ public class Device {
         return dirName;
     }
 
+    public String getOSId() {
+        if (OSId == null) {
+            try {
+                OSId = Files.readTextFile(Init.DEVICES_DIR + dirName + C.OSID_FILE);
+            } catch (IOException e ) {
+                L.d("Device", "Can't read osid file: " + e.toString());
+            }
+        }
+        return OSId;
+    }
+
     public String getFullName() {
         String fullName;
         try {
             fullName = Files.readTextFile(Init.DEVICES_DIR + dirName + "/name");
         } catch (IOException e) {
-            Log.d("Device", "Can't read full name: " + e.toString());
+            L.d("Device", "Can't read full name: " + e.toString());
             fullName = null;
         }
         return fullName;

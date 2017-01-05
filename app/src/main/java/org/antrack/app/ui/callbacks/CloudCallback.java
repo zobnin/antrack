@@ -5,6 +5,7 @@ import android.util.Log;
 import org.antrack.app.CloudWatcher;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
+import org.antrack.app.libs.L;
 import org.antrack.app.ui.State;
 
 // Callback for update files from cloud
@@ -22,7 +23,7 @@ public class CloudCallback implements CloudWatcher.Callback {
                                 if (pw.isConnected())
                                     pw.getFile(Init.DEVICES_DIR + path, path);
                             } catch (Exception e) {
-                                Log.d("CloudCallback", "Error downloading file: " + e);
+                                L.d("CloudCallback", "Error downloading file: " + e);
                             }
                         }
                     }).start();

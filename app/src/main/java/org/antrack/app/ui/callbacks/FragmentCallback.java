@@ -3,6 +3,7 @@ package org.antrack.app.ui.callbacks;
 import android.util.Log;
 
 import org.antrack.app.FileWatcher;
+import org.antrack.app.libs.L;
 import org.antrack.app.ui.State;
 
 // Callback for update fragments on file changes
@@ -12,7 +13,7 @@ public class FragmentCallback implements FileWatcher.Callback {
     public void onFileUpdate(String path) {
         if (State.fragment != null) {
             State.fragment.onFileUpdate();
-            Log.d("FragmentCallback", "Fragment updated");
+            L.d("FragmentCallback", "Fragment updated");
         }
     }
 

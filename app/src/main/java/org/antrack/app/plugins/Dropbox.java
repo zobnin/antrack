@@ -14,6 +14,7 @@ import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.files.WriteMode;
 
 import org.antrack.app.C;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
 import org.apache.http.HttpStatus;
 
@@ -54,7 +55,7 @@ public class Dropbox {
         try {
             return client.users().getCurrentAccount().getEmail();
         } catch (Exception e) {
-            Log.e(TAG, "getEmail exception: " + e.toString());
+            L.e(TAG, "getEmail exception: " + e.toString());
             return null;
         }
     }
@@ -67,13 +68,13 @@ public class Dropbox {
                     .withMode(WriteMode.OVERWRITE)
                     .uploadAndFinish(is);
             is.close();
-            Log.d(TAG, "PutFile: " + rFile + " " + meta.toString());
+            L.d(TAG, "PutFile: " + rFile + " " + meta.toString());
             if (delete) {
                 //noinspection ResultOfMethodCallIgnored
                 file.delete();
             }
         } catch (Exception e) {
-            Log.e(TAG, "PutFile exception: " + e.toString());
+            L.e(TAG, "PutFile exception: " + e.toString());
         }
     }
 
@@ -83,9 +84,9 @@ public class Dropbox {
             FileOutputStream os = new FileOutputStream(file);
             FileMetadata meta = client.files().downloadBuilder(rFile).download(os);
             os.close();
-            Log.d(TAG, "GetFile: " + rFile + " " + meta.toString());
+            L.d(TAG, "GetFile: " + rFile + " " + meta.toString());
         } catch (Exception e) {
-            Log.e(TAG, "GetFile exception: " + e.toString());
+            L.e(TAG, "GetFile exception: " + e.toString());
         }
     }
 
@@ -96,7 +97,7 @@ public class Dropbox {
             else
                 client.files().delete(path);
         } catch (Exception e) {
-            Log.e(TAG, "Delete exception: " + e.toString());
+            L.e(TAG, "Delete exception: " + e.toString());
         }
     }
 
@@ -128,7 +129,7 @@ public class Dropbox {
                 result = client.files().listFolderContinue(result.getCursor());
             }
         } catch (Exception e) {
-            Log.e(TAG, "listDir exception: " + e.toString());
+            L.e(TAG, "listDir exception: " + e.toString());
             return null;
         }
 
@@ -158,7 +159,7 @@ public class Dropbox {
     public void getDir(String lDir, String rDir) {
         ArrayList<String> files = listDir(rDir);
         if (files == null) {
-            Log.e(TAG, "GetFiles: dir is empty");
+            L.e(TAG, "GetFiles: dir is empty");
             return;
         }
 
@@ -194,14 +195,14 @@ public class Dropbox {
                     fileList = new ArrayList<>();
                     for (Metadata md : folderResult.getEntries()) {
                         String changedFilePath = md.getPathLower();
-                        Log.d(TAG, "watchForChanges: modified file: " + changedFilePath);
+                        L.d(TAG, "watchForChanges: modified file: " + changedFilePath);
                         fileList.add(changedFilePath);
                     }
                 }
             }
             return fileList;
         } catch (Exception e) {
-            Log.e(TAG, "watchForChanges exception: " + e.toString());
+            L.e(TAG, "watchForChanges exception: " + e.toString());
             return null;
         }
     }
@@ -228,7 +229,7 @@ public class Dropbox {
                     "{\"cursor\": \"" + cursor +
                     "\",\"timeout\": " + Integer.toString(C.DB_LONGPOLL_TIMEOUT) + "}";
 
-            Log.e(TAG, "query: " + query);
+            L.e(TAG, "query: " + query);
 
             OutputStream os = conn.getOutputStream();
             os.write(query.getBytes());
@@ -245,10 +246,10 @@ public class Dropbox {
 
             String response = Utils.StreamToString(is);
 
-            Log.e(TAG, "Longpoll result: " + response);
+            L.e(TAG, "Longpoll result: " + response);
             return response.contains("true");
         } catch (Exception e) {
-            Log.e(TAG, "Longpoll exception: " + e);
+            L.e(TAG, "Longpoll exception: " + e);
             return false;
         }
     }

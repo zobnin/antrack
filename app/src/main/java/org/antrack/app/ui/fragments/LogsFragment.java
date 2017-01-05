@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
@@ -80,7 +81,7 @@ public class LogsFragment extends BaseFragment {
                         }
                     });
                 } catch (IOException e) {
-                    Log.e(TAG, "Cat read logs file: " + e.toString());
+                    L.e(TAG, "Cat read logs file: " + e.toString());
                 }
             }
         }).start();

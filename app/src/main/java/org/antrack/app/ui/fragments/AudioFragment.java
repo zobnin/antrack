@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Media;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.State;
@@ -82,7 +83,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
                     ArrayList<String> audioFiles = U.compareDirs(audioDir);
 
                     if (audioFiles == null) {
-                        Log.d(TAG, "compareDirs returned null");
+                        L.d(TAG, "compareDirs returned null");
                         return;
                     }
 

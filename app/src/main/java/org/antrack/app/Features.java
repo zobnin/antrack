@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.util.Log;
 
+import org.antrack.app.libs.L;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -42,7 +44,7 @@ public class Features {
                 }
             }
         } catch (Exception e) {
-            Log.d(TAG, "Read exception: " + e.toString());
+            L.d(TAG, "Read exception: " + e.toString());
         }
     }
 
@@ -62,7 +64,7 @@ public class Features {
             writer.write(feat);
             writer.close();
         } catch (Exception e) {
-            Log.e(TAG, "Write error: " + e.toString());
+            L.e(TAG, "Write error: " + e.toString());
         }
     }
 

@@ -5,6 +5,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Shell;
 import org.antrack.app.libs.Utils;
 
@@ -37,7 +38,7 @@ public class Init {
 
     public static void all(Context context) {
         if (!done) {
-            Log.d(TAG, "Initialization...");
+            L.d(TAG, "Initialization...");
             getIMEI(context);
             makeDirs(context);
             initSettings(context);
@@ -57,7 +58,7 @@ public class Init {
 
         MAIN_DIR = DEVICES_DIR + DEVICE_NAME_IMEI;
 
-        Log.d(TAG, "Device dir: " + MAIN_DIR);
+        L.d(TAG, "Device dir: " + MAIN_DIR);
 
         CONTROL_FILE = MAIN_DIR + C.CONTROL_FILE;
         CONTROL_Q_FILE = MAIN_DIR + C.CONTROL_Q_FILE;
@@ -78,7 +79,7 @@ public class Init {
             Files.writeTextFile(MAIN_DIR + C.NAME_FILE,
                     android.os.Build.BRAND + " " + android.os.Build.MODEL);
         } catch (IOException e) {
-            Log.e(TAG, "Can't write /name: " + e.toString());
+            L.e(TAG, "Can't write /name: " + e.toString());
         }
     }
 
@@ -95,7 +96,7 @@ public class Init {
             if (IMSI != null) {
                 Settings.put(C.S_IMSI, IMSI);
             } else {
-                Log.e(TAG, "Can't get IMSI");
+                L.e(TAG, "Can't get IMSI");
             }
         }
     }

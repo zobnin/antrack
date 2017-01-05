@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.antrack.app.libs.L;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
@@ -144,7 +145,7 @@ public class CallsFragment extends BaseFragment {
                 calls.add(call);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Can't read apps file: " + e);
+            L.e(TAG, "Can't read apps file: " + e);
             return false;
         }
 

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.antrack.app.Pw;
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
@@ -65,7 +66,7 @@ class Mod {
                     Pw pw = Pw.getInstance();
                     pw.delete(U.getCloudPath(getFile(moduleName)), false);
                 } catch (Exception e) {
-                    Log.e("Mod", "Delete exception: " + e.toString());
+                    L.e("Mod", "Delete exception: " + e.toString());
                 }
             }
         }).start();

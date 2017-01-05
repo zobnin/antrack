@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.antrack.app.C;
+import org.antrack.app.libs.L;
 import org.antrack.app.service.Logger;
 import org.antrack.app.service.MainService;
 import org.antrack.app.libs.Net;
@@ -27,11 +28,11 @@ public class ConnChangeReceiver extends BroadcastReceiver {
         Intent myIntent = new Intent(context, MainService.class);
 
         if (Net.isConnected(context)) {
-            Log.d(TAG, "Connected to network, start service");
+            L.d(TAG, "Connected to network, start service");
             Logger.connected(context);
             context.startService(myIntent);
         } else {
-            Log.d(TAG, "Network disconnected, stop service");
+            L.d(TAG, "Network disconnected, stop service");
             Logger.disconnected(context);
             context.stopService(myIntent);
         }

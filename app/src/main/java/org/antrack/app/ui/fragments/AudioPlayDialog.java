@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Media;
 
 import java.util.concurrent.TimeUnit;
@@ -65,7 +66,7 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
 
         play(this.file);
 
-        Log.d(TAG, "Start playing: " + file);
+        L.d(TAG, "Start playing: " + file);
 
     }
 

@@ -1,13 +1,13 @@
 package org.antrack.app.ui;
 
-import android.util.Log;
-
 import org.antrack.app.C;
 import org.antrack.app.Features;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
+import org.antrack.app.OSignal;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,7 +41,7 @@ public class U {
 
             ret = ret.substring(ret.lastIndexOf("Last update") + 12).trim();
         } catch (IOException e) {
-            Log.e(TAG, "Can't read info file: " + e.toString());
+            L.e(TAG, "Can't read info file: " + e.toString());
             return null;
         }
 
@@ -58,7 +58,7 @@ public class U {
             if (pw.isConnected())
                 pw.getFile(getLocalPath(file), getCloudPath(file));
         } catch (Exception e) {
-            Log.e(TAG, "Can't get file " + file + ":" + e);
+            L.e(TAG, "Can't get file " + file + ":" + e);
         }
     }
 
@@ -78,7 +78,7 @@ public class U {
             if (pw.isConnected())
                 pw.getDir(getLocalPath(dir), getCloudPath(dir));
         } catch (Exception e) {
-            Log.e(TAG, "Can't get dir " + dir + ": " + e);
+            L.e(TAG, "Can't get dir " + dir + ": " + e);
         }
     }
 
@@ -89,7 +89,7 @@ public class U {
             if (pw.isConnected())
                 pw.putFile(getLocalPath(file), getCloudPath(file), false);
         } catch (Exception e) {
-            Log.e(TAG, "Can't put file " + file + ": " + e);
+            L.e(TAG, "Can't put file " + file + ": " + e);
         }
     }
 
@@ -114,7 +114,7 @@ public class U {
                     if (pw.isConnected())
                         listDirResult = pw.listDir(dir);
                 } catch (Exception e) {
-                    Log.e(TAG, "Can't list dir " + dir + ": " + e);
+                    L.e(TAG, "Can't list dir " + dir + ": " + e);
                 }
             }
         });
@@ -123,7 +123,7 @@ public class U {
         try {
             thread.join();
         } catch (InterruptedException e) {
-            Log.e(TAG, "listDir exception: " + e);
+            L.e(TAG, "listDir exception: " + e);
             return null;
         }
         return listDirResult;
@@ -158,7 +158,7 @@ public class U {
             try {
                 Files.writeTextFile(deviceControlFile, cmd);
             } catch (IOException e) {
-                Log.e(TAG, "Can't run command " + cmd + ": " + e);
+                L.e(TAG, "Can't run command " + cmd + ": " + e);
             }
         }
         else {
@@ -168,8 +168,10 @@ public class U {
                 Files.addLineToStack(deviceControlFile,
                         Utils.date(C.LAST_CMD_TIME_FORMAT) + " " + cmd, C.CONTROL_Q_MAX_LENGTH);
                 putFileAsync(C.CONTROL_Q_FILE);
+
+                OSignal.push(State.device.getOSId().trim());
             } catch (IOException e) {
-                Log.e(TAG, "Can't run command " + cmd + ": " + e);
+                L.e(TAG, "Can't run command " + cmd + ": " + e);
             }
         }
     }
@@ -229,7 +231,7 @@ public class U {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "Can't read modules file: " + e);
+            L.e(TAG, "Can't read modules file: " + e);
             return false;
         }
 

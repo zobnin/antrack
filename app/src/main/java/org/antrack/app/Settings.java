@@ -2,6 +2,7 @@ package org.antrack.app;
 
 import android.util.Log;
 
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Shell;
 
 import java.io.FileInputStream;
@@ -27,7 +28,7 @@ public class Settings {
             prop = new Properties();
             prop.load(new FileInputStream(settingsFile));
         } catch (Exception e) {
-            Log.e(TAG, e.toString());
+            L.e(TAG, e.toString());
         }
     }
 
@@ -35,19 +36,19 @@ public class Settings {
         try {
             prop.store(new FileOutputStream(settingsFile), "");
         } catch (Exception e) {
-            Log.e(TAG, e.toString());
+            L.e(TAG, e.toString());
         }
     }
 
     public static void put(String name, String value) {
         prop.setProperty(name, value);
         store(); // For cloud synchronization
-        Log.d(TAG, "Set settings: " + name + " = " + value);
+        L.d(TAG, "Set settings: " + name + " = " + value);
     }
 
     public static String get(String name) {
         String value = prop.getProperty(name);
-        Log.d(TAG, "Get settings: " + name + " = " + value);
+        L.d(TAG, "Get settings: " + name + " = " + value);
         return value;
     }
 }

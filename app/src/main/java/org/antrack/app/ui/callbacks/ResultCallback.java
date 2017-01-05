@@ -5,6 +5,7 @@ import android.util.Log;
 import org.antrack.app.C;
 import org.antrack.app.FileWatcher;
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.MainActivity;
 import org.antrack.app.ui.State;
@@ -22,12 +23,12 @@ public class ResultCallback implements FileWatcher.Callback {
     }
 
     public void onFileUpdate(String path) {
-        Log.d(TAG, "RESULT UPDATED!!!");
+        L.d(TAG, "RESULT UPDATED!!!");
         String result = "";
         try {
             result = Files.readTextFile(path);
         } catch (IOException e) {
-            Log.e(TAG, "Can't read result file: " + e);
+            L.e(TAG, "Can't read result file: " + e);
         }
 
         final String result2 = result;

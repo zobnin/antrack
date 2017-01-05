@@ -40,7 +40,7 @@ public class Utils {
             bos.close();
             bis.close();
         } catch (IOException e) {
-            Log.e(TAG, "unpackAsset: " + e.toString());
+            L.e(TAG, "unpackAsset: " + e.toString());
         }
     }
 

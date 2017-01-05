@@ -6,6 +6,7 @@ import android.util.Log;
 import org.antrack.app.C;
 import org.antrack.app.Init;
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Shell;
 import org.antrack.app.libs.Utils;
 
@@ -18,7 +19,7 @@ public class Logger {
 
     private static void put(String txt) {
         try {
-            Log.d(TAG, "New record: " + txt);
+            L.d(TAG, "New record: " + txt);
 
             File file = new File(logfile);
             if (file.exists()) {
@@ -29,7 +30,7 @@ public class Logger {
             }
             Files.addLine(logfile, Utils.date("yyyy.MM.dd HH:mm:ss") + " " + txt);
         } catch (IOException e) {
-            Log.e(TAG, "put IOException");
+            L.e(TAG, "put IOException");
         }
     }
 

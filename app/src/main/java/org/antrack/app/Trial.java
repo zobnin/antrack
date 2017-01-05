@@ -4,6 +4,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 
 import java.io.File;
 import java.net.URL;
@@ -16,7 +17,7 @@ public class Trial {
     public static boolean checkTrial() {
         long remainingDays = getRemainingDays();
 
-        Log.d("TRIAL", "remainingDays: " + remainingDays);
+        L.d("TRIAL", "remainingDays: " + remainingDays);
 
         return remainingDays > 0;
     }
@@ -61,7 +62,7 @@ public class Trial {
             // Last because it may cause exception
             Files.writeTextFile(sdFile, String.valueOf(date));
         } catch(Exception e) {
-            Log.e("TRIAL", "saveDate exception: " + e.toString());
+            L.e("TRIAL", "saveDate exception: " + e.toString());
         }
     }
 
@@ -90,10 +91,10 @@ public class Trial {
                 }
             }
         } catch (Exception e) {
-            Log.e("TRIAL", "getDateFromAppDir exception: " + e);
+            L.e("TRIAL", "getDateFromAppDir exception: " + e);
         }
 
-        Log.d("TRIAL", "getDateFromAppDir: " + date);
+        L.d("TRIAL", "getDateFromAppDir: " + date);
 
         return date;
     }
@@ -104,10 +105,10 @@ public class Trial {
             date = Long.parseLong(Files.readTextFile(
                     Environment.getExternalStorageDirectory() + "/.cache"));
         } catch (Exception e) {
-            Log.e("TRIAL", "getDateFromSdcard exception: " + e);
+            L.e("TRIAL", "getDateFromSdcard exception: " + e);
         }
 
-        Log.d("TRIAL", "getDateFromSdcard: " + date);
+        L.d("TRIAL", "getDateFromSdcard: " + date);
 
         return date;
     }
@@ -123,10 +124,10 @@ public class Trial {
                 }
             }
         } catch (Exception e) {
-            Log.e("TRIAL", "getDateFromCloud exception: " + e);
+            L.e("TRIAL", "getDateFromCloud exception: " + e);
         }
 
-        Log.d("TRIAL", "getDateFromCloud: " + date);
+        L.d("TRIAL", "getDateFromCloud: " + date);
 
         return date;
     }
@@ -139,7 +140,7 @@ public class Trial {
             URLConnection conn = url.openConnection();
             date = conn.getDate();
         } catch (Exception e) {
-            Log.e("TRIAL", "getDate exception: " + e.toString());
+            L.e("TRIAL", "getDate exception: " + e.toString());
         }
 
         return date;

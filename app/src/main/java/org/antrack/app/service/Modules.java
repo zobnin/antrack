@@ -8,6 +8,7 @@ import org.antrack.app.Init;
 import org.antrack.app.ModuleInterface;
 import org.antrack.app.Settings;
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.ModuleLoader;
 import org.antrack.app.libs.Shell;
 import org.antrack.app.libs.Utils;
@@ -65,7 +66,7 @@ class Modules {
 
     // FIXME иногда modules может быть null, что делать в этом случае?
     public void run(String action, String extra) {
-        Log.d(TAG, "Get action: " + action);
+        L.d(TAG, "Get action: " + action);
         boolean root = checkForRoot();
         boolean admin = checkForAdmin();
 
@@ -130,7 +131,7 @@ class Modules {
             }
             writer.close();
         } catch (IOException e) {
-            Log.e(TAG, "filed to write modules file: " + e.toString());
+            L.e(TAG, "filed to write modules file: " + e.toString());
         }
         return "done";
     }
@@ -157,7 +158,7 @@ class Modules {
             writer.close();
             return "done";
         } catch (IOException e) {
-            Log.e(TAG, "filed to write modules.json file");
+            L.e(TAG, "filed to write modules.json file");
             return "error: " + e.toString();
         }
     }

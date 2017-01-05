@@ -7,6 +7,7 @@ import org.antrack.app.Init;
 import org.antrack.app.Pw;
 import org.antrack.app.Settings;
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
 
 import java.io.File;
@@ -77,7 +78,7 @@ public class U {
         }
 
         if (!file.exists()) {
-            Log.d("U/uploadFile", "File don't exist: " + path);
+            L.d("U/uploadFile", "File don't exist: " + path);
             return;
         }
 

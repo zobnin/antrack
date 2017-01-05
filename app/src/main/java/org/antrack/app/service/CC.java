@@ -7,6 +7,7 @@ import org.antrack.app.C;
 import org.antrack.app.Init;
 import org.antrack.app.Settings;
 import org.antrack.app.libs.Files;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
 
 import java.io.BufferedReader;
@@ -39,18 +40,18 @@ class CC {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.length() > 2) {
-                    Log.d(TAG, "get bootstrap line: " + line);
+                    L.d(TAG, "get bootstrap line: " + line);
                     parseCommand(line.trim());
                 }
             }
             reader.close();
         } catch (IOException e) {
-            Log.e(TAG, "unpackBootstrap error: " + e.toString());
+            L.e(TAG, "unpackBootstrap error: " + e.toString());
         }
     }
 
     void parseCommand(String cmd) {
-        Log.d(TAG, "command: " + cmd);
+        L.d(TAG, "command: " + cmd);
 
         if (cmd.length() > 200) {
             writeResult("internal", "error: command can't be > 200 symbols");
@@ -109,7 +110,7 @@ class CC {
                 Files.writeTextFile(Init.RESULT_FILE, Utils.date("yyyy.MM.dd HH:mm:ss:SSS"));
                 Files.addLine(Init.RESULT_FILE, cmd + " " + result);
             } catch (IOException e) {
-                Log.e(TAG, "writeResult IOException: " + e);
+                L.e(TAG, "writeResult IOException: " + e);
             }
         }
     }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import org.antrack.app.libs.L;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
 
@@ -70,7 +71,7 @@ public class ImagesFragment extends BaseFragment {
                     ArrayList<String> images = U.compareDirs(modDir);
 
                     if (images == null) {
-                        Log.d(TAG, "compareDirs returned null");
+                        L.d(TAG, "compareDirs returned null");
                         return;
                     }
 

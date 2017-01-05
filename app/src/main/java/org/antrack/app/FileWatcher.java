@@ -2,6 +2,7 @@ package org.antrack.app;
 
 import android.util.Log;
 
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.RecursiveFileObserver;
 
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class FileWatcher {
 
     public void addCallback(String name, Callback callback) {
         if (callback == null) {
-            Log.e(TAG, "addCallback: callback == null");
+            L.e(TAG, "addCallback: callback == null");
             return;
         }
 
@@ -91,7 +92,7 @@ public class FileWatcher {
             watchers.get(device).addCallback(name, callback);
         }
 
-        Log.d(TAG, "addCallback name: " + name + ", device: " + device + ", file: " + callback.getWatchFile());
+        L.d(TAG, "addCallback name: " + name + ", device: " + device + ", file: " + callback.getWatchFile());
 
     }
 
@@ -110,7 +111,7 @@ public class FileWatcher {
             }
         }
 
-        Log.d(TAG, "removeCallback name: " + name);
+        L.d(TAG, "removeCallback name: " + name);
     }
 
     // FIXME колбэк может быть удален пока выполняется эта функция
@@ -118,7 +119,7 @@ public class FileWatcher {
         path = path.replace("//", "/");
         String device = path.replace(Init.DEVICES_DIR, "/").split("/")[1];
 
-        Log.d(TAG, "File modified, device: " + device + ", path: " + path);
+        L.d(TAG, "File modified, device: " + device + ", path: " + path);
 
         Watcher watcher = watchers.get(device);
         if (watcher == null)

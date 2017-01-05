@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Keyboard;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
@@ -155,7 +156,7 @@ public class ShellFragment extends BaseFragment {
                 }
             });
         } catch (IOException e) {
-            Log.e(TAG, "Can't read cmdout: " + e);
+            L.e(TAG, "Can't read cmdout: " + e);
         }
     }
 

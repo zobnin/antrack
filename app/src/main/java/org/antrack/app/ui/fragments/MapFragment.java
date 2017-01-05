@@ -15,6 +15,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.antrack.app.libs.L;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
 
@@ -142,7 +143,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                 currentLocation.lng  = loc[3];
             }
         } catch (IOException e) {
-            Log.e(TAG, "Can't read apps file: " + e);
+            L.e(TAG, "Can't read apps file: " + e);
             return false;
         }
 

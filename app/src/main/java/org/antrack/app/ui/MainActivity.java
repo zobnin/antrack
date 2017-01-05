@@ -31,6 +31,7 @@ import org.antrack.app.Pw;
 import org.antrack.app.Trial;
 import org.antrack.app.libs.Checks;
 import org.antrack.app.libs.Keyboard;
+import org.antrack.app.libs.L;
 import org.antrack.app.libs.LoadingDialog;
 import org.antrack.app.libs.Utils;
 import org.antrack.app.service.MainService;
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity
             State.device = new Device(Init.DEVICE_NAME_IMEI);
         }
 
-        Log.d(TAG, "Running on: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
+        L.d(TAG, "Running on: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
 
         /*** Start wizard ***/
 
@@ -264,13 +265,13 @@ public class MainActivity extends AppCompatActivity
                             //System.exit(-1);
                         }
                     });
-                    Log.e(TAG, "Trial is expired");
+                    L.e(TAG, "Trial is expired");
                 }
                 // Crash app
                 if (!Checks.all(MainActivity.this)) {
                     //Pw zz = null;
                     //zz.isConnected();
-                    Log.e(TAG, "Checks failed");
+                    L.e(TAG, "Checks failed");
                 }
 
             }
@@ -342,7 +343,7 @@ public class MainActivity extends AppCompatActivity
         setToolbarTitle();
         addCallbacks();
 
-        Log.d(TAG, "Fragment loaded");
+        L.d(TAG, "Fragment loaded");
     }
 
     private void reloadCurrentFragment() {
@@ -352,7 +353,7 @@ public class MainActivity extends AppCompatActivity
 
         setToolbarTitle();
 
-        Log.d(TAG, "Fragment reloaded");
+        L.d(TAG, "Fragment reloaded");
     }
 
     private void setToolbarTitle() {
@@ -449,7 +450,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     });
                 } catch (Exception e) {
-                    Log.d(TAG, "Device selector error: " + e);
+                    L.d(TAG, "Device selector error: " + e);
                 }
 
             }
@@ -561,17 +562,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void waitModulesAndSwitchDevice() {
-        // Get modules list and features if not exist
+        // Get modules list, features and osid if not exist
         String modulesFile = U.getLocalPath(C.MODULES_FILE);
         String featuresFile = U.getLocalPath(C.FEATURES_FILE);
+        String osidFile = U.getLocalPath(C.OSID_FILE);
 
-        if (!new File(modulesFile).exists() || !new File(featuresFile).exists()) {
+        if (!new File(modulesFile).exists() ||
+                !new File(featuresFile).exists() ||
+                !new File(osidFile).exists()) {
+
             fileWatcher = FileWatcher.getInstance();
             fileWatcher.addCallback("modules", new ModulesCallback(this));
             fileWatcher.addCallback("features", new FeaturesCallback(this));
 
             U.getFileAsync(C.MODULES_FILE);
             U.getFileAsync(C.FEATURES_FILE);
+            U.getFileAsync(C.OSID_FILE);
 
             LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 

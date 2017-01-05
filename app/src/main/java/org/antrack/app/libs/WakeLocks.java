@@ -3,7 +3,6 @@ package org.antrack.app.libs;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
-import android.util.Log;
 
 public class WakeLocks {
     private PowerManager.WakeLock myWakeLock;
@@ -20,16 +19,16 @@ public class WakeLocks {
         myWakeLock = ((PowerManager) context
                 .getSystemService(Context.POWER_SERVICE)).newWakeLock(
                 PowerManager.PARTIAL_WAKE_LOCK, "GenericWakelock");
-        Log.d(TAG, "Lock initiated");
+        L.d(TAG, "Lock initiated");
     }
 
     public void lock() {
         try {
             myWakeLock.acquire();
             //myWifiLock.acquire();
-            Log.d(TAG,"Lock acquired");
+            L.d(TAG,"Lock acquired");
         } catch (Exception e) {
-            Log.e(TAG, "Error getting Lock: " + e.getMessage());
+            L.e(TAG, "Error getting Lock: " + e.getMessage());
         }
     }
 
@@ -40,6 +39,6 @@ public class WakeLocks {
         if (myWifiLock.isHeld())
             myWifiLock.release();
         */
-        Log.d(TAG,"Lock released");
+        L.d(TAG,"Lock released");
     }
 }

@@ -5,6 +5,7 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -127,6 +128,14 @@
             android:enabled="true"
             android:exported="false">
             <!--android:process=":MainService" -->
+        </service>
+
+        <service
+            android:name="org.antrack.app.service.OSService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.onesignal.NotificationExtender" />
+            </intent-filter>
         </service>
 
         <meta-data

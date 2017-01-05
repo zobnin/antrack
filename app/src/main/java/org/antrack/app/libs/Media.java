@@ -22,7 +22,7 @@ public class Media {
         try {
             recorder.prepare();
         } catch (IOException e) {
-            Log.e(TAG, "recordAudio exception");
+            L.e(TAG, "recordAudio exception");
         }
 
         recorder.start();
@@ -33,7 +33,7 @@ public class Media {
                 try {
                     Thread.sleep(time * 1000);
                 } catch (InterruptedException e) {
-                    Log.d(TAG, "timer interrupted");
+                    L.d(TAG, "timer interrupted");
                 } finally {
                     recorder.stop();
                     recorder.release();
@@ -55,7 +55,7 @@ public class Media {
             duration = mp.getDuration();
             mp.release();
         } catch (IOException e) {
-            Log.e(TAG, "Can't open media file: " + e.toString());
+            L.e(TAG, "Can't open media file: " + e.toString());
             duration = -1;
         }
         return duration / 1000;

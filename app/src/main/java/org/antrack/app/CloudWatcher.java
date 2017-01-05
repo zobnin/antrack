@@ -1,6 +1,6 @@
 package org.antrack.app;
 
-import android.util.Log;
+import org.antrack.app.libs.L;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,13 +66,14 @@ public class CloudWatcher {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, "Start thread for device: " + device);
+                    L.d(TAG, "Start thread for device: " + device);
 
                     while (active) {
                         try {
                             Pw pw = Pw.getInstance();
                             // Sleep if there are no internet connection
-                            pw.waitOnline();
+                            // FIXME
+                            //pw.waitOnline();
                             ArrayList<String> changedFiles = pw.watchForChanges("/" + device);
 
                             // Second check if thread become inactive while blocked
@@ -85,7 +86,7 @@ public class CloudWatcher {
                                 }
                             }
                         } catch (Exception e) {
-                            Log.e(TAG, "Thread interrupted");
+                            L.e(TAG, "Thread interrupted");
                             break;
                         }
                     }
@@ -100,7 +101,7 @@ public class CloudWatcher {
 
     public void addCallback(String name, Callback callback) {
         if (callback == null) {
-            Log.e(TAG, "addCallback: callback == null");
+            L.e(TAG, "addCallback: callback == null");
             return;
         }
 
@@ -123,7 +124,7 @@ public class CloudWatcher {
             watchers.get(device).addCallback(name, callback);
         }
 
-        Log.d(TAG, "addCallback name: " + name + ", device: " + device + ", file: " + callback.getWatchFile());
+        L.d(TAG, "addCallback name: " + name + ", device: " + device + ", file: " + callback.getWatchFile());
     }
 
     public void removeCallback(String name) {
@@ -141,14 +142,14 @@ public class CloudWatcher {
             }
         }
 
-        Log.d(TAG, "removeCallback name: " + name);
+        L.d(TAG, "removeCallback name: " + name);
 
     }
 
     private void processFile(String path) {
         String device = path.split("/")[1];
 
-        Log.d(TAG, "File modified, device: " + device + ", path: " + path);
+        L.d(TAG, "File modified, device: " + device + ", path: " + path);
 
         Watcher watcher = watchers.get(device);
         if (watcher == null)

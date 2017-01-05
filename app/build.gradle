@@ -44,9 +44,9 @@ dependencies {
     compile 'com.splunk.mint:mint:5.0.0'
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
 
-    // OneSignal
+    // OSignal
     compile 'com.onesignal:OneSignal:3.+@aar'
-    // Required for OneSignal, even if you have added FCM.
+    // Required for OSignal, even if you have added FCM.
     compile 'com.google.android.gms:play-services-gcm:+'
     // Required for geotagging
     compile "com.google.android.gms:play-services-location:+"

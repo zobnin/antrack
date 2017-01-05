@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import org.antrack.app.C;
+import org.antrack.app.libs.L;
 import org.antrack.app.service.MainService;
 import org.antrack.app.Settings;
 
@@ -50,11 +51,11 @@ public class SettingsFragment extends BaseFragment {
                     Settings.put(C.S_ENABLE_SERVICE, "true");
                     serviceIntent = new Intent(context, MainService.class);
                     context.startService(serviceIntent);
-                    Log.d(TAG, "Service started");
+                    L.d(TAG, "Service started");
                 } else {
                     Settings.put(C.S_ENABLE_SERVICE, "false");
                     context.stopService(serviceIntent);
-                    Log.d(TAG, "Service stopped");
+                    L.d(TAG, "Service stopped");
                 }
             }
         });

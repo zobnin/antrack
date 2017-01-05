@@ -9,6 +9,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.antrack.app.C;
+import org.antrack.app.libs.L;
 import org.antrack.app.service.Logger;
 import org.antrack.app.Settings;
 
@@ -25,7 +26,7 @@ public class SimChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        Log.d("SimChangeReceiver", "SIM state changed");
+        L.d("SimChangeReceiver", "SIM state changed");
 
         Bundle extras = intent.getExtras();
         String ready = extras.getString("ss");

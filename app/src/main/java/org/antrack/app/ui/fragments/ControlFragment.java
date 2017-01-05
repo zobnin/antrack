@@ -16,6 +16,7 @@ import android.widget.Switch;
 
 import org.antrack.app.C;
 import org.antrack.app.Init;
+import org.antrack.app.libs.L;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
 
@@ -217,7 +218,7 @@ public class ControlFragment extends BaseFragment {
                         });
                     }
                 } catch (Exception e) {
-                    Log.e(TAG, e.toString());
+                    L.e(TAG, e.toString());
                 }
             }
         }).start();
