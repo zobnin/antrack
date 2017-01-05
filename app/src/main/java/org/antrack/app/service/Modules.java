@@ -7,6 +7,7 @@ import org.antrack.app.C;
 import org.antrack.app.Init;
 import org.antrack.app.ModuleInterface;
 import org.antrack.app.Settings;
+import org.antrack.app.libs.Files;
 import org.antrack.app.libs.ModuleLoader;
 import org.antrack.app.libs.Shell;
 import org.antrack.app.libs.Utils;
@@ -27,8 +28,8 @@ class Modules {
         String modulesDir = Init.APP_DIR + C.MODULES_DIR;
         String odexDir = Init.APP_DIR + C.ODEX_DIR;
 
-        Shell.runCommand("mkdir " + modulesDir);
-        Shell.runCommand("mkdir " + odexDir);
+        Files.mkdir(modulesDir);
+        Files.mkdir(odexDir);
 
         ModuleLoader ml = new ModuleLoader();
         ml.unpackModules(context, modulesDir);

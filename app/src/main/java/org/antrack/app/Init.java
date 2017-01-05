@@ -8,6 +8,7 @@ import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Shell;
 import org.antrack.app.libs.Utils;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Init {
@@ -62,10 +63,9 @@ public class Init {
         CONTROL_Q_FILE = MAIN_DIR + C.CONTROL_Q_FILE;
         RESULT_FILE = MAIN_DIR + C.RESULT_FILE;
 
-        // TODO Нормально создать каталоговую структуру
-        Shell.runCommand("mkdir -p " + MAIN_DIR);
-        Shell.runCommand("touch " + CONTROL_FILE);
-        Shell.runCommand("touch " + CONTROL_Q_FILE);
+        Files.mkdirs(MAIN_DIR);
+        Files.touch(CONTROL_FILE);
+        Files.touch(CONTROL_Q_FILE);
     }
 
     private static void getIMEI(Context context) {

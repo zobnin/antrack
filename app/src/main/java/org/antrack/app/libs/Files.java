@@ -1,7 +1,5 @@
 package org.antrack.app.libs;
 
-import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -19,6 +17,20 @@ import java.util.ArrayList;
 
 public class Files {
     private final String TAG = "Files";
+
+    public static void mkdir(String path) {
+        new File(path).mkdir();
+    }
+
+    public static void mkdirs(String path) {
+        new File(path).mkdirs();
+    }
+
+    public static void touch(String path) {
+        try {
+            new File(path).createNewFile();
+        } catch (IOException e) {}
+    }
 
     // Create all needed directories for given file
     public static void mkdirsForFile(String FilePath) {
