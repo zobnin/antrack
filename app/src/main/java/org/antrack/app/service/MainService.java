@@ -77,6 +77,10 @@ public class MainService extends Service {
 
                 /*** Start watching for local file changes ***/
 
+                // File watcher must be started AFTER creating all catalogs
+                // Catalogs for modules created on load step
+                cc.runModules("load", null);
+
                 fileWatcher = FileWatcher.getInstance();
                 fileWatcher.addCallback("service", new LocalFileUpdated());
 
@@ -89,12 +93,10 @@ public class MainService extends Service {
                 Features feat = new Features();
                 feat.write(MainService.this, Init.MAIN_DIR + C.FEATURES_FILE);
 
-                /*** Bootstrap modules ***/
+                /*** Bootstrap ***/
 
                 // Generate /modules file
                 cc.parseCommand("!modules");
-
-                cc.runModules("load", null);
                 cc.parseBootstrap();
 
                 /*** Unpack assets ***/

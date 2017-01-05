@@ -50,15 +50,16 @@ public class BaseFragment extends Fragment {
                             public void run() {
                                 Utils.sleep(15);
                                 if (loading.getVisibility() != View.GONE) {
-                                    // FIXME проверять activity
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            View noData = getActivity().findViewById(R.id.nodata);
-                                            setVisible(noData);
-                                            loading.setVisibility(View.GONE);
-                                        }
-                                    });
+                                    if (getActivity() != null) {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                View noData = getActivity().findViewById(R.id.nodata);
+                                                setVisible(noData);
+                                                loading.setVisibility(View.GONE);
+                                            }
+                                        });
+                                    }
                                 }
                             }
                         });

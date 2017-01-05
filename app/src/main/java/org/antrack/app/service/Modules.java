@@ -81,7 +81,7 @@ class Modules {
                     break;
                 case "load":
                     if (module.result() != null && module.result().endsWith("/"))
-                        Shell.runCommand("mkdir " + Init.MAIN_DIR + module.result());
+                        Files.mkdir(Init.MAIN_DIR + module.result());
                     module.onLoad(context);
                     break;
                 case "alarm":

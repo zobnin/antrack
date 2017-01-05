@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
 import app.R;
 
 public class SmsFragment extends BaseFragment {
-    private final String TAG = "AppsFragment";
+    private final String TAG = "SmsFragment";
     private Context context;
 
     private ExecutorService executor;
@@ -151,6 +151,7 @@ public class SmsFragment extends BaseFragment {
             return false;
         }
 
+        // FIXME DateComparator exception: java.lang.NullPointerException: Attempt to invoke virtual method 'int java.lang.String.length()' on a null object reference
         Collections.sort(smses, new SmsComaparator());
         Collections.reverse(smses);
 

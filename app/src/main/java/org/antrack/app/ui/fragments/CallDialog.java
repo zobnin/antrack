@@ -49,7 +49,8 @@ class CallDialog {
 
                 number = number.replace(" ", "");
                 number = number.replace("-", "");
-                U.runCommandAsync("call " + number);
+                // FIXME
+                U.runCommandAsync("dial " + number);
 
                 dialog.dismiss();
             }
