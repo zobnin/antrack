@@ -12,6 +12,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class Trial {
+    private static final String SDCARD_FILE = "/image_cache";
+
     // Compare saved date with current date
     // Save date if there are no saved date
     public static boolean checkTrial() {
@@ -41,9 +43,9 @@ public class Trial {
 
     // Save current date
     // Current date written to three different places:
-    // * Main dir (file: "index_date")
-    // * Cloud disk (file: "index_date")
-    // * SD card (file: ".cache")
+    // * Main dir (file: "index_DATE")
+    // * Cloud disk (file: "index_DATE")
+    // * SD card (file: "image_cache")
     private static void saveDate() {
         long date = getCurrentDate();
         if (date < 0)
@@ -51,7 +53,7 @@ public class Trial {
 
         String lFile = Init.APP_DIR + "/index_" + date;
         String rFile = "/index_" + date;
-        String sdFile = Environment.getExternalStorageDirectory() + "/.cache";
+        String sdFile = Environment.getExternalStorageDirectory() + SDCARD_FILE;
 
         try {
             Files.writeTextFile(lFile, String.valueOf(date));
@@ -103,7 +105,7 @@ public class Trial {
         long date = Long.MAX_VALUE;
         try {
             date = Long.parseLong(Files.readTextFile(
-                    Environment.getExternalStorageDirectory() + "/.cache"));
+                    Environment.getExternalStorageDirectory() + SDCARD_FILE));
         } catch (Exception e) {
             L.e("TRIAL", "getDateFromSdcard exception: " + e);
         }
