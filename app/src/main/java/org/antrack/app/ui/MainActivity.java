@@ -20,6 +20,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+
 import org.antrack.app.C;
 import org.antrack.app.CloudWatcher;
 import org.antrack.app.FileWatcher;
@@ -177,6 +181,16 @@ public class MainActivity extends AppCompatActivity
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 Keyboard.hide(MainActivity.this);
+
+                if (Settings.get(C.S_SHOW_HELP) == null) {
+                    new ShowcaseView.Builder(MainActivity.this)
+                            .setTarget(new ViewTarget(R.id.nav_header_main_text1, MainActivity.this))
+                            .setContentTitle(R.string.overlay_help_titile)
+                            .setContentText(R.string.overlay_help_message)
+                            .hideOnTouchOutside()
+                            .build();
+                    Settings.put(C.S_SHOW_HELP, "false");
+                }
             }
             // Change fragment on drawer close
             @Override

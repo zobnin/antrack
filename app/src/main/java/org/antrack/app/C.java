@@ -63,5 +63,6 @@ public class C {
     public static final String S_SMS_ON_SIM_CHANGE = "smsOnSimChange"; // false
     public static final String S_IMSI = "IMSI"; // null
     public static final String S_SYSTEM_APP = "systemApp"; // false
+    public static final String S_SHOW_HELP = "showHelp"; // true
     public static final String S_LAST_CMD_TIME = "lastCmdId"; // null
 }

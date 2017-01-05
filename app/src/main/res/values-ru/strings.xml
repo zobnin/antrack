@@ -164,4 +164,6 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="wipe_warning">Это действие удалит все данные с устройства.</string>
     <string name="wipe_sd_checkbox">Удалить файлы с карты памяти</string>
     <string name="lock_warning">Ввдеите PIN-код чтобы заблокировать устройство</string>
+    <string name="overlay_help_titile">Текущее устройство</string>
+    <string name="overlay_help_message">Нажмите для переключения на другие устройства</string>
 </resources>

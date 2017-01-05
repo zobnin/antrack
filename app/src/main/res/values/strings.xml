@@ -103,4 +103,6 @@ Coming soon
     <string name="wipe_warning">This action will delete all data on the device.</string>
     <string name="wipe_sd_checkbox">Wipe SD card</string>
     <string name="lock_warning">This action will lock device with given PIN-code.</string>
+    <string name="overlay_help_titile">Current device</string>
+    <string name="overlay_help_message">Tap on it to switch to other connected device</string>
 </resources>
