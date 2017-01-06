@@ -508,6 +508,8 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
 
+        Keyboard.hide(this);
+
         if (!State.initDone)
             return;
 

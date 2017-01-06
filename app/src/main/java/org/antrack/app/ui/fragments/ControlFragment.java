@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,11 +146,11 @@ public class ControlFragment extends BaseFragment {
             }
         });
 
-        if (!State.device.isMain()) {
-            U.getFile(settingsFile);
-        }
-
         onFileUpdate();
+
+        if (!State.device.isMain()) {
+            U.getFileAsync(settingsFile);
+        }
 
         return view;
     }
@@ -168,9 +167,10 @@ public class ControlFragment extends BaseFragment {
             public void run() {
                 try {
                     prop = new Properties();
-                    prop.load(new FileInputStream(settingsFile));
+                    prop.load(new FileInputStream(Init.DEVICES_DIR + State.device.getDir() + settingsFile));
 
-                    if (prop.getProperty(C.S_HIDDEN).equals("true")) {
+                    String hidden = prop.getProperty(C.S_HIDDEN);
+                    if (hidden != null && hidden.equals("true")) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -186,7 +186,8 @@ public class ControlFragment extends BaseFragment {
                         });
                     }
 
-                    if (prop.getProperty(C.S_SYSTEM_APP).equals("true")) {
+                    String system = prop.getProperty(C.S_SYSTEM_APP);
+                    if (system != null && system.equals("true")) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -202,7 +203,8 @@ public class ControlFragment extends BaseFragment {
                         });
                     }
 
-                    if (prop.getProperty(C.S_LOST).equals("true")) {
+                    String lost = prop.getProperty(C.S_LOST);
+                    if (lost != null && lost.equals("true")) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
