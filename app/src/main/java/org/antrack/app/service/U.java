@@ -36,21 +36,18 @@ public class U {
 
         long lastCmdTime = Long.parseLong(Settings.get(C.S_LAST_CMD_TIME));
 
-        String cmdTime = null;
-        String cmdName = null;
         for (String cmd : cmds) {
             String[] cmdA = cmd.split(" ");
-            cmdTime = cmdA[0].trim();
-            cmdName = Utils.arrayToString(Arrays.copyOfRange(cmdA, 1, cmdA.length));
+            String cmdTime = cmdA[0].trim();
+            String cmdName = Utils.arrayToString(Arrays.copyOfRange(cmdA, 1, cmdA.length));
 
             if (Long.parseLong(cmdTime) > lastCmdTime) {
+                Settings.put(C.S_LAST_CMD_TIME, cmdTime);
+                // This action may crash if module has errors
                 cc.parseCommand(cmdName);
             }
         }
 
-        if (cmdTime != null) {
-            Settings.put(C.S_LAST_CMD_TIME, cmdTime);
-        }
     }
 
     public static void getFile(String file) throws InterruptedException {
