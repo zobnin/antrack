@@ -1,7 +1,6 @@
 package org.antrack.app.service;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.antrack.app.C;
 import org.antrack.app.Init;
@@ -28,7 +27,7 @@ public class Logger {
                     Shell.runCommand("mv " + logfile + " " + logfile + ".old");
                 }
             }
-            Files.addLine(logfile, Utils.date("yyyy.MM.dd HH:mm:ss") + " " + txt);
+            Files.addLine(logfile, Utils.date(C.DEFAULT_TIME_FORMAT) + " " + txt);
         } catch (IOException e) {
             L.e(TAG, "put IOException");
         }

@@ -1,7 +1,6 @@
 package org.antrack.app.plugins;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.android.Auth;

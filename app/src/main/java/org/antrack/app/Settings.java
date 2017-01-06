@@ -1,7 +1,5 @@
 package org.antrack.app;
 
-import android.util.Log;
-
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.Shell;
 

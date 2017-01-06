@@ -226,7 +226,9 @@ public class MainService extends Service {
                                 try {
                                     pw.getFile(Init.DEVICES_DIR + Init.DEVICE_NAME_IMEI + C.CONTROL_Q_FILE,
                                             "/" + Init.DEVICE_NAME_IMEI + C.CONTROL_Q_FILE);
-                                } catch (Exception e) {}
+                                } catch (Exception e) {
+                                    L.d(TAG, "Error getting file: " + e.toString());
+                                }
                                 break;
                             }
                         }

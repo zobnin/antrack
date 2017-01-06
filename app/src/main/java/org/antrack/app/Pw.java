@@ -1,7 +1,6 @@
 package org.antrack.app;
 
 import android.app.Activity;
-import android.util.Log;
 
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.Net;
@@ -131,6 +130,7 @@ public class Pw {
     public void getDir(String lDir, String rDir) throws InterruptedException {
         if (Settings.get("plugin").equals("dropbox")) {
             L.d(TAG, "Get files from dir " + rDir + " to dir " + lDir);
+
             // We don't want to trigger fileObserver on every downloaded file
             // so we save dir to main folder and then move to devices folder
             String tempDir = Init.APP_DIR + "/" + new File(rDir).getName();

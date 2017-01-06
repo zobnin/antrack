@@ -10,8 +10,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class OSignal {
-    private static final String APP_ID = "90b00836-3c46-43ca-930d-1d4dca449771";
-
     public static void writeId() {
         OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
             @Override

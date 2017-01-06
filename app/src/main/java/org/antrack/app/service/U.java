@@ -1,7 +1,5 @@
 package org.antrack.app.service;
 
-import android.util.Log;
-
 import org.antrack.app.C;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
@@ -47,7 +45,6 @@ public class U {
                 cc.parseCommand(cmdName);
             }
         }
-
     }
 
     public static void getFile(String file) throws InterruptedException {

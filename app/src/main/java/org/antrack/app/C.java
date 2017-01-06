@@ -34,6 +34,7 @@ public class C {
     public static final String NOWIPE_FILE = "/.nowipe";
 
     public static final String DEFAULT_TIME_FORMAT = "yyyy.MM.dd HH:mm:ss";
+    public static final String ACCURATE_TIME_FORMAT = "yyyy.MM.dd HH:mm:ss.SSS";
     public static final String LAST_CMD_TIME_FORMAT = "yyyyMMddHHmmssSSS";
 
     public static final String TRUE = "true";

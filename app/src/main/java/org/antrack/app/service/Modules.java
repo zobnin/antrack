@@ -1,7 +1,6 @@
 package org.antrack.app.service;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.antrack.app.C;
 import org.antrack.app.Init;
@@ -10,7 +9,6 @@ import org.antrack.app.Settings;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.ModuleLoader;
-import org.antrack.app.libs.Shell;
 import org.antrack.app.libs.Utils;
 import org.json.simple.JSONObject;
 
@@ -19,7 +17,7 @@ import java.io.IOException;
 import java.util.Map;
 
 class Modules {
-    private String TAG = "Mod";
+    private String TAG = "Modules";
     private Context context;
     private Map<String, ModuleInterface> modules = null;
 
@@ -43,12 +41,12 @@ class Modules {
 
     private boolean checkForRoot() {
         String useRoot = Settings.get(C.S_USE_ROOT);
-        return !(useRoot == null || useRoot.equals("false"));
+        return !(useRoot == null || useRoot.equals(C.FALSE));
     }
 
     private boolean checkForAdmin() {
         String useAdmin = Settings.get(C.S_USE_ADMIN);
-        return !(useAdmin == null || useAdmin.equals("false"));
+        return !(useAdmin == null || useAdmin.equals(C.FALSE));
     }
 
     String command(String moduleName, String[] args) {
@@ -133,7 +131,7 @@ class Modules {
         } catch (IOException e) {
             L.e(TAG, "filed to write modules file: " + e.toString());
         }
-        return "done";
+        return C.DONE;
     }
 
     String dumpJSON() {
@@ -156,7 +154,7 @@ class Modules {
                 writer.flush();
             }
             writer.close();
-            return "done";
+            return C.DONE;
         } catch (IOException e) {
             L.e(TAG, "filed to write modules.json file");
             return "error: " + e.toString();

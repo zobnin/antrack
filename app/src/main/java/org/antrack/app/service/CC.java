@@ -1,7 +1,6 @@
 package org.antrack.app.service;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.antrack.app.C;
 import org.antrack.app.Init;
@@ -107,7 +106,7 @@ class CC {
     private void writeResult(String cmd, String result) {
         if (result != null && !internalCommand) {
             try {
-                Files.writeTextFile(Init.RESULT_FILE, Utils.date("yyyy.MM.dd HH:mm:ss:SSS"));
+                Files.writeTextFile(Init.RESULT_FILE, Utils.date(C.ACCURATE_TIME_FORMAT));
                 Files.addLine(Init.RESULT_FILE, cmd + " " + result);
             } catch (IOException e) {
                 L.e(TAG, "writeResult IOException: " + e);

@@ -1,6 +1,7 @@
 package org.antrack.app;
 
 import android.app.Application;
+
 import com.onesignal.OneSignal;
 
 public class AntrackApplication extends Application {

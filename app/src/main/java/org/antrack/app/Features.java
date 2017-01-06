@@ -3,7 +3,6 @@ package org.antrack.app;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.util.Log;
 
 import org.antrack.app.libs.L;
 
