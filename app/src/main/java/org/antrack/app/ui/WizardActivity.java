@@ -27,7 +27,7 @@ import java.util.List;
 import app.R;
 
 public class WizardActivity extends AppCompatActivity {
-    boolean pluginChoise = false;
+    boolean pluginChosen = false;
 
     private Admin aTools;
     private Pw pw;
@@ -80,9 +80,9 @@ public class WizardActivity extends AppCompatActivity {
         });
 
 
-        final Button button_root = (Button) findViewById(R.id.button_root);
+        final Button rootButton = (Button) findViewById(R.id.button_root);
         if (Shell.checkSu()) {
-            button_root.setOnClickListener(new View.OnClickListener() {
+            rootButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     if (Shell.checkSuRun()) {
                         Settings.put(C.S_USE_ROOT, C.TRUE);
@@ -93,15 +93,15 @@ public class WizardActivity extends AppCompatActivity {
                 }
             });
         } else {
-            button_root.setEnabled(false);
+            rootButton.setEnabled(false);
         }
 
-        final Button button_dropbox = (Button) findViewById(R.id.button_dropbox);
-        button_dropbox.setOnClickListener(new View.OnClickListener() {
+        final Button dropboxButton = (Button) findViewById(R.id.button_dropbox);
+        dropboxButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Settings.put(C.S_PLUGIN, "dropbox");
                 try {
-                    pluginChoise = true;
+                    pluginChosen = true;
                     pw = Pw.getInstance();
                     pw.auth(WizardActivity.this);
                 } catch (InterruptedException e) {
@@ -130,7 +130,7 @@ public class WizardActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (Settings.get(C.S_TOKEN) == null) {
             // FIXME translate
-            Utils.showToast(WizardActivity.this, "Authentication is required");
+            Utils.showToast(WizardActivity.this, "Authentication required");
         } else {
             Settings.wizardComplete(this);
             finish();
@@ -142,7 +142,7 @@ public class WizardActivity extends AppCompatActivity {
         super.onResume();
 
         // Handle Dropbox plugin auth
-        if (pluginChoise) {
+        if (pluginChosen) {
             Pw pw = Pw.getInstance();
             String token = pw.resume();
             if (token != null) {
