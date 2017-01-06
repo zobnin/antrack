@@ -20,6 +20,7 @@ public class C {
     public static final String CONTROL_FILE = "/ctl";
     public static final String RESULT_FILE = "/result";
     public static final String OSID_FILE = "/osid";
+    public static final String WIZARD_COMPLETE_FILE = "/.wizard_complete";
 
     public static final String BOOTSTRAP_ASSET = "bootstrap";
     public static final String ALARM_ASSET = "alarm.ogg";
@@ -51,7 +52,6 @@ public class C {
     public static final String ACTION_COMMAND = "command";
     public static final String ACTION_WAKEUP = "wakeup";
 
-    public static final String S_LAUNCH_WIZARD = "launchWizard"; // false
     public static final String S_USE_ADMIN = "useAdmin"; // false
     public static final String S_USE_ROOT = "useRoot"; // false
     public static final String S_UPDATE_INTERVAL = "updateInterval"; // 30

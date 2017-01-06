@@ -14,19 +14,12 @@ import com.dropbox.core.v2.files.WriteMode;
 
 import org.antrack.app.C;
 import org.antrack.app.libs.L;
-import org.antrack.app.libs.Utils;
-import org.apache.http.HttpStatus;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class Dropbox {
     final private String TAG = "Dropbox";
@@ -207,7 +200,7 @@ public class Dropbox {
     }
 
     private String longpollURL="https://notify.dropboxapi.com/2/files/list_folder/longpoll";
-
+/*
     private boolean longpoll(String cursor) {
         try {
             String charset = "UTF-8";
@@ -252,4 +245,5 @@ public class Dropbox {
             return false;
         }
     }
+*/
 }

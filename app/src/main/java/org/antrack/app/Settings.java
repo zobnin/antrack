@@ -1,8 +1,12 @@
 package org.antrack.app;
 
+import android.content.Context;
+
+import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.Shell;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
@@ -13,12 +17,34 @@ public class Settings {
     private static Properties prop = null;
     private static String settingsFile = null;
 
+    public static boolean needLaunchWizard(Context context) {
+        String wizardCompleteFile = context.getApplicationInfo().dataDir + C.WIZARD_COMPLETE_FILE;
+        return (!new File(wizardCompleteFile).exists());
+    }
+
+    public static void wizardComplete(Context context) {
+        String wizardCompleteFile = context.getApplicationInfo().dataDir + C.WIZARD_COMPLETE_FILE;
+        Files.touch(wizardCompleteFile);
+    }
+
     public static void init() {
         if (prop == null) {
             settingsFile = Init.MAIN_DIR + C.SETTINGS_FILE;
             Shell.runCommand("touch " + settingsFile);
             load();
         }
+    }
+
+    public static void put(String name, String value) {
+        prop.setProperty(name, value);
+        store(); // For cloud synchronization
+        L.d(TAG, "Set settings: " + name + " = " + value);
+    }
+
+    public static String get(String name) {
+        String value = prop.getProperty(name);
+        L.d(TAG, "Get settings: " + name + " = " + value);
+        return value;
     }
 
     private static void load() {
@@ -38,15 +64,4 @@ public class Settings {
         }
     }
 
-    public static void put(String name, String value) {
-        prop.setProperty(name, value);
-        store(); // For cloud synchronization
-        L.d(TAG, "Set settings: " + name + " = " + value);
-    }
-
-    public static String get(String name) {
-        String value = prop.getProperty(name);
-        L.d(TAG, "Get settings: " + name + " = " + value);
-        return value;
-    }
 }

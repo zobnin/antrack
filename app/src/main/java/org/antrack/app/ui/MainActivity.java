@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity
 
     TextView deviceTextView;
     TextView deviceTextView2;
+    Button deviceArrow;
 
     View fragmentContainer;
 
@@ -107,10 +108,25 @@ public class MainActivity extends AppCompatActivity
     BaseFragment selectedFragment;
     int selectedDevice = -1;
 
+    Bundle savedInstanceState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.savedInstanceState = savedInstanceState;
+
+        /*** Start wizard ***/
+
+        if (Settings.needLaunchWizard(this)) {
+            Intent intent = new Intent(this, WizardActivity.class);
+            startActivityForResult(intent, 1);
+        } else {
+            main();
+        }
+    }
+
+    private void main() {
         /*** Init ***/
 
         Init.all(this);
@@ -124,18 +140,6 @@ public class MainActivity extends AppCompatActivity
 
         L.d(TAG, "Running on: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
 
-        /*** Start wizard ***/
-
-        String wizard = Settings.get(C.S_LAUNCH_WIZARD);
-        if (wizard == null || wizard.equals(C.TRUE)) {
-            Intent intent = new Intent(this, WizardActivity.class);
-            startActivityForResult(intent, 1);
-        } else {
-            main();
-        }
-    }
-
-    private void main() {
         /*** Start service ***/
 
         final String serviceEnabled = Settings.get(C.S_ENABLE_SERVICE);
@@ -212,7 +216,7 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        drawer.setDrawerListener(drawerToggle);
+        drawer.addDrawerListener(drawerToggle);
         // Calling sync state is necessary or hamburger icon wont show up
         drawerToggle.syncState();
 
@@ -221,7 +225,11 @@ public class MainActivity extends AppCompatActivity
 
         /*** Drawer header ***/
 
-        deviceTextView = (TextView) findViewById(R.id.nav_header_main_text1);
+        View drawerHeader = navigationView.getHeaderView(0);
+
+        deviceArrow = (Button) drawerHeader.findViewById(R.id.arrow);
+
+        deviceTextView = (TextView) drawerHeader.findViewById(R.id.nav_header_main_text1);
         deviceTextView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 rotateArrowUp();
@@ -229,7 +237,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        deviceTextView2 = (TextView) findViewById(R.id.nav_header_main_text2);
+        deviceTextView2 = (TextView) drawerHeader.findViewById(R.id.nav_header_main_text2);
 
         new Thread(new Runnable() {
             @Override
@@ -281,13 +289,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void rotateArrowUp() {
-        Button arrow = (Button) findViewById(R.id.arrow);
-        arrow.animate().rotation(180);
+        deviceArrow.animate().rotation(180);
     }
 
     public void rotateArrowDown() {
-        Button arrow = (Button) findViewById(R.id.arrow);
-        arrow.animate().rotation(0);
+        deviceArrow.animate().rotation(0);
     }
 
     // Switch device to currentDevice
@@ -306,7 +312,7 @@ public class MainActivity extends AppCompatActivity
         deviceTextView.setText(State.device.getName());
         navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.activity_main_drawer);
-        navigationView.getMenu().getItem(0).setChecked(true);
+        //navigationView.getMenu().getItem(0).setChecked(true);
 
         // Rotate arrow
         rotateArrowDown();
@@ -510,7 +516,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(CURRENT_DEVICE, State.device.getDir());
+        if (State.device != null) {
+            savedInstanceState.putString(CURRENT_DEVICE, State.device.getDir());
+        }
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -654,8 +662,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Select item
-        if (item.isChecked()) item.setChecked(false);
-        else item.setChecked(true);
+        //if (item.isChecked()) item.setChecked(false);
+        //else item.setChecked(true);
 
         // Save menu title in State
         State.menuItemTitle = (String) item.getTitle();
