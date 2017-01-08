@@ -167,4 +167,12 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="overlay_help_titile">Текущее устройство</string>
     <string name="overlay_help_message">Нажмите для переключения на другие устройства</string>
     <string name="wizard_nopermissions">Вы должны дать приложению все разрешения</string>
+    <string name="main_update_interval_more">Промежуток времени между отправкой данных в облако</string>
+    <string name="pref_15_minutes">15 минут</string>
+    <string name="pref_1_hour">1 час</string>
+    <string name="pref_2_hours">2 часа</string>
+    <string name="pref_30_minutes">30 минут</string>
+    <string name="pref_3_hours">3 часа</string>
+    <string name="main_enable_service_more">Сервис отвечает на запросы с других устройств и отправляет данные в облако</string>
+    <string name="main_start_at_boot_more">Запуск при загрузке позволяет AnTrack всегда оставаться на связи с другими устройствами</string>
 </resources>
