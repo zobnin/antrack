@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -374,14 +375,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setToolbarTitle() {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(State.menuItemTitle);
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setTitle(State.menuItemTitle);
+
+            if (State.fragment == settingsFragment || State.fragment == howtoFragment) {
+                actionBar.setSubtitle(null);
+                return;
+            }
 
             String lastUpdate = State.device.lastUpdate;
             if (lastUpdate == null) {
-                getSupportActionBar().setSubtitle(State.device.getName());
+                actionBar.setSubtitle(State.device.getName());
             } else {
-                getSupportActionBar().setSubtitle(
+                actionBar.setSubtitle(
                         State.device.getName() + " (" + lastUpdate + ")");
             }
 
