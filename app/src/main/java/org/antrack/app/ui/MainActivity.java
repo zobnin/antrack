@@ -361,6 +361,7 @@ public class MainActivity extends AppCompatActivity
         ft.detach(fragment).attach(fragment).commit();
 
         setToolbarTitle();
+        addCallbacks();
 
         L.d(TAG, "Fragment reloaded");
     }
