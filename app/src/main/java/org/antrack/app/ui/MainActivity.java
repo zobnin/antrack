@@ -570,9 +570,14 @@ public class MainActivity extends AppCompatActivity
         fileWatcher = FileWatcher.getInstance();
         cloudWatcher = CloudWatcher.getInstance();
 
-        cloudWatcher.removeCallback("ui");
-        fileWatcher.removeCallback("result");
-        fileWatcher.removeCallback("ui");
+        if (cloudWatcher != null) {
+            cloudWatcher.removeCallback("ui");
+        }
+
+        if (fileWatcher != null) {
+            fileWatcher.removeCallback("result");
+            fileWatcher.removeCallback("ui");
+        }
     }
 
     private void showToast(final Context context, final String msg) {
