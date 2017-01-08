@@ -3,10 +3,14 @@ package org.antrack.app.ui.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.view.View;
+import android.widget.TextView;
 
 import org.antrack.app.libs.Utils;
+import org.antrack.app.ui.MainActivity;
 import org.antrack.app.ui.RecyclerViewAnim;
 import org.antrack.app.ui.State;
+
+import java.util.Arrays;
 
 import app.R;
 
@@ -15,6 +19,30 @@ public class BaseFragment extends Fragment {
 
     public void onFileUpdate() {}
     public String getWatchFile() { return null; }
+
+    public String getModule() { return null; }
+
+    public void onResult(String message) {
+        final MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.setToolbarTitle();
+                }
+            });
+        }
+
+        String[] messageA = message.split(" ");
+        if (messageA[0].equals(getModule())) {
+            if (messageA[1].contains("error")) {
+                hideAllMessages();
+                showError(Utils.arrayToString(Arrays.copyOfRange(messageA, 2, messageA.length)));
+            } else {
+                hideAllMessages();
+            }
+        }
+    }
 
     protected void waitCardsDrawn(RecyclerViewAnim rv) {
         while (true) {
@@ -34,6 +62,20 @@ public class BaseFragment extends Fragment {
         v.setAlpha(0);
         v.setVisibility(View.VISIBLE);
         v.animate().alpha(1);
+    }
+
+    protected void showError(final String text) {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getActivity() == null) return;
+                    View errorView = getActivity().findViewById(R.id.error);
+                    TextView errorText = (TextView) getActivity().findViewById(R.id.error_text);
+                    errorText.setText(text);
+                    setVisible(errorView);
+                }
+            });
     }
 
     protected void showNoData() {
@@ -155,6 +197,7 @@ public class BaseFragment extends Fragment {
                 @Override
                 public void run() {
                     Activity a = getActivity();
+                    a.findViewById(R.id.error).setVisibility(View.GONE);
                     a.findViewById(R.id.nodata).setVisibility(View.GONE);
                     a.findViewById(R.id.loading).setVisibility(View.GONE);
                     a.findViewById(R.id.nomodule).setVisibility(View.GONE);

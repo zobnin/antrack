@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,12 +36,12 @@ public class ImagesFragment extends BaseFragment {
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        if (!Mod.check(getMod())) {
-            showNoModule(getMod());
+        if (!Mod.check(getModule())) {
+            showNoModule(getModule());
             return null;
         }
 
-        modDir = Mod.getFile(getMod());
+        modDir = Mod.getFile(getModule());
         fullDir = U.getLocalPath(modDir);
 
         imageList = new File(fullDir).list();
@@ -87,7 +86,7 @@ public class ImagesFragment extends BaseFragment {
         return view;
     }
 
-    public String getMod() { return null; }
+    public String getModule() { return null; }
 
     @Override
     public String getWatchFile() {
@@ -129,7 +128,7 @@ public class ImagesFragment extends BaseFragment {
 
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Mod.deleteFiles(getMod());
+                Mod.deleteFiles(getModule());
                 imagesAdapter.update(new String[0]);
                 imagesAdapter.notifyDataSetChanged();
                 showNoData();

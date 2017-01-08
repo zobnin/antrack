@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +45,11 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
 
     static String audioDir;
     static String audioCmd;
+
+    @Override
+    public String getModule() {
+        return Mod.AUDIO;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

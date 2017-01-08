@@ -15,7 +15,7 @@ import app.R;
 
 public class ScreensFragment extends ImagesFragment {
     @Override
-    public String getMod() { return Mod.SCREENSHOT; }
+    public String getModule() { return Mod.SCREENSHOT; }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,10 +38,10 @@ public class ScreensFragment extends ImagesFragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.toolbar_action_front_camera:
-                if (Mod.check(getMod())) {
-                    U.runCommandAsync(getMod());
+                if (Mod.check(getModule())) {
+                    U.runCommandAsync(getModule());
                 } else {
-                    Mod.showNoModule(getActivity(), getMod());
+                    Mod.showNoModule(getActivity(), getModule());
                 }
                 return true;
             case R.id.toolbar_action_delete:

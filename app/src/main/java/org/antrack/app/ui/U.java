@@ -3,11 +3,11 @@ package org.antrack.app.ui;
 import org.antrack.app.C;
 import org.antrack.app.Features;
 import org.antrack.app.Init;
+import org.antrack.app.OSignal;
 import org.antrack.app.Pw;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
-import org.antrack.app.OSignal;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,25 +28,6 @@ public class U {
     // Get full path in cloud
     public static String getCloudPath(String path) {
         return "/" + State.device.getDir() + path;
-    }
-
-    static String getLastUpdate() {
-        String ret;
-        try {
-            ret = Files.readTextFile(U.getLocalPath("/status"));
-
-            if (ret.equals("")) {
-                return null;
-            }
-
-            ret = ret.substring(ret.lastIndexOf("Last update") + 12).trim();
-        } catch (IOException e) {
-            L.e(TAG, "Can't read info file: " + e.toString());
-            return null;
-        }
-
-        State.device.lastUpdate = ret;
-        return ret;
     }
 
     // Download file for current device

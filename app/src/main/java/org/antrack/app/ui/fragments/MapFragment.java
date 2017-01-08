@@ -1,7 +1,6 @@
 package org.antrack.app.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     private String locationFile;
     private String locationCmd;
+
+
+    @Override
+    public String getModule() {
+        return Mod.LOCATE;
+    }
 
     private class Location {
         String date = "0";

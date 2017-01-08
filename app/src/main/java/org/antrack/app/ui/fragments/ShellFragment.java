@@ -3,7 +3,6 @@ package org.antrack.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;

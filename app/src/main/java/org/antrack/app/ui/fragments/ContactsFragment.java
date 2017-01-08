@@ -3,7 +3,6 @@ package org.antrack.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import java.util.concurrent.Executors;
 import app.R;
 
 public class ContactsFragment extends BaseFragment {
-    private final String TAG = "AppsFragment";
+    private final String TAG = "ContactsFragment";
 
     private ExecutorService executor;
 
@@ -35,6 +34,11 @@ public class ContactsFragment extends BaseFragment {
 
     String contactsFile;
     String contactsCmd;
+
+    @Override
+    public String getModule() {
+        return Mod.CONTACTS;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

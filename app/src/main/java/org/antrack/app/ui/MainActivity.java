@@ -39,6 +39,7 @@ import org.antrack.app.ui.callbacks.CloudCallback;
 import org.antrack.app.ui.callbacks.FeaturesCallback;
 import org.antrack.app.ui.callbacks.FragmentCallback;
 import org.antrack.app.ui.callbacks.ModulesCallback;
+import org.antrack.app.ui.callbacks.ResultCallback;
 import org.antrack.app.ui.fragments.AppsFragment;
 import org.antrack.app.ui.fragments.AudioFragment;
 import org.antrack.app.ui.fragments.BaseFragment;
@@ -335,6 +336,10 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
+        if (State.fragment != null) {
+            State.fragment.hideAllMessages();
+        }
+
         FragmentTransaction ft = fragmentManager.beginTransaction();
 
         if (State.fragment == null) {
@@ -356,6 +361,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void reloadCurrentFragment() {
+        State.fragment.hideAllMessages();
+
         BaseFragment fragment = (BaseFragment) fragmentManager.findFragmentByTag("fragment");
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.detach(fragment).attach(fragment).commit();
@@ -366,11 +373,11 @@ public class MainActivity extends AppCompatActivity
         L.d(TAG, "Fragment reloaded");
     }
 
-    private void setToolbarTitle() {
+    public void setToolbarTitle() {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(State.menuItemTitle);
 
-            String lastUpdate = U.getLastUpdate();
+            String lastUpdate = State.device.lastUpdate;
             if (lastUpdate == null) {
                 getSupportActionBar().setSubtitle(State.device.getName());
             } else {
@@ -552,10 +559,11 @@ public class MainActivity extends AppCompatActivity
         fileWatcher.removeCallback("ui");
 
         fileWatcher.addCallback("ui", new FragmentCallback());
+        fileWatcher.addCallback("result", new ResultCallback(this));
 
-        if (!State.device.isMain())
+        if (!State.device.isMain()) {
             cloudWatcher.addCallback("ui", new CloudCallback());
-
+        }
     }
 
     private void removeCallbacks() {
@@ -563,6 +571,7 @@ public class MainActivity extends AppCompatActivity
         cloudWatcher = CloudWatcher.getInstance();
 
         cloudWatcher.removeCallback("ui");
+        fileWatcher.removeCallback("result");
         fileWatcher.removeCallback("ui");
     }
 
@@ -659,31 +668,17 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_howto:
                 selectedFragment = howtoFragment;
                 break;
-            case R.id.nav_site:
-                break;
+            //case R.id.nav_site:
+            //    break;
             default:
                 selectedDevice = item.getItemId() - Menu.FIRST;
         }
-
-        // Select item
-        /*
-        int size = navigationView.getMenu().size();
-        for (int i = 0; i < size; i++) {
-            navigationView.getMenu().getItem(i).setChecked(false);
-        }
-        item.setChecked(true);
-        */
 
         // Save menu title in State
         State.menuItemTitle = (String) item.getTitle();
 
         // Hide "No data.", "No module." and so on
-        //selectedFragment.hideAll();
-        findViewById(R.id.nodata).setVisibility(View.GONE);
-        findViewById(R.id.loading).setVisibility(View.GONE);
-        findViewById(R.id.nomodule).setVisibility(View.GONE);
-        findViewById(R.id.noroot).setVisibility(View.GONE);
-        findViewById(R.id.nophone).setVisibility(View.GONE);
+        //State.fragment.hideAllMessages();
 
         // Fade out container
         fragmentContainer = findViewById(R.id.container);

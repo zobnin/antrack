@@ -10,7 +10,8 @@ import java.io.IOException;
 public class Device {
     private String dirName;
     private String OSId = null;
-    String lastUpdate = null;
+
+    public String lastUpdate = null;
 
     Device(String dir) {
         dirName = dir;

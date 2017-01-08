@@ -63,10 +63,12 @@
                 android:id="@+id/nav_howto"
                 android:icon="@drawable/ic_menu_howto"
                 android:title="@string/menu_howto" />
+            <!--
             <item
                 android:id="@+id/nav_site"
                 android:icon="@drawable/ic_menu_site"
                 android:title="@string/menu_website" />
+                -->
         </menu>
     </item>
     </group>

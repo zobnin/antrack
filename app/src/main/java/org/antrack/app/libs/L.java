@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class L {
     private static final boolean LOGCAT = true;
-    private static final boolean FILE = true;
+    private static final boolean FILE = false;
 
     public static void d(String tag, String msg) {
         if (LOGCAT) { Log.d(tag, msg); }
