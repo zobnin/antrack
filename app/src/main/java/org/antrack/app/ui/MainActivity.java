@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             State.firstRun = false;
             State.device = new Device(savedInstanceState.getString(CURRENT_DEVICE));
+            State.fragment = (BaseFragment) getFragmentManager().findFragmentByTag("fragment");
         } else {
             State.device = new Device(Init.DEVICE_NAME_IMEI);
         }
@@ -312,7 +313,7 @@ public class MainActivity extends AppCompatActivity
         deviceTextView.setText(State.device.getName());
         navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.activity_main_drawer);
-        //navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.getMenu().getItem(0).setChecked(true);
 
         // Rotate arrow
         rotateArrowDown();
@@ -664,8 +665,13 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Select item
-        //if (item.isChecked()) item.setChecked(false);
-        //else item.setChecked(true);
+        /*
+        int size = navigationView.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            navigationView.getMenu().getItem(i).setChecked(false);
+        }
+        item.setChecked(true);
+        */
 
         // Save menu title in State
         State.menuItemTitle = (String) item.getTitle();
