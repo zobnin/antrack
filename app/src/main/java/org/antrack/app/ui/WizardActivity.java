@@ -2,6 +2,7 @@ package org.antrack.app.ui;
 
 import android.Manifest;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -56,8 +57,9 @@ public class WizardActivity extends AppCompatActivity {
                 ).withListener(new MultiplePermissionsListener() {
             @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
                 if (report.areAllPermissionsGranted()) {
-                    // FIXME API
-                    Battery.requestIgnoreBatteryOptimisation(WizardActivity.this);
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        Battery.requestIgnoreBatteryOptimisation(WizardActivity.this);
+                    }
                     main();
                 }
             }

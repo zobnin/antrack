@@ -244,8 +244,13 @@ public class MainService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        fileWatcher.removeCallback("service");
-        cloudWatcher.removeCallback("service");
+        if (fileWatcher != null) {
+            fileWatcher.removeCallback("service");
+        }
+
+        if (cloudWatcher != null) {
+            cloudWatcher.removeCallback("service");
+        }
 
         String enabled = Settings.get(C.S_ENABLE_SERVICE);
         if (enabled == null || enabled.equals("false")) {
