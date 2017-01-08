@@ -166,4 +166,5 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="lock_warning">Ввдеите PIN-код чтобы заблокировать устройство</string>
     <string name="overlay_help_titile">Текущее устройство</string>
     <string name="overlay_help_message">Нажмите для переключения на другие устройства</string>
+    <string name="wizard_nopermissions">Вы должны дать приложению все разрешения</string>
 </resources>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -38,7 +39,10 @@ public class WizardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkPermissions();
+    }
 
+    private void checkPermissions() {
         Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -55,15 +59,24 @@ public class WizardActivity extends AppCompatActivity {
                         Manifest.permission.READ_CONTACTS,
                         Manifest.permission.READ_SMS
                 ).withListener(new MultiplePermissionsListener() {
-            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+            @Override
+            public void onPermissionsChecked(MultiplePermissionsReport report) {
                 if (report.areAllPermissionsGranted()) {
                     if (Build.VERSION.SDK_INT >= 23) {
                         Battery.requestIgnoreBatteryOptimisation(WizardActivity.this);
                     }
                     main();
+                } else {
+                    Toast.makeText(WizardActivity.this,
+                            R.string.wizard_nopermissions, Toast.LENGTH_SHORT).show();
+                    checkPermissions();
                 }
             }
-            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {/* ... */}
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                token.continuePermissionRequest();
+            }
         }).check();
     }
 
