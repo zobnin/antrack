@@ -222,10 +222,11 @@ public class MainService extends Service {
                                 cc.parseCommand(intent.getStringExtra("command"));
                                 break;
                             case C.ACTION_WAKEUP:
-                                L.d(TAG, "Get awake");
+                                L.d(TAG, "Get wakeup");
                                 try {
                                     pw.getFile(Init.DEVICES_DIR + Init.DEVICE_NAME_IMEI + C.CONTROL_Q_FILE,
                                             "/" + Init.DEVICE_NAME_IMEI + C.CONTROL_Q_FILE);
+                                    U.parseCtlq(cc);
                                 } catch (Exception e) {
                                     L.d(TAG, "Error getting file: " + e.toString());
                                 }
