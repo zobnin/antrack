@@ -9,6 +9,7 @@ import org.antrack.app.libs.Shell;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 public class Settings {
@@ -25,6 +26,26 @@ public class Settings {
     public static void wizardComplete(Context context) {
         String wizardCompleteFile = context.getApplicationInfo().dataDir + C.WIZARD_COMPLETE_FILE;
         Files.touch(wizardCompleteFile);
+    }
+
+    public static void saveToken(String token) {
+        try {
+            Files.writeTextFile(Init.APP_DIR + C.TOKEN_FILE, token);
+        } catch (IOException e) {
+            L.e(TAG, "Can't save token: " + e.toString());
+        }
+    }
+
+    public static String readToken() {
+        String token = null;
+
+        try {
+            token = Files.readTextFile(Init.APP_DIR + C.TOKEN_FILE);
+        } catch (IOException e) {
+            L.e(TAG, "Can't read token: " + e.toString());
+        }
+
+        return token;
     }
 
     public static void init() {

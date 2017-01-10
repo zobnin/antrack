@@ -20,6 +20,7 @@ public class C {
     public static final String CONTROL_FILE = "/ctl";
     public static final String RESULT_FILE = "/result";
     public static final String OSID_FILE = "/osid";
+    public static final String TOKEN_FILE = "/.token";
     public static final String WIZARD_COMPLETE_FILE = "/.wizard_complete";
 
     public static final String BOOTSTRAP_ASSET = "bootstrap";
@@ -56,7 +57,6 @@ public class C {
     public static final String S_USE_ROOT = "useRoot"; // false
     public static final String S_UPDATE_INTERVAL = "updateInterval"; // 30
     public static final String S_PLUGIN = "plugin"; // null
-    public static final String S_TOKEN = "token"; // null
     public static final String S_START_AT_BOOT = "startAtBoot"; // true
     public static final String S_ENABLE_SERVICE = "enableService"; // true
     public static final String S_HIDDEN = "hidden"; // false

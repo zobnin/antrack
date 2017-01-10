@@ -143,7 +143,7 @@ public class WizardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (Settings.get(C.S_TOKEN) == null) {
+        if (Settings.readToken() == null) {
             // FIXME translate
             Utils.showToast(WizardActivity.this, "Authentication required");
         } else {
@@ -161,7 +161,7 @@ public class WizardActivity extends AppCompatActivity {
             Pw pw = Pw.getInstance();
             String token = pw.resume();
             if (token != null) {
-                Settings.put(C.S_TOKEN, token);
+                Settings.saveToken(token);
                 closeButton.setEnabled(true);
             } else {
                 // FIXME здесь надо как-то обрабатывать ситуацию если нет токена

@@ -118,7 +118,7 @@ class CC {
         /*
          * 1. Hide app
          * 2. Enable password
-         * 3. Remove other device files
+         * 3. Remove other devices files
          * 4. Turn on setting "photo on screen on"
          */
 

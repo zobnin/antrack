@@ -44,7 +44,7 @@ public class Pw {
     public boolean connect() {
         Settings.init();
 
-        token = Settings.get(C.S_TOKEN);
+        token = Settings.readToken();
         if (token == null || token.equals("")) {
             return false;
         }
