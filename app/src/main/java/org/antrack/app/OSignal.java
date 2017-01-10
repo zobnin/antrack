@@ -23,11 +23,11 @@ public class OSignal {
         });
     }
 
-    public static void push(String userId) {
+    public static void push(String userId, String message) {
         L.d("OSignal", "push to " + userId);
 
         try {
-            OneSignal.postNotification(new JSONObject("{'contents': {'en':'ping'}, 'include_player_ids': ['" + userId + "'], 'priority':10}"),
+            OneSignal.postNotification(new JSONObject("{'contents': {'en':'" + message + "'}, 'include_player_ids': ['" + userId + "'], 'priority':10}"),
                     new OneSignal.PostNotificationResponseHandler() {
                         @Override
                         public void onSuccess(JSONObject response) {

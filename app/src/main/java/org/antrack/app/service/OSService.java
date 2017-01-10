@@ -11,11 +11,12 @@ import org.antrack.app.libs.L;
 public class OSService extends NotificationExtenderService {
     @Override
     protected boolean onNotificationProcessing(OSNotificationReceivedResult receivedResult) {
-        Intent myIntent = new Intent(this, MainService.class);
-        myIntent.setAction(C.ACTION_WAKEUP);
-        this.startService(myIntent);
+        L.d("OSService", "Received notification: " + receivedResult.payload.body);
 
-        L.d("OSService", "Received notification");
+        Intent intent = new Intent(this, MainService.class);
+        intent.setAction(C.ACTION_PUSH);
+        intent.putExtra("command", receivedResult.payload.body);
+        this.startService(intent);
 
         // Return true to stop the notification from displaying.
         return true;

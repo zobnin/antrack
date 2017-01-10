@@ -7,7 +7,6 @@ import org.antrack.app.OSignal;
 import org.antrack.app.Pw;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
-import org.antrack.app.libs.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -145,15 +144,18 @@ public class U {
         else {
             String deviceControlFile = getLocalPath(C.CONTROL_Q_FILE);
 
+            /*
             try {
                 Files.addLineToStack(deviceControlFile,
                         Utils.date(C.LAST_CMD_TIME_FORMAT) + " " + cmd, C.CONTROL_Q_MAX_LENGTH);
                 putFileAsync(C.CONTROL_Q_FILE);
 
-                OSignal.push(State.device.getOSId().trim());
+                OSignal.push(State.device.getOSId().trim(), cmd);
             } catch (IOException e) {
                 L.e(TAG, "Can't run command " + cmd + ": " + e);
             }
+            */
+            OSignal.push(State.device.getOSId().trim(), cmd);
         }
     }
 
