@@ -116,29 +116,24 @@ class CC {
 
     private String lost(String pin) {
         /*
-         * 1. Lock screen
-         * 2. Hide app
-         * 3. Turn on setting "photo on screen on"
-         * 4. Turn on setting "send SMS after sim change"
+         * 1. Hide app
+         * 2. Enable password
+         * 3. Remove other device files
+         * 4. Turn on setting "photo on screen on"
          */
 
-        if (pin.equals(C.OFF)) {
-            //hide("off");
-
-            Settings.put(C.S_SCREEN_ON_PHOTO, C.FALSE);
-            Settings.put(C.S_SMS_ON_SIM_CHANGE, C.FALSE);
-
-            Logger.unlost(context);
-        } else {
-            //String ret = lock(pin);
-            //if (!ret.equals("done")) { return ret; }
-
-            //hide("on");
+        if (pin.equals(C.ON)) {
+            parseCommand("hide on");
 
             Settings.put(C.S_SCREEN_ON_PHOTO, C.TRUE);
-            Settings.put(C.S_SMS_ON_SIM_CHANGE, C.TRUE);
 
             Logger.lost(context);
+        } else {
+            parseCommand("hide off");
+
+            Settings.put(C.S_SCREEN_ON_PHOTO, C.FALSE);
+
+            Logger.unlost(context);
         }
 
         return C.DONE;

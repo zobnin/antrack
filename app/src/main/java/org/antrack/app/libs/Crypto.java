@@ -13,7 +13,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
-    static void encrypt(String inputFile, String outputFile, String key) throws IOException, NoSuchAlgorithmException,
+    static void encryptFile(String inputFile, String outputFile, String key) throws IOException, NoSuchAlgorithmException,
             NoSuchPaddingException, InvalidKeyException {
         FileInputStream fis = new FileInputStream(inputFile);
         FileOutputStream fos = new FileOutputStream(outputFile);
@@ -39,7 +39,7 @@ public class Crypto {
         fis.close();
     }
 
-    static void decrypt(String inputFile, String outputFile, String key) throws IOException, NoSuchAlgorithmException,
+    static void decryptFile(String inputFile, String outputFile, String key) throws IOException, NoSuchAlgorithmException,
             NoSuchPaddingException, InvalidKeyException {
         FileInputStream fis = new FileInputStream(inputFile);
         FileOutputStream fos = new FileOutputStream(outputFile);
