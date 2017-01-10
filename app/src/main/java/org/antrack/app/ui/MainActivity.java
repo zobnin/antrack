@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity
                             .setContentText(R.string.overlay_help_message)
                             .hideOnTouchOutside()
                             .build();
-                    Settings.put(C.S_SHOW_HELP, "false");
+                    Settings.put(C.S_SHOW_HELP, C.FALSE);
                 }
             }
             // Change fragment on drawer close
