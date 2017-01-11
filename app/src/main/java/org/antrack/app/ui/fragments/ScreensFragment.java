@@ -18,6 +18,9 @@ public class ScreensFragment extends ImagesFragment {
     public String getModule() { return Mod.SCREENSHOT; }
 
     @Override
+    public String getWatchFile() { return Mod.getFile(Mod.SCREENSHOT); }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (!State.features.root) {
             showNoRoot();

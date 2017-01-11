@@ -13,6 +13,9 @@ public class PhotosFragment extends ImagesFragment {
     public String getModule() { return Mod.CAMERA; }
 
     @Override
+    public String getWatchFile() { return Mod.getFile(Mod.CAMERA); }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_photos, menu);
         super.onCreateOptionsMenu(menu, inflater);

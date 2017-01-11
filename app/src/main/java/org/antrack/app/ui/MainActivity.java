@@ -355,8 +355,8 @@ public class MainActivity extends AppCompatActivity
         // We must attach fragment immediately, otherwise getWatchFile() may return null
         fragmentManager.executePendingTransactions();
 
-        addCallbacks();
         State.fragment = fragment;
+        addCallbacks();
         setToolbarTitle();
 
         L.d(TAG, "Fragment loaded");

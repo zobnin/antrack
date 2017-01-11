@@ -184,7 +184,7 @@ public class MainService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                WakeLocks wl = new WakeLocks(MainService.this);
+                WakeLocks wl = new WakeLocks(MainService.this, "ServiceWakelock");
                 wl.lock();
 
                 if (intent != null) {

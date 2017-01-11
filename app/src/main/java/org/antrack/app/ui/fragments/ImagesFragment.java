@@ -86,13 +86,6 @@ public class ImagesFragment extends BaseFragment {
         return view;
     }
 
-    public String getModule() { return null; }
-
-    @Override
-    public String getWatchFile() {
-        return modDir;
-    }
-
     @Override
     public void onFileUpdate() {
         new Thread(new Runnable() {
