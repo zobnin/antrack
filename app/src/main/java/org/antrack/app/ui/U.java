@@ -155,6 +155,15 @@ public class U {
                 L.e(TAG, "Can't run command " + cmd + ": " + e);
             }
             */
+            /*
+            try {
+                byte[] encrypted = Crypto.encryptString(cmd, State.device.getKey());
+                OSignal.push(State.device.getOSId().trim(),
+                        Base64.encodeToString(encrypted, Base64.DEFAULT));
+            } catch (Exception e) {
+                L.e(TAG, "Can't encrypt command: " + e.toString());
+            }
+            */
             OSignal.push(State.device.getOSId().trim(), cmd);
         }
     }

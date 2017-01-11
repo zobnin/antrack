@@ -2,14 +2,20 @@ package org.antrack.app.ui;
 
 import org.antrack.app.C;
 import org.antrack.app.Init;
+import org.antrack.app.libs.Crypto;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
 
 import java.io.IOException;
 
+import javax.crypto.SecretKey;
+
+import static android.content.ContentValues.TAG;
+
 public class Device {
     private String dirName;
     private String OSId = null;
+    private SecretKey key;
 
     public String lastUpdate = null;
 
@@ -38,6 +44,18 @@ public class Device {
             }
         }
         return OSId;
+    }
+
+    public SecretKey getKey() {
+        if (key == null) {
+            try {
+                String stringKey = Files.readTextFile(U.getLocalPath(C.KEY_FILE));
+                key = Crypto.stringToKey(stringKey.trim());
+            } catch (Exception e) {
+                L.d(TAG, "Can't read key file: " + e.toString());
+            }
+        }
+        return key;
     }
 
     public String getFullName() {

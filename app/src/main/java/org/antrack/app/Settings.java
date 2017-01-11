@@ -12,11 +12,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.crypto.SecretKey;
+
 public class Settings {
     private static final String TAG = "Settings";
 
     private static Properties prop = null;
     private static String settingsFile = null;
+    private static SecretKey key = null;
 
     public static boolean needLaunchWizard(Context context) {
         String wizardCompleteFile = context.getApplicationInfo().dataDir + C.WIZARD_COMPLETE_FILE;
@@ -47,7 +50,26 @@ public class Settings {
 
         return token;
     }
+/*
+    public static void generateKey() {
+        if (key == null) {
+            try {
+                key = Crypto.generateKey();
+                String stringKey = Crypto.keyToString(key);
+                Files.writeTextFile(Init.MAIN_DIR + C.KEY_FILE, stringKey);
+            } catch (Exception e) {
+                L.e(TAG, "Can't generate key: " + e.toString());
+            }
+        }
+    }
 
+    public static SecretKey readKey() {
+        if (key == null) {
+            generateKey();
+        }
+        return key;
+    }
+*/
     public static void init() {
         if (prop == null) {
             settingsFile = Init.MAIN_DIR + C.SETTINGS_FILE;
