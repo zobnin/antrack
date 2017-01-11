@@ -6,24 +6,25 @@ import org.antrack.app.libs.LoadingDialog;
 import org.antrack.app.ui.MainActivity;
 import org.antrack.app.ui.State;
 
-// Callback for update modules
-public class ModulesCallback implements FileWatcher.Callback {
+// Callback for update features
+public class OsidCallback implements FileWatcher.Callback {
     static boolean active = false;
 
     private MainActivity activity;
 
-    public ModulesCallback(MainActivity activity) {
+    public OsidCallback(MainActivity activity) {
         this.activity = activity;
         active = true;
     }
 
     public void onFileUpdate(String path) {
-        FileWatcher fw = FileWatcher.getInstance();
-        fw.removeCallback("modules");
+        FileWatcher fw;
+        fw = FileWatcher.getInstance();
+        fw.removeCallback("osid");
         active = false;
 
+        if (ModulesCallback.active) return;
         if (FeaturesCallback.active) return;
-        if (OsidCallback.active) return;
         if (KeyCallback.active) return;
 
         activity.runOnUiThread(new Runnable() {
@@ -36,6 +37,7 @@ public class ModulesCallback implements FileWatcher.Callback {
     }
 
     public String getWatchFile() {
-        return "/" + State.device.getDir() + C.MODULES_FILE;
+        return "/" + State.device.getDir() + C.OSID_FILE;
     }
 }
+

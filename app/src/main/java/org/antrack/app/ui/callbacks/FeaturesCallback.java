@@ -24,6 +24,8 @@ public class FeaturesCallback implements FileWatcher.Callback {
         active = false;
 
         if (ModulesCallback.active) return;
+        if (OsidCallback.active) return;
+        if (KeyCallback.active) return;
 
         activity.runOnUiThread(new Runnable() {
             @Override

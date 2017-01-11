@@ -1,11 +1,14 @@
 package org.antrack.app.service;
 
 import android.content.Intent;
+import android.util.Base64;
 
 import com.onesignal.NotificationExtenderService;
 import com.onesignal.OSNotificationReceivedResult;
 
 import org.antrack.app.C;
+import org.antrack.app.Settings;
+import org.antrack.app.libs.Crypto;
 import org.antrack.app.libs.L;
 
 public class OSService extends NotificationExtenderService {
@@ -15,18 +18,20 @@ public class OSService extends NotificationExtenderService {
     protected boolean onNotificationProcessing(OSNotificationReceivedResult receivedResult) {
         L.d(TAG, "Received notification: " + receivedResult.payload.body);
 
-        String cmd = receivedResult.payload.body;
+        String cmd;
 
-        /*
-        try {
-            cmd = Crypto.decryptString(
-                    Base64.decode(receivedResult.payload.body, Base64.DEFAULT),
-                    State.device.getKey());
-        } catch (Exception e) {
-            L.e(TAG, "Can't decrypt message: " + e.toString());
+        if (!receivedResult.payload.body.equals("")) {
+            try {
+                cmd = Crypto.decryptString(
+                        Base64.decode(receivedResult.payload.body, Base64.DEFAULT),
+                        Settings.readKey());
+            } catch (Exception e) {
+                L.e(TAG, "Can't decrypt message: " + e.toString());
+                return true;
+            }
+        } else {
             return true;
         }
-        */
 
         L.d(TAG, "Command: " + cmd);
 

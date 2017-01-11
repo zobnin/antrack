@@ -2,6 +2,7 @@ package org.antrack.app;
 
 import android.content.Context;
 
+import org.antrack.app.libs.Crypto;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.Shell;
@@ -50,26 +51,33 @@ public class Settings {
 
         return token;
     }
-/*
-    public static void generateKey() {
+
+    public static void saveKey() {
         if (key == null) {
-            try {
-                key = Crypto.generateKey();
-                String stringKey = Crypto.keyToString(key);
-                Files.writeTextFile(Init.MAIN_DIR + C.KEY_FILE, stringKey);
-            } catch (Exception e) {
-                L.e(TAG, "Can't generate key: " + e.toString());
+            if (!new File(Init.MAIN_DIR + C.KEY_FILE).exists()) {
+                try {
+                    key = Crypto.generateKey();
+                    String stringKey = Crypto.keyToString(key);
+                    Files.writeTextFile(Init.MAIN_DIR + C.KEY_FILE, stringKey);
+                } catch (Exception e) {
+                    L.e(TAG, "Can't write key file: " + e.toString());
+                }
             }
         }
     }
 
     public static SecretKey readKey() {
         if (key == null) {
-            generateKey();
+            try {
+                String stringKey = Files.readTextFile(Init.MAIN_DIR + C.KEY_FILE);
+                key = Crypto.stringToKey(stringKey.trim());
+            } catch (Exception e) {
+                L.e(TAG, "Can't read key file: " + e.toString());
+            }
         }
         return key;
     }
-*/
+
     public static void init() {
         if (prop == null) {
             settingsFile = Init.MAIN_DIR + C.SETTINGS_FILE;

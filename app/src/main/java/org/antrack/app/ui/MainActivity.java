@@ -39,7 +39,9 @@ import org.antrack.app.service.MainService;
 import org.antrack.app.ui.callbacks.CloudCallback;
 import org.antrack.app.ui.callbacks.FeaturesCallback;
 import org.antrack.app.ui.callbacks.FragmentCallback;
+import org.antrack.app.ui.callbacks.KeyCallback;
 import org.antrack.app.ui.callbacks.ModulesCallback;
+import org.antrack.app.ui.callbacks.OsidCallback;
 import org.antrack.app.ui.callbacks.ResultCallback;
 import org.antrack.app.ui.fragments.AppsFragment;
 import org.antrack.app.ui.fragments.AudioFragment;
@@ -212,7 +214,7 @@ public class MainActivity extends AppCompatActivity
                 } else if (selectedDevice != -1) {
                     fragmentContainer.animate().alpha(1);
                     State.device = devices.get(selectedDevice);
-                    waitModulesAndSwitchDevice();
+                    waitFilesAndSwitchDevice();
                 }
                 selectedFragment = null;
                 selectedDevice = -1;
@@ -259,7 +261,7 @@ public class MainActivity extends AppCompatActivity
         /*** Load default fragment ***/
 
         if (State.firstRun) {
-            waitModulesAndSwitchDevice();
+            waitFilesAndSwitchDevice();
         } else {
             switchDevice(false);
             State.initDone = true;
@@ -317,7 +319,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.inflateMenu(R.menu.activity_main_drawer);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        // Rotate arrow
         rotateArrowDown();
 
         State.deviceMenuActive = false;
@@ -351,12 +352,12 @@ public class MainActivity extends AppCompatActivity
 
         ft.commitAllowingStateLoss();
 
-        // We must attach fragment immediately, otherwise getFiles() may return null
+        // We must attach fragment immediately, otherwise getWatchFile() may return null
         fragmentManager.executePendingTransactions();
 
+        addCallbacks();
         State.fragment = fragment;
         setToolbarTitle();
-        addCallbacks();
 
         L.d(TAG, "Fragment loaded");
     }
@@ -368,8 +369,8 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.detach(fragment).attach(fragment).commit();
 
-        setToolbarTitle();
         addCallbacks();
+        setToolbarTitle();
 
         L.d(TAG, "Fragment reloaded");
     }
@@ -597,23 +598,28 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private void waitModulesAndSwitchDevice() {
+    private void waitFilesAndSwitchDevice() {
         // Get modules list, features and osid if not exist
         String modulesFile = U.getLocalPath(C.MODULES_FILE);
         String featuresFile = U.getLocalPath(C.FEATURES_FILE);
         String osidFile = U.getLocalPath(C.OSID_FILE);
+        String keyFile = U.getLocalPath(C.KEY_FILE);
 
         if (!new File(modulesFile).exists() ||
                 !new File(featuresFile).exists() ||
-                !new File(osidFile).exists()) {
+                !new File(osidFile).exists() ||
+                !new File(keyFile).exists()) {
 
             fileWatcher = FileWatcher.getInstance();
             fileWatcher.addCallback("modules", new ModulesCallback(this));
             fileWatcher.addCallback("features", new FeaturesCallback(this));
+            fileWatcher.addCallback("osid", new OsidCallback(this));
+            fileWatcher.addCallback("key", new KeyCallback(this));
 
             U.getFileAsync(C.MODULES_FILE);
             U.getFileAsync(C.FEATURES_FILE);
             U.getFileAsync(C.OSID_FILE);
+            U.getFileAsync(C.KEY_FILE);
 
             LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 

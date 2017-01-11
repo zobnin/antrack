@@ -1,10 +1,13 @@
 package org.antrack.app.ui;
 
+import android.util.Base64;
+
 import org.antrack.app.C;
 import org.antrack.app.Features;
 import org.antrack.app.Init;
 import org.antrack.app.OSignal;
 import org.antrack.app.Pw;
+import org.antrack.app.libs.Crypto;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
 
@@ -155,7 +158,6 @@ public class U {
                 L.e(TAG, "Can't run command " + cmd + ": " + e);
             }
             */
-            /*
             try {
                 byte[] encrypted = Crypto.encryptString(cmd, State.device.getKey());
                 OSignal.push(State.device.getOSId().trim(),
@@ -163,8 +165,6 @@ public class U {
             } catch (Exception e) {
                 L.e(TAG, "Can't encrypt command: " + e.toString());
             }
-            */
-            OSignal.push(State.device.getOSId().trim(), cmd);
         }
     }
 

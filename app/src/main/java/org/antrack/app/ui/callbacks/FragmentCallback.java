@@ -1,7 +1,5 @@
 package org.antrack.app.ui.callbacks;
 
-import android.util.Log;
-
 import org.antrack.app.FileWatcher;
 import org.antrack.app.libs.L;
 import org.antrack.app.ui.State;

@@ -95,9 +95,10 @@ public class MainService extends Service {
                 Features feat = new Features();
                 feat.write(MainService.this, Init.MAIN_DIR + C.FEATURES_FILE);
 
-                /*** Write OneSignal Id ***/
+                /*** Write OneSignal Id and generate SecretKey ***/
 
                 OSignal.writeId();
+                Settings.saveKey();
 
                 /*** Bootstrap ***/
 
