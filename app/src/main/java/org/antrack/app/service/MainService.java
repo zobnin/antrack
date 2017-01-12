@@ -233,6 +233,8 @@ public class MainService extends Service {
                             }
                         }
                 }
+                // Wait other threads
+                Utils.sleep(1);
                 wl.unlock();
             }
         }).start();
