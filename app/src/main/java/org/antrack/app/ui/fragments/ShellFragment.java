@@ -1,5 +1,6 @@
 package org.antrack.app.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.Keyboard;
 import org.antrack.app.libs.L;
-import org.antrack.app.libs.Utils;
 import org.antrack.app.ui.State;
 import org.antrack.app.ui.U;
 
@@ -35,6 +35,7 @@ public class ShellFragment extends BaseFragment {
     String cmdCmd;
 
     boolean progress = false;
+    Thread progressThread;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,10 +86,12 @@ public class ShellFragment extends BaseFragment {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     sendCommand(editText.getText().toString());
-                    progress = false;
+
                     editText.setText("");
                     textView.setText("");
-                    showProgress();
+
+                    startProgress();
+
                     handled = true;
                 }
                 return handled;
@@ -103,9 +106,10 @@ public class ShellFragment extends BaseFragment {
     }
 
     private void addText(final String text) {
-        if (getActivity() == null) return;
+        Activity activity = getActivity();
 
-        getActivity().runOnUiThread(new Runnable() {
+        if (activity == null) return;
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 textView.append(text);
@@ -113,30 +117,43 @@ public class ShellFragment extends BaseFragment {
         });
     }
 
-    private void showProgress() {
+    private void startProgress() {
         if (State.device.isMain())
             return;
 
-        progress = true;
+        stopProgress();
 
-        new Thread(new Runnable() {
+        progressThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 int seconds = 0;
 
-                while(progress) {
+                while (true) {
                     addText(".");
 
                     if (seconds == 60) {
                         addText(" :(");
-                        progress = false;
                     }
 
-                    Utils.sleep(1);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        return;
+                    }
                     seconds += 1;
                 }
             }
-        }).start();
+        });
+        progressThread.start();
+    }
+
+    private void stopProgress() {
+        if (State.device.isMain())
+            return;
+
+        if (progressThread != null && progressThread.isAlive()) {
+            progressThread.interrupt();
+        }
     }
 
     @Override
@@ -147,7 +164,7 @@ public class ShellFragment extends BaseFragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    progress = false;
+                    stopProgress();
                     textView.setAlpha(0);
                     // Remove time stamp
                     textView.setText(out.substring(out.indexOf('\n')+1));
