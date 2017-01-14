@@ -121,8 +121,10 @@ public class MainService extends Service {
 
                 /*** Watch for remote file changes ***/
 
+                /*
                 cloudWatcher = CloudWatcher.getInstance();
-                //cloudWatcher.addCallback("service", new CloudFileUpdated());
+                cloudWatcher.addCallback("service", new CloudFileUpdated());
+                */
 
                 Logger.started(MainService.this);
             }

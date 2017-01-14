@@ -14,16 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class U {
-    // Get full local dir path
-    private static String getFullPath(String path) {
-        return Init.MAIN_DIR + path;
-    }
-
-    // Get full cloud dir path
-    private static String getCloudPath(String path) {
-        return "/" + Init.DEVICE_NAME_IMEI + path;
-    }
-
     static void parseCtl(CC cc) throws IOException {
         String command = Files.readTextFile(getFullPath(C.CONTROL_FILE)).trim();
         cc.parseCommand(command);
@@ -78,4 +68,15 @@ public class U {
 
         pw.putFile(path, "/" + path.replace(Init.DEVICES_DIR, ""), false);
     }
+
+    // Get full local dir path
+    private static String getFullPath(String path) {
+        return Init.MAIN_DIR + path;
+    }
+
+    // Get full cloud dir path
+    private static String getCloudPath(String path) {
+        return "/" + Init.DEVICE_NAME_IMEI + path;
+    }
+
 }
