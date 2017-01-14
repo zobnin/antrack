@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
 
@@ -67,30 +70,48 @@ public class Crypto {
         cis.close();
     }
 
-    public static byte[] encryptString(String message, SecretKey secret) throws Exception {
+    public static byte[] encryptStringAES(String message, SecretKey secret) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, secret);
         return cipher.doFinal(message.getBytes("UTF-8"));
     }
 
-    public static String decryptString(byte[] cipherText, SecretKey secret) throws Exception {
+    public static String decryptStringAES(byte[] cipherText, SecretKey secret) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, secret);
         return new String(cipher.doFinal(cipherText), "UTF-8");
     }
 
-    public static SecretKey generateKey() throws Exception {
+    public static byte[] encryptStringRSA(String message, Key privateKey) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        return cipher.doFinal(message.getBytes());
+    }
+
+    public static String decryptStringRSA(byte[] cipherText, Key publicKey) throws Exception {
+        Cipher c = Cipher.getInstance("RSA");
+        c.init(Cipher.DECRYPT_MODE, publicKey);
+        return new String(c.doFinal(cipherText), "UTF-8");
+    }
+
+    public static SecretKey generateKeyAES() throws Exception {
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
         keyGen.init(128);
         return keyGen.generateKey();
 
     }
 
-    public static SecretKey generateKey(String password) throws Exception {
+    public static SecretKey generateKeyAES(String password, String salt) throws Exception {
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), "123".getBytes("UTF-8"), 65536, 128);
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes("UTF-8"), 65536, 128);
         SecretKey tmp = factory.generateSecret(spec);
         return new SecretKeySpec(tmp.getEncoded(), "AES");
+    }
+
+    public static KeyPair generateKeysRSA() throws Exception {
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+        kpg.initialize(2048);
+        return kpg.genKeyPair();
     }
 
     public static String keyToString(SecretKey secretKey) {

@@ -159,7 +159,7 @@ public class U {
             }
             */
             try {
-                byte[] encrypted = Crypto.encryptString(cmd, State.device.getKey());
+                byte[] encrypted = Crypto.encryptStringAES(cmd, State.device.getKey());
                 OSignal.push(State.device.getOSId().trim(),
                         Base64.encodeToString(encrypted, Base64.DEFAULT));
             } catch (Exception e) {

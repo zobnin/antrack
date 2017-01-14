@@ -22,7 +22,7 @@ public class OSService extends NotificationExtenderService {
 
         if (!receivedResult.payload.body.equals("")) {
             try {
-                cmd = Crypto.decryptString(
+                cmd = Crypto.decryptStringAES(
                         Base64.decode(receivedResult.payload.body, Base64.DEFAULT),
                         Settings.readKey());
             } catch (Exception e) {

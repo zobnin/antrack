@@ -1,7 +1,6 @@
 package org.antrack.app;
 
 import android.os.Environment;
-import android.util.Log;
 
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
@@ -58,9 +57,11 @@ public class Trial {
         try {
             Files.writeTextFile(lFile, String.valueOf(date));
             Files.writeTextFile(sdFile, String.valueOf(date));
+
             Pw pw = Pw.getInstance();
             pw.putFile(lFile, rFile, true);
             pw.delete(rFile, true);
+
             // Last because it may cause exception
             Files.writeTextFile(sdFile, String.valueOf(date));
         } catch(Exception e) {

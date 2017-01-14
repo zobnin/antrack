@@ -56,7 +56,7 @@ public class Settings {
         if (key == null) {
             if (!new File(Init.MAIN_DIR + C.KEY_FILE).exists()) {
                 try {
-                    key = Crypto.generateKey();
+                    key = Crypto.generateKeyAES();
                     String stringKey = Crypto.keyToString(key);
                     Files.writeTextFile(Init.MAIN_DIR + C.KEY_FILE, stringKey);
                 } catch (Exception e) {
