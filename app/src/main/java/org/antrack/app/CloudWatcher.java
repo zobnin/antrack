@@ -72,8 +72,7 @@ public class CloudWatcher {
                         try {
                             Pw pw = Pw.getInstance();
                             // Sleep if there are no internet connection
-                            // FIXME
-                            //pw.waitOnline();
+                            pw.waitOnline();
                             ArrayList<String> changedFiles = pw.watchForChanges("/" + device);
 
                             // Second check if thread become inactive while blocked
