@@ -111,17 +111,18 @@ public class MainService extends Service {
                 Utils.unpackAsset(context, C.ALARM_ASSET);
 
                 /*** Get ctlq ***/
-
+                /*
                 try {
                     U.getFile(C.CONTROL_Q_FILE);
                 } catch (Exception e) {
                     L.d(TAG, "Can't parse ctlq file: " + e);
                 }
+                */
 
                 /*** Watch for remote file changes ***/
 
                 cloudWatcher = CloudWatcher.getInstance();
-                cloudWatcher.addCallback("service", new CloudFileUpdated());
+                //cloudWatcher.addCallback("service", new CloudFileUpdated());
 
                 Logger.started(MainService.this);
             }

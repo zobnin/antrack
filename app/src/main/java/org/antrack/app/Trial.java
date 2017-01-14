@@ -25,15 +25,18 @@ public class Trial {
 
     public static long getRemainingDays() {
         long currentDate = getCurrentDate();
-        long savedDate = getSavedDate();
 
-        if (savedDate < 0) {
-            saveDate();
-            return -1;
+        // Without internet AnTrack not usable so just return 1 day
+        if (currentDate <= 0) {
+            return 1;
         }
 
-        if (currentDate < 0) {
-            return -1;
+        long savedDate = getSavedDate();
+
+        if (savedDate == Long.MAX_VALUE) {
+            saveDate();
+            // If date not yet saved return 10
+            return C.CONTROL_Q_MAX_LENGTH;
         }
 
         // Little trick to make reversing harder
@@ -47,7 +50,9 @@ public class Trial {
     // * SD card (file: "image_cache")
     private static void saveDate() {
         long date = getCurrentDate();
-        if (date < 0)
+
+        // Если не удалось получить дату сейчас получится позже
+        if (date <= 0)
             return;
 
         String lFile = Init.APP_DIR + "/index_" + date;
@@ -60,7 +65,7 @@ public class Trial {
 
             Pw pw = Pw.getInstance();
             pw.putFile(lFile, rFile, true);
-            pw.delete(rFile, true);
+            pw.delete(rFile, false);
 
             // Last because it may cause exception
             Files.writeTextFile(sdFile, String.valueOf(date));
@@ -70,22 +75,22 @@ public class Trial {
     }
 
     private static long getSavedDate() {
-        long[] dates = new long[3];
+        long dates[] = new long[3];
 
         dates[0] = getDateFromAppDir();
         dates[1] = getDateFromSdcard();
         dates[2] = getDateFromCloud();
 
-        long min = dates[0];
+        long min = Long.MAX_VALUE;
         for (long i : dates) {
-            if (i < min) min = i;
+            if (i > 0 && i < min) min = i;
         }
 
         return min;
     }
 
     private static long getDateFromAppDir() {
-        long date = Long.MAX_VALUE;
+        long date = -1;
         try {
             String[] localFiles = new File(Init.APP_DIR).list();
             for (String file : localFiles) {
@@ -94,7 +99,7 @@ public class Trial {
                 }
             }
         } catch (Exception e) {
-            L.e("TRIAL", "getDateFromAppDir exception: " + e);
+            L.e("TRIAL", "getDateFromAppDir exception: " + e.toString());
         }
 
         L.d("TRIAL", "getDateFromAppDir: " + date);
@@ -103,12 +108,12 @@ public class Trial {
     }
 
     private static long getDateFromSdcard() {
-        long date = Long.MAX_VALUE;
+        long date = -1;
         try {
             date = Long.parseLong(Files.readTextFile(
-                    Environment.getExternalStorageDirectory() + SDCARD_FILE));
+                    Environment.getExternalStorageDirectory() + SDCARD_FILE).trim());
         } catch (Exception e) {
-            L.e("TRIAL", "getDateFromSdcard exception: " + e);
+            L.e("TRIAL", "getDateFromSdcard exception: " + e.toString());
         }
 
         L.d("TRIAL", "getDateFromSdcard: " + date);
@@ -117,7 +122,7 @@ public class Trial {
     }
 
     private static long getDateFromCloud() {
-        long date = Long.MAX_VALUE;
+        long date = -1;
         try {
             Pw pw = Pw.getInstance();
             ArrayList<String> cloudFiles = pw.listDir("", true);
@@ -127,7 +132,7 @@ public class Trial {
                 }
             }
         } catch (Exception e) {
-            L.e("TRIAL", "getDateFromCloud exception: " + e);
+            L.e("TRIAL", "getDateFromCloud exception: " + e.toString());
         }
 
         L.d("TRIAL", "getDateFromCloud: " + date);
@@ -146,7 +151,7 @@ public class Trial {
             L.e("TRIAL", "getDate exception: " + e.toString());
         }
 
+        L.d("TRIAL", "getCurrentDate: " + date);
         return date;
     }
-
 }

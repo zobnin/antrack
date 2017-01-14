@@ -136,20 +136,20 @@ public class U {
         if (State.device.isMain()) {
             cmd = "!" + cmd;
 
-            String deviceControlFile = getLocalPath(C.CONTROL_FILE);
+            String ctlFile = getLocalPath(C.CONTROL_FILE);
 
             try {
-                Files.writeTextFile(deviceControlFile, cmd);
+                Files.writeTextFile(ctlFile, cmd);
             } catch (IOException e) {
                 L.e(TAG, "Can't run command " + cmd + ": " + e);
             }
         }
         else {
-            String deviceControlFile = getLocalPath(C.CONTROL_Q_FILE);
-
             /*
+            String ctlFile = getLocalPath(C.CONTROL_Q_FILE);
+
             try {
-                Files.addLineToStack(deviceControlFile,
+                Files.addLineToStack(ctlFile,
                         Utils.date(C.LAST_CMD_TIME_FORMAT) + " " + cmd, C.CONTROL_Q_MAX_LENGTH);
                 putFileAsync(C.CONTROL_Q_FILE);
 
