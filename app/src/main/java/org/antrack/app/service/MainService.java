@@ -141,6 +141,7 @@ public class MainService extends Service {
                 }
             }
             // Current device ctlq changed -> read and execute commands
+            /*
             else if (path.endsWith(C.CONTROL_Q_FILE)) {
                 try {
                     U.parseCtlq(cc);
@@ -148,6 +149,7 @@ public class MainService extends Service {
                     L.e(TAG, "Can't read ctlq file: " + e.toString());
                 }
             }
+            */
             // Other file changed -> upload to cloud
             else {
                 try {
@@ -251,9 +253,11 @@ public class MainService extends Service {
             fileWatcher.removeCallback("service");
         }
 
+        /*
         if (cloudWatcher != null) {
             cloudWatcher.removeCallback("service");
         }
+        */
 
         String enabled = Settings.get(C.S_ENABLE_SERVICE);
         if (enabled == null || enabled.equals("false")) {
