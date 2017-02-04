@@ -51,6 +51,9 @@ public class MainService extends Service {
         pw = Pw.getInstance();
         cc = new CC(context);
 
+        /*** Ctl ***/
+
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -112,21 +115,18 @@ public class MainService extends Service {
 
                 Utils.unpackAsset(context, C.ALARM_ASSET);
 
-                /*** Get ctlq ***/
-                /*
-                try {
-                    U.getFile(C.CONTROL_Q_FILE);
-                } catch (Exception e) {
-                    L.d(TAG, "Can't parse ctlq file: " + e);
+                /*** Get and watch for clt / ctlq ***/
+
+                String ctlEnabled = settings.get(C.S_ENABLE_CTL);
+                if (C.TRUE.equals(ctlEnabled)) {
+                    try {
+                        U.getFile(C.CONTROL_Q_FILE);
+                        cloudWatcher = CloudWatcher.getInstance();
+                        cloudWatcher.addCallback("service", new CloudFileUpdated());
+                    } catch (Exception e) {
+                        L.d(TAG, "Can't parse ctlq file: " + e);
+                    }
                 }
-                */
-
-                /*** Watch for remote file changes ***/
-
-                /*
-                cloudWatcher = CloudWatcher.getInstance();
-                cloudWatcher.addCallback("service", new CloudFileUpdated());
-                */
 
                 Logger.started(MainService.this);
             }
@@ -144,16 +144,19 @@ public class MainService extends Service {
                     L.e(TAG, "Can't read ctl file: " + e.toString());
                 }
             }
+
             // Current device ctlq changed -> read and execute commands
-            /*
             else if (path.endsWith(C.CONTROL_Q_FILE)) {
-                try {
-                    U.parseCtlq(cc);
-                } catch (IOException e) {
-                    L.e(TAG, "Can't read ctlq file: " + e.toString());
+                String ctlEnabled = settings.get(C.S_ENABLE_CTL);
+                if (C.TRUE.equals(ctlEnabled)) {
+                    try {
+                        U.parseCtlq(cc);
+                    } catch (IOException e) {
+                        L.e(TAG, "Can't read ctlq file: " + e.toString());
+                    }
                 }
             }
-            */
+
             // Other file changed -> upload to cloud
             else {
                 try {
@@ -257,11 +260,12 @@ public class MainService extends Service {
             fileWatcher.removeCallback("service");
         }
 
-        /*
-        if (cloudWatcher != null) {
-            cloudWatcher.removeCallback("service");
+        String ctlEnabled = settings.get(C.S_ENABLE_CTL);
+        if (C.TRUE.equals(ctlEnabled)) {
+            if (cloudWatcher != null) {
+                cloudWatcher.removeCallback("service");
+            }
         }
-        */
 
         String enabled = settings.get(C.S_ENABLE_SERVICE);
         if (enabled == null || enabled.equals("false")) {

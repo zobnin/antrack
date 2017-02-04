@@ -1,7 +1,6 @@
 package org.antrack.app.libs;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.antrack.app.C;
 import org.antrack.app.ModuleInterface;
@@ -30,6 +29,7 @@ public class ModuleLoader {
             L.e(TAG, "Load class error: " + e.toString());
             return null;
         }
+
     }
 
     public Map<String, ModuleInterface> getObjects(String jarDir, String odexDir) {
@@ -44,13 +44,15 @@ public class ModuleLoader {
 
         for (File file : files) {
             Class<?> loadedClass = loadClass(file, odexDir);
+
             if (loadedClass == null) continue;
             try {
                 ModuleInterface obj = (ModuleInterface) loadedClass.newInstance();
                 hashmap.put(file.getName().replace(".jar", ""), obj);
             } catch (Exception e) {
-                L.d(TAG, "getObjects error: " + e.toString());
+                L.e(TAG, "getObjects error: " + e.toString());
             }
+            L.d(TAG, "Module loaded: " + file.getName().replace(".jar", ""));
         }
         return hashmap;
     }

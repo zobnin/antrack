@@ -70,4 +70,5 @@ public class C {
     public static final String S_SYSTEM_APP = "systemApp"; // false
     public static final String S_SHOW_HELP = "showHelp"; // true
     public static final String S_LAST_CMD_TIME = "lastCmdId"; // null
+    public static final String S_ENABLE_CTL = "enableCtl"; // false
 }
