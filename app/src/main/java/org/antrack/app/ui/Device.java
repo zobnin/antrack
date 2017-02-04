@@ -7,15 +7,14 @@ import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
 
 import java.io.IOException;
-
-import javax.crypto.SecretKey;
+import java.security.PublicKey;
 
 import static android.content.ContentValues.TAG;
 
 public class Device {
     private String dirName;
     private String OSId = null;
-    private SecretKey key;
+    private PublicKey key;
 
     public String lastUpdate = null;
 
@@ -46,11 +45,11 @@ public class Device {
         return OSId;
     }
 
-    public SecretKey getKey() {
+    public PublicKey getPublicKey() {
         if (key == null) {
             try {
-                String stringKey = Files.readTextFile(U.getLocalPath(C.KEY_FILE));
-                key = Crypto.stringToKey(stringKey.trim());
+                String stringKey = Files.readTextFile(U.getLocalPath(C.PUBLIC_KEY_FILE));
+                key = Crypto.stringToPublicKey(stringKey.trim());
             } catch (Exception e) {
                 L.d(TAG, "Can't read key file: " + e.toString());
             }

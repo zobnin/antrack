@@ -37,7 +37,7 @@ public class KeyCallback implements FileWatcher.Callback {
     }
 
     public String getWatchFile() {
-        return "/" + State.device.getDir() + C.KEY_FILE;
+        return "/" + State.device.getDir() + C.PUBLIC_KEY_FILE;
     }
 }
 

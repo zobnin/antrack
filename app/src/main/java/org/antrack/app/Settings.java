@@ -2,10 +2,8 @@ package org.antrack.app;
 
 import android.content.Context;
 
-import org.antrack.app.libs.Crypto;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
-import org.antrack.app.libs.Shell;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,18 +11,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import javax.crypto.SecretKey;
-
 public class Settings {
     private static final String TAG = "Settings";
 
     private static Properties prop = null;
     private static String settingsFile = null;
-    private static SecretKey key = null;
 
     public static boolean needLaunchWizard(Context context) {
         String wizardCompleteFile = context.getApplicationInfo().dataDir + C.WIZARD_COMPLETE_FILE;
-        return (!new File(wizardCompleteFile).exists());
+        return !new File(wizardCompleteFile).exists();
     }
 
     public static void wizardComplete(Context context) {
@@ -52,36 +47,10 @@ public class Settings {
         return token;
     }
 
-    public static void saveKey() {
-        if (key == null) {
-            if (!new File(Init.MAIN_DIR + C.KEY_FILE).exists()) {
-                try {
-                    key = Crypto.generateKeyAES();
-                    String stringKey = Crypto.keyToString(key);
-                    Files.writeTextFile(Init.MAIN_DIR + C.KEY_FILE, stringKey);
-                } catch (Exception e) {
-                    L.e(TAG, "Can't write key file: " + e.toString());
-                }
-            }
-        }
-    }
-
-    public static SecretKey readKey() {
-        if (key == null) {
-            try {
-                String stringKey = Files.readTextFile(Init.MAIN_DIR + C.KEY_FILE);
-                key = Crypto.stringToKey(stringKey.trim());
-            } catch (Exception e) {
-                L.e(TAG, "Can't read key file: " + e.toString());
-            }
-        }
-        return key;
-    }
-
     public static void init() {
         if (prop == null) {
             settingsFile = Init.MAIN_DIR + C.SETTINGS_FILE;
-            Shell.runCommand("touch " + settingsFile);
+            Files.touch(settingsFile);
             load();
         }
     }

@@ -12,6 +12,7 @@ import org.antrack.app.CloudWatcher;
 import org.antrack.app.Features;
 import org.antrack.app.FileWatcher;
 import org.antrack.app.Init;
+import org.antrack.app.Keys;
 import org.antrack.app.OSignal;
 import org.antrack.app.Pw;
 import org.antrack.app.Settings;
@@ -95,10 +96,10 @@ public class MainService extends Service {
                 Features feat = new Features();
                 feat.write(MainService.this, Init.MAIN_DIR + C.FEATURES_FILE);
 
-                /*** Write OneSignal Id and generate SecretKey ***/
+                /*** Write OneSignal Id and generate key pair ***/
 
                 OSignal.writeId();
-                Settings.saveKey();
+                Keys.saveKeys();
 
                 /*** Bootstrap ***/
 

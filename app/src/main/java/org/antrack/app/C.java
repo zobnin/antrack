@@ -20,7 +20,8 @@ public class C {
     public static final String CONTROL_FILE = "/ctl";
     public static final String RESULT_FILE = "/result";
     public static final String OSID_FILE = "/osid";
-    public static final String KEY_FILE = "/key";
+    public static final String PUBLIC_KEY_FILE = "/public_key";
+    public static final String PRIVATE_KEY_FILE = "/.private_key";
     public static final String TOKEN_FILE = "/.token";
     public static final String WIZARD_COMPLETE_FILE = "/.wizard_complete";
 

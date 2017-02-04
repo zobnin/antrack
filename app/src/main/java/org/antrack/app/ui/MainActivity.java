@@ -603,7 +603,7 @@ public class MainActivity extends AppCompatActivity
         String modulesFile = U.getLocalPath(C.MODULES_FILE);
         String featuresFile = U.getLocalPath(C.FEATURES_FILE);
         String osidFile = U.getLocalPath(C.OSID_FILE);
-        String keyFile = U.getLocalPath(C.KEY_FILE);
+        String keyFile = U.getLocalPath(C.PUBLIC_KEY_FILE);
 
         if (!new File(modulesFile).exists() ||
                 !new File(featuresFile).exists() ||
@@ -619,7 +619,7 @@ public class MainActivity extends AppCompatActivity
             U.getFileAsync(C.MODULES_FILE);
             U.getFileAsync(C.FEATURES_FILE);
             U.getFileAsync(C.OSID_FILE);
-            U.getFileAsync(C.KEY_FILE);
+            U.getFileAsync(C.PUBLIC_KEY_FILE);
 
             LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 

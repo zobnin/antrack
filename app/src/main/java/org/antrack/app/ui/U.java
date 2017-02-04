@@ -5,6 +5,7 @@ import android.util.Base64;
 import org.antrack.app.C;
 import org.antrack.app.Features;
 import org.antrack.app.Init;
+import org.antrack.app.Keys;
 import org.antrack.app.OSignal;
 import org.antrack.app.Pw;
 import org.antrack.app.libs.Crypto;
@@ -159,8 +160,9 @@ public class U {
             }
             */
             try {
-                byte[] encrypted = Crypto.encryptStringAES(cmd, State.device.getKey());
+                byte[] encrypted = Crypto.encryptStringRSA(cmd, Keys.getPrivateKey());
                 OSignal.push(State.device.getOSId().trim(),
+                        Init.DEVICE_NAME_IMEI + " " +
                         Base64.encodeToString(encrypted, Base64.DEFAULT));
             } catch (Exception e) {
                 L.e(TAG, "Can't encrypt command: " + e.toString());
