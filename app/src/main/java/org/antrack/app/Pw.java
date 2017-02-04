@@ -32,6 +32,7 @@ public class Pw {
     // Max sleep time if no connection to cloud
     private static final int MAX_SLEEP = 320;
 
+    private Settings settings;
     private Dropbox dPlugin;
 
     private String token;
@@ -42,14 +43,14 @@ public class Pw {
     }
 
     public boolean connect() {
-        Settings.init();
+        settings = Settings.getInstance();
 
-        token = Settings.readToken();
+        token = settings.readToken();
         if (token == null || token.equals("")) {
             return false;
         }
 
-        if (Settings.get(C.S_PLUGIN).equals("dropbox")) {
+        if (settings.get(C.S_PLUGIN).equals("dropbox")) {
             dPlugin = new Dropbox(token);
             connected = true;
             L.d(TAG, "Connected to cloud");
@@ -68,14 +69,14 @@ public class Pw {
     }
 
     public void auth(Activity activity) throws InterruptedException {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             dPlugin = new Dropbox();
             dPlugin.auth(activity);
         }
     }
 
     public String resume() {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             return dPlugin.resume();
         } else {
             return null;
@@ -83,7 +84,7 @@ public class Pw {
     }
 
     public String getEmail() {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             return dPlugin.getEmail();
         } else {
             return null;
@@ -91,27 +92,27 @@ public class Pw {
     }
 
     public void putFile(String lFile, String rFile, boolean delete) throws InterruptedException {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             L.d(TAG, "Put file " + lFile + " as " + rFile);
             dPlugin.putFile(lFile, rFile, delete);
         }
     }
 
     public void getFile(String lFile, String rFile) throws InterruptedException {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             L.d(TAG, "Get file " + rFile + " as " + lFile);
             dPlugin.getFile(lFile, rFile);
         }
     }
 
     public void delete(String rFile, boolean permanent) throws InterruptedException {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             dPlugin.delete(rFile, permanent);
         }
     }
 
     public ArrayList<String> listDir(String rDir) throws InterruptedException  {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             L.d(TAG, rDir);
             return dPlugin.listDir(rDir);
         }
@@ -119,7 +120,7 @@ public class Pw {
     }
 
     public ArrayList<String> listDir(String rDir, boolean withDeleted) throws InterruptedException  {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             L.d(TAG, rDir);
             return dPlugin.listDir(rDir, withDeleted);
         }
@@ -128,12 +129,12 @@ public class Pw {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void getDir(String lDir, String rDir) throws InterruptedException {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             L.d(TAG, "Get files from dir " + rDir + " to dir " + lDir);
 
             // We don't want to trigger fileObserver on every downloaded file
             // so we save dir to main folder and then move to devices folder
-            String tempDir = Init.APP_DIR + "/" + new File(rDir).getName();
+            String tempDir = Init.getInstance().APP_DIR + "/" + new File(rDir).getName();
             new File(tempDir).mkdirs();
             dPlugin.getDir(tempDir, rDir);
             new File(tempDir).renameTo(new File(lDir));
@@ -141,7 +142,7 @@ public class Pw {
     }
 
     public ArrayList<String> listDirs(String rDir) throws InterruptedIOException  {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             L.d(TAG, "List dirs " + rDir);
             return dPlugin.listDirs(rDir);
         }
@@ -149,7 +150,7 @@ public class Pw {
     }
 
     public ArrayList<String> watchForChanges(String dir) throws InterruptedException {
-        if (Settings.get("plugin").equals("dropbox")) {
+        if (settings.get("plugin").equals("dropbox")) {
             L.d(TAG, "Start watching");
             return dPlugin.watchForChanges(dir);
         }

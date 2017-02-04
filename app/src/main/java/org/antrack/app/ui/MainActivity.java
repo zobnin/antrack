@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
 
         /*** Start wizard ***/
 
-        if (Settings.needLaunchWizard(this)) {
+        if (Settings.getInstance().needLaunchWizard()) {
             Intent intent = new Intent(this, WizardActivity.class);
             startActivityForResult(intent, 1);
         } else {
@@ -133,21 +133,19 @@ public class MainActivity extends AppCompatActivity
     private void main() {
         /*** Init ***/
 
-        Init.all(this);
-
         if (savedInstanceState != null) {
             State.firstRun = false;
             State.device = new Device(savedInstanceState.getString(CURRENT_DEVICE));
             State.fragment = (BaseFragment) getFragmentManager().findFragmentByTag("fragment");
         } else {
-            State.device = new Device(Init.DEVICE_NAME_IMEI);
+            State.device = new Device(Init.getInstance().DEVICE_NAME_IMEI);
         }
 
         L.d(TAG, "Running on: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
 
         /*** Start service ***/
 
-        final String serviceEnabled = Settings.get(C.S_ENABLE_SERVICE);
+        final String serviceEnabled = Settings.getInstance().get(C.S_ENABLE_SERVICE);
 
         if (serviceEnabled == null || serviceEnabled.equals(C.TRUE)) {
             startService();
@@ -193,14 +191,14 @@ public class MainActivity extends AppCompatActivity
                 super.onDrawerOpened(drawerView);
                 Keyboard.hide(MainActivity.this);
 
-                if (Settings.get(C.S_SHOW_HELP) == null) {
+                if (Settings.getInstance().get(C.S_SHOW_HELP) == null) {
                     new ShowcaseView.Builder(MainActivity.this)
                             .setTarget(new ViewTarget(R.id.nav_header_main_text1, MainActivity.this))
                             .setContentTitle(R.string.overlay_help_titile)
                             .setContentText(R.string.overlay_help_message)
                             .hideOnTouchOutside()
                             .build();
-                    Settings.put(C.S_SHOW_HELP, C.FALSE);
+                    Settings.getInstance().put(C.S_SHOW_HELP, C.FALSE);
                 }
             }
             // Change fragment on drawer close
@@ -404,7 +402,8 @@ public class MainActivity extends AppCompatActivity
     private void createDevicesMenu() {
         /*** Show devices from app folder ***/
 
-        ArrayList<String> deviceDirs = new ArrayList<>(Arrays.asList(new File(Init.DEVICES_DIR).list()));
+        ArrayList<String> deviceDirs = new ArrayList<>(
+                Arrays.asList(new File(Init.getInstance().DEVICES_DIR).list()));
         Collections.sort(deviceDirs);
 
         navigationView.getMenu().clear();
@@ -464,7 +463,7 @@ public class MainActivity extends AppCompatActivity
                                 devices.add(device);
 
                                 //noinspection ResultOfMethodCallIgnored
-                                new File(Init.DEVICES_DIR + deviceDir).mkdir();
+                                new File(Init.getInstance().DEVICES_DIR + deviceDir).mkdir();
 
                                 // Workaround: if device menu is not shown don't redraw it
                                 if (State.deviceMenuActive) {

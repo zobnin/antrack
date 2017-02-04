@@ -23,7 +23,7 @@ public class Device {
     }
 
     public boolean isMain() {
-        return dirName.equals(Init.DEVICE_NAME_IMEI);
+        return dirName.equals(Init.getInstance().DEVICE_NAME_IMEI);
     }
 
     public String getName() {
@@ -37,7 +37,7 @@ public class Device {
     public String getOSId() {
         if (OSId == null) {
             try {
-                OSId = Files.readTextFile(Init.DEVICES_DIR + dirName + C.OSID_FILE);
+                OSId = Files.readTextFile(Init.getInstance().DEVICES_DIR + dirName + C.OSID_FILE);
             } catch (IOException e ) {
                 L.d("Device", "Can't read osid file: " + e.toString());
             }
@@ -60,7 +60,7 @@ public class Device {
     public String getFullName() {
         String fullName;
         try {
-            fullName = Files.readTextFile(Init.DEVICES_DIR + dirName + "/name");
+            fullName = Files.readTextFile(Init.getInstance().DEVICES_DIR + dirName + "/name");
         } catch (IOException e) {
             L.d("Device", "Can't read full name: " + e.toString());
             fullName = null;

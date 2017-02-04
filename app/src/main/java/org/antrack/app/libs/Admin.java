@@ -62,7 +62,7 @@ public class Admin {
         @Override
         public void onEnabled(Context context, Intent intent) {
             Utils.showToast(context, "Admin rights granted");
-            Settings.put(C.S_USE_ADMIN, "true");
+            Settings.getInstance().put(C.S_USE_ADMIN, "true");
         }
 /*
         @Override
@@ -73,7 +73,7 @@ public class Admin {
         @Override
         public void onDisabled(Context context, Intent intent) {
             Utils.showToast(context, "Admin rights disabled");
-            Settings.put(C.S_USE_ADMIN, "false");
+            Settings.getInstance().put(C.S_USE_ADMIN, "false");
         }
 /*
         @Override

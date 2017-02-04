@@ -40,7 +40,7 @@ public class FileWatcher {
         private HashMap<String, Callback> callbacks;
 
         Watcher(String device) {
-            super(Init.DEVICES_DIR + device);
+            super(Init.getInstance().DEVICES_DIR + device);
             callbacks = new HashMap<>();
         }
 
@@ -115,7 +115,7 @@ public class FileWatcher {
     // FIXME колбэк может быть удален пока выполняется эта функция
     private void processFile(String path) {
         path = path.replace("//", "/");
-        String device = path.replace(Init.DEVICES_DIR, "/").split("/")[1];
+        String device = path.replace(Init.getInstance().DEVICES_DIR, "/").split("/")[1];
 
         L.d(TAG, "File modified, device: " + device + ", path: " + path);
 

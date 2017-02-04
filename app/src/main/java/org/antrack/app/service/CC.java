@@ -20,11 +20,13 @@ class CC {
 
     private Context context;
     private Modules modules;
+    private Settings settings;
 
     private boolean internalCommand = false;
 
     CC(Context context) {
         this.context = context;
+        settings = Settings.getInstance();
         modules = new Modules(context);
     }
 
@@ -106,8 +108,9 @@ class CC {
     private void writeResult(String cmd, String result) {
         if (result != null && !internalCommand) {
             try {
-                Files.writeTextFile(Init.RESULT_FILE, Utils.date(C.ACCURATE_TIME_FORMAT));
-                Files.addLine(Init.RESULT_FILE, cmd + " " + result);
+                Init init = Init.getInstance();
+                Files.writeTextFile(init.RESULT_FILE, Utils.date(C.ACCURATE_TIME_FORMAT));
+                Files.addLine(init.RESULT_FILE, cmd + " " + result);
             } catch (IOException e) {
                 L.e(TAG, "writeResult IOException: " + e);
             }
@@ -125,13 +128,13 @@ class CC {
         if (pin.equals(C.ON)) {
             parseCommand("hide on");
 
-            Settings.put(C.S_SCREEN_ON_PHOTO, C.TRUE);
+            settings.put(C.S_SCREEN_ON_PHOTO, C.TRUE);
 
             Logger.lost(context);
         } else {
             parseCommand("hide off");
 
-            Settings.put(C.S_SCREEN_ON_PHOTO, C.FALSE);
+            settings.put(C.S_SCREEN_ON_PHOTO, C.FALSE);
 
             Logger.unlost(context);
         }

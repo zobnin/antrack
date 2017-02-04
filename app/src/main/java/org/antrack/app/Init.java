@@ -2,53 +2,65 @@ package org.antrack.app;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
-import org.antrack.app.libs.Shell;
 import org.antrack.app.libs.Utils;
 
-import java.io.File;
 import java.io.IOException;
 
 public class Init {
-    private static String TAG="Init";
-
-    private static boolean done = false;
-
-    // This device name
-    public static String DEVICE_NAME;
-    // This device IMEI
-    public static String DEVICE_IMEI;
-    // This device actual name in app
-    public static String DEVICE_NAME_IMEI;
-
-    // App directory
-    public static String APP_DIR;
-    // App directory + devices
-    public static String DEVICES_DIR;
-    // App directory + devices + main device name
-    public static String MAIN_DIR;
-
-    // Full paths to control and result file
-    public static String CONTROL_FILE;
-    public static String CONTROL_Q_FILE;
-    public static String RESULT_FILE;
-
-    public static void all(Context context) {
-        if (!done) {
-            L.d(TAG, "Initialization...");
-            getIMEI(context);
-            makeDirs(context);
-            initSettings(context);
-            initLastCmdTime();
-            writeName();
-            done = true;
+    private static volatile Init instance;
+    public static Init getInstance() {
+        Init localInstance = instance;
+        if (localInstance == null) {
+            synchronized (Init.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    instance = localInstance = new Init();
+                }
+            }
         }
+        return localInstance;
     }
 
-    private static void makeDirs(Context context) {
+    private static final String TAG="Init";
+
+    private Context context;
+    private Settings settings;
+
+    // This device name
+    public String DEVICE_NAME;
+    // This device IMEI
+    public String DEVICE_IMEI;
+    // This device actual name in app
+    public String DEVICE_NAME_IMEI;
+
+    // App directory
+    public String APP_DIR;
+    // App directory + devices
+    public String DEVICES_DIR;
+    // App directory + devices + main device name
+    public String MAIN_DIR;
+
+    // Full paths to control and result file
+    public String CONTROL_FILE;
+    public String CONTROL_Q_FILE;
+    public String RESULT_FILE;
+
+    public Init() {
+        L.d(TAG, "Initialization...");
+
+        context = AntrackApplication.getAppContext();
+
+        getIMEI(context);
+        makeDirs(context);
+        initSettings(context);
+        initLastCmdTime();
+        writeName();
+    }
+
+    private void makeDirs(Context context) {
         APP_DIR = context.getApplicationInfo().dataDir;
         DEVICES_DIR = APP_DIR + C.DEVICES_DIR;
 
@@ -69,12 +81,12 @@ public class Init {
         Files.touch(CONTROL_Q_FILE);
     }
 
-    private static void getIMEI(Context context) {
+    private void getIMEI(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         DEVICE_IMEI = tm.getDeviceId();
     }
 
-    private static void writeName() {
+    private void writeName() {
         try {
             Files.writeTextFile(MAIN_DIR + C.NAME_FILE,
                     android.os.Build.BRAND + " " + android.os.Build.MODEL);
@@ -83,28 +95,28 @@ public class Init {
         }
     }
 
-    private static void initSettings(Context context) {
-        Settings.init();
+    private void initSettings(Context context) {
+        settings = Settings.getInstance();
 
-        if (Settings.get(C.S_UPDATE_INTERVAL) == null) {
-            Settings.put(C.S_UPDATE_INTERVAL, C.UPDATE_INTERVAL);
+        if (settings.get(C.S_UPDATE_INTERVAL) == null) {
+            settings.put(C.S_UPDATE_INTERVAL, C.UPDATE_INTERVAL);
         }
 
-        if (Settings.get(C.S_IMSI) == null) {
+        if (settings.get(C.S_IMSI) == null) {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             String IMSI = tm.getSubscriberId();
             if (IMSI != null) {
-                Settings.put(C.S_IMSI, IMSI);
+                settings.put(C.S_IMSI, IMSI);
             } else {
                 L.e(TAG, "Can't get IMSI");
             }
         }
     }
 
-    private static void initLastCmdTime() {
-        if (Settings.get(C.S_LAST_CMD_TIME) == null) {
+    private  void initLastCmdTime() {
+        if (settings.get(C.S_LAST_CMD_TIME) == null) {
             String currentTime = Utils.date(C.LAST_CMD_TIME_FORMAT);
-            Settings.put(C.S_LAST_CMD_TIME, currentTime);
+            settings.put(C.S_LAST_CMD_TIME, currentTime);
         }
     }
 }

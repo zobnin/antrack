@@ -55,7 +55,7 @@ public class Trial {
         if (date <= 0)
             return;
 
-        String lFile = Init.APP_DIR + "/index_" + date;
+        String lFile = Init.getInstance().APP_DIR + "/index_" + date;
         String rFile = "/index_" + date;
         String sdFile = Environment.getExternalStorageDirectory() + SDCARD_FILE;
 
@@ -92,7 +92,7 @@ public class Trial {
     private static long getDateFromAppDir() {
         long date = -1;
         try {
-            String[] localFiles = new File(Init.APP_DIR).list();
+            String[] localFiles = new File(Init.getInstance().APP_DIR).list();
             for (String file : localFiles) {
                 if (file.startsWith("/index_")) {
                     date = Long.parseLong(file.substring(file.indexOf('_') + 1));

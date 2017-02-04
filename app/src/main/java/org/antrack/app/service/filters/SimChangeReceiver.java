@@ -6,12 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import org.antrack.app.C;
+import org.antrack.app.Settings;
 import org.antrack.app.libs.L;
 import org.antrack.app.service.Logger;
-import org.antrack.app.Settings;
 
 /* 1. детектируем
      Intent: android.intent.action.SIM_STATE_CHANGED with extras: ss = NOT_READY
@@ -35,19 +34,19 @@ public class SimChangeReceiver extends BroadcastReceiver {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             String IMSI = tm.getSubscriberId();
 
-            Settings.init();
+            Settings settings = Settings.getInstance();
 
-            if (Settings.get(C.S_IMSI) == null) {
-                Settings.put(C.S_IMSI, IMSI);
+            if (settings.get(C.S_IMSI) == null) {
+                settings.put(C.S_IMSI, IMSI);
             } else {
-                String oldIMSI = Settings.get(C.S_IMSI);
+                String oldIMSI = settings.get(C.S_IMSI);
 
                 if (!oldIMSI.equals(IMSI)) {
                     Logger.simChanged(context);
-                    String needSms = Settings.get(C.S_SMS_ON_SIM_CHANGE);
+                    String needSms = settings.get(C.S_SMS_ON_SIM_CHANGE);
 
                     if (needSms != null && needSms.equals(C.TRUE)) {
-                        String number = Settings.get(C.S_BACKUP_PHONE);
+                        String number = settings.get(C.S_BACKUP_PHONE);
                         if (number != null) {
                             String model = android.os.Build.MODEL;
                             SmsManager.getDefault().sendTextMessage(number, null, "Sim change on " + model + " detected!", null, null);

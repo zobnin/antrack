@@ -13,7 +13,7 @@ public class CloudCallback implements CloudWatcher.Callback {
         if (path.endsWith(C.RESULT_FILE)) {
             Pw pw = Pw.getInstance();
             try {
-                pw.getFile(Init.DEVICES_DIR + path, path);
+                pw.getFile(Init.getInstance().DEVICES_DIR + path, path);
             } catch (Exception e) {
                     L.d("CloudCallback", "Error downloading result: " + e.toString());
             }
@@ -28,7 +28,7 @@ public class CloudCallback implements CloudWatcher.Callback {
                             try {
                                 Pw pw = Pw.getInstance();
                                 if (pw.isConnected())
-                                    pw.getFile(Init.DEVICES_DIR + path, path);
+                                    pw.getFile(Init.getInstance().DEVICES_DIR + path, path);
                             } catch (Exception e) {
                                 L.d("CloudCallback", "Error downloading file: " + e.toString());
                             }

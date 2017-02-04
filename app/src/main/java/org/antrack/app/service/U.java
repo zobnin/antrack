@@ -20,9 +20,11 @@ public class U {
     }
 
     static void parseCtlq(CC cc) throws IOException {
+        Settings settings = Settings.getInstance();
+
         ArrayList<String> cmds = Files.textFileToArray(getFullPath(C.CONTROL_Q_FILE));
 
-        long lastCmdTime = Long.parseLong(Settings.get(C.S_LAST_CMD_TIME));
+        long lastCmdTime = Long.parseLong(settings.get(C.S_LAST_CMD_TIME));
 
         for (String cmd : cmds) {
             String[] cmdA = cmd.split(" ");
@@ -30,7 +32,7 @@ public class U {
             String cmdName = Utils.arrayToString(Arrays.copyOfRange(cmdA, 1, cmdA.length));
 
             if (Long.parseLong(cmdTime) > lastCmdTime) {
-                Settings.put(C.S_LAST_CMD_TIME, cmdTime);
+                settings.put(C.S_LAST_CMD_TIME, cmdTime);
                 // This action may crash if module has errors
                 cc.parseCommand(cmdName);
             }
@@ -66,17 +68,20 @@ public class U {
             return;
         }
 
-        pw.putFile(path, "/" + path.replace(Init.DEVICES_DIR, ""), false);
+        Init init = Init.getInstance();
+        pw.putFile(path, "/" + path.replace(init.DEVICES_DIR, ""), false);
     }
 
     // Get full local dir path
     private static String getFullPath(String path) {
-        return Init.MAIN_DIR + path;
+        Init init = Init.getInstance();
+        return init.MAIN_DIR + path;
     }
 
     // Get full cloud dir path
     private static String getCloudPath(String path) {
-        return "/" + Init.DEVICE_NAME_IMEI + path;
+        Init init = Init.getInstance();
+        return "/" + init.DEVICE_NAME_IMEI + path;
     }
 
 }

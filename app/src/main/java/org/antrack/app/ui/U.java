@@ -25,7 +25,7 @@ public class U {
 
     // Get full dir name with main dir and current device name
     public static String getLocalPath(String path) {
-        return Init.DEVICES_DIR + State.device.getDir() + path;
+        return Init.getInstance().DEVICES_DIR + State.device.getDir() + path;
     }
 
     // Get full path in cloud
@@ -162,7 +162,7 @@ public class U {
             try {
                 byte[] encrypted = Crypto.encryptStringRSA(cmd, Keys.getPrivateKey());
                 OSignal.push(State.device.getOSId().trim(),
-                        Init.DEVICE_NAME_IMEI + " " +
+                        Init.getInstance().DEVICE_NAME_IMEI + " " +
                         Base64.encodeToString(encrypted, Base64.DEFAULT));
             } catch (Exception e) {
                 L.e(TAG, "Can't encrypt command: " + e.toString());
@@ -213,7 +213,7 @@ public class U {
                         // Make dirs for module
                         if (result.endsWith("/")) {
                             //noinspection ResultOfMethodCallIgnored
-                            new File(Init.DEVICES_DIR + State.device.getDir() + result).mkdir();
+                            new File(Init.getInstance().DEVICES_DIR + State.device.getDir() + result).mkdir();
                         }
                         break;
                     case "Start when":

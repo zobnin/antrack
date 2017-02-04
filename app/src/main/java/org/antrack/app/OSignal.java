@@ -15,7 +15,8 @@ public class OSignal {
             @Override
             public void idsAvailable(String userId, String registrationId) {
                 try {
-                    Files.writeTextFile(Init.MAIN_DIR + C.OSID_FILE, userId);
+                    Init init = Init.getInstance();
+                    Files.writeTextFile(init.MAIN_DIR + C.OSID_FILE, userId);
                 } catch (IOException e) {
                     L.e("OSignal", "error: " + e);
                 }

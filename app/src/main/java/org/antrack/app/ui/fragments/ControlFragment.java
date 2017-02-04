@@ -122,7 +122,8 @@ public class ControlFragment extends BaseFragment {
         alarmButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // FIXME
-                U.runCommandAsync(Mod.getCommand(Mod.ALARM) + " " + Init.APP_DIR + "/" + C.ALARM_ASSET);
+                U.runCommandAsync(Mod.getCommand(Mod.ALARM) + " " +
+                                Init.getInstance().APP_DIR + "/" + C.ALARM_ASSET);
             }
         });
 
@@ -167,7 +168,9 @@ public class ControlFragment extends BaseFragment {
             public void run() {
                 try {
                     prop = new Properties();
-                    prop.load(new FileInputStream(Init.DEVICES_DIR + State.device.getDir() + settingsFile));
+                    prop.load(new FileInputStream(
+                            Init.getInstance().DEVICES_DIR +
+                                    State.device.getDir() + settingsFile));
 
                     String hidden = prop.getProperty(C.S_HIDDEN);
                     if (hidden != null && hidden.equals("true")) {

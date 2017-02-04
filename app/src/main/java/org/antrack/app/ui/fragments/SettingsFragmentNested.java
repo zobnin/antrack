@@ -15,12 +15,17 @@ import app.R;
 
 public class SettingsFragmentNested extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     final String TAG = "SettingsFragment";
+
     Context context;
     Intent serviceIntent;
+    Settings settings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        settings = Settings.getInstance();
+
         addPreferencesFromResource(R.xml.preferences);
     }
 
@@ -30,12 +35,12 @@ public class SettingsFragmentNested extends PreferenceFragment implements Shared
             case "enable_service":
                 enabled = sharedPreferences.getBoolean(key, true);
                 if (enabled) {
-                    Settings.put(C.S_ENABLE_SERVICE, "true");
+                    settings.put(C.S_ENABLE_SERVICE, "true");
                     serviceIntent = new Intent(context, MainService.class);
                     context.startService(serviceIntent);
                     L.d(TAG, "Service started");
                 } else {
-                    Settings.put(C.S_ENABLE_SERVICE, "false");
+                    settings.put(C.S_ENABLE_SERVICE, "false");
                     context.stopService(serviceIntent);
                     L.d(TAG, "Service stopped");
                 }
@@ -43,15 +48,15 @@ public class SettingsFragmentNested extends PreferenceFragment implements Shared
             case "start_at_boot":
                 enabled = sharedPreferences.getBoolean(key, true);
                 if (enabled) {
-                    Settings.put(C.S_START_AT_BOOT, "true");
+                    settings.put(C.S_START_AT_BOOT, "true");
                 } else {
-                    Settings.put(C.S_START_AT_BOOT, "false");
+                    settings.put(C.S_START_AT_BOOT, "false");
                 }
                 break;
             case "update_interval":
                 String interval = sharedPreferences.getString(key, "30");
-                Settings.put(C.S_UPDATE_INTERVAL, interval);
-                String serviceEnabled = Settings.get(C.S_ENABLE_SERVICE);
+                settings.put(C.S_UPDATE_INTERVAL, interval);
+                String serviceEnabled = settings.get(C.S_ENABLE_SERVICE);
                 if (serviceEnabled == null || serviceEnabled.equals(C.TRUE)) {
                     serviceIntent = new Intent(context, MainService.class);
                     context.stopService(serviceIntent);

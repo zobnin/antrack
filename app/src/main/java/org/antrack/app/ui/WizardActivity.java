@@ -16,7 +16,6 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.antrack.app.C;
-import org.antrack.app.Init;
 import org.antrack.app.Pw;
 import org.antrack.app.Settings;
 import org.antrack.app.libs.Admin;
@@ -31,6 +30,7 @@ import app.R;
 public class WizardActivity extends AppCompatActivity {
     boolean pluginChosen = false;
 
+    private Settings settings;
     private Admin aTools;
     private Pw pw;
 
@@ -82,9 +82,10 @@ public class WizardActivity extends AppCompatActivity {
 
     private void main() {
         final Context context = this;
-        setContentView(R.layout.activity_wizard);
 
-        Init.all(this);
+        settings = Settings.getInstance();
+
+        setContentView(R.layout.activity_wizard);
 
         final Button button_admin = (Button) findViewById(R.id.button_admin);
         button_admin.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +101,7 @@ public class WizardActivity extends AppCompatActivity {
             rootButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     if (Shell.checkSuRun()) {
-                        Settings.put(C.S_USE_ROOT, C.TRUE);
+                        settings.put(C.S_USE_ROOT, C.TRUE);
                         Utils.showToast(context, getResources().getString(R.string.root_rights_granted));
                     } else {
                         Utils.showToast(context, "No root rights");
@@ -114,7 +115,7 @@ public class WizardActivity extends AppCompatActivity {
         final Button dropboxButton = (Button) findViewById(R.id.button_dropbox);
         dropboxButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Settings.put(C.S_PLUGIN, "dropbox");
+                settings.put(C.S_PLUGIN, "dropbox");
                 try {
                     pluginChosen = true;
                     pw = Pw.getInstance();
@@ -135,7 +136,7 @@ public class WizardActivity extends AppCompatActivity {
     }
 
     private void exit() {
-        Settings.wizardComplete(this);
+        settings.wizardComplete();
         // Pw is singleton and will be used by service and activity
         pw.connect();
         finish();
@@ -143,11 +144,11 @@ public class WizardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (Settings.readToken() == null) {
+        if (settings.readToken() == null) {
             // FIXME translate
             Utils.showToast(WizardActivity.this, "Authentication required");
         } else {
-            Settings.wizardComplete(this);
+            settings.wizardComplete();
             finish();
         }
     }
@@ -161,7 +162,7 @@ public class WizardActivity extends AppCompatActivity {
             Pw pw = Pw.getInstance();
             String token = pw.resume();
             if (token != null) {
-                Settings.saveToken(token);
+                settings.saveToken(token);
                 closeButton.setEnabled(true);
             } else {
                 // FIXME здесь надо как-то обрабатывать ситуацию если нет токена

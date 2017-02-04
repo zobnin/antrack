@@ -68,16 +68,14 @@ public class Features {
     }
 
     private void getFeatures(Context context) {
-        Settings.init();
-
         // Do we have root?
-        String haveRoot = Settings.get(C.S_USE_ROOT);
+        String haveRoot = Settings.getInstance().get(C.S_USE_ROOT);
         if (haveRoot != null && haveRoot.equals(C.TRUE)) {
             root = true;
         }
 
         // Do we have admin?
-        String haveAdmin = Settings.get(C.S_USE_ADMIN);
+        String haveAdmin = Settings.getInstance().get(C.S_USE_ADMIN);
         if (haveAdmin != null && haveAdmin.equals(C.TRUE)) {
             root = true;
         }

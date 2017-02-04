@@ -1,7 +1,6 @@
 package org.antrack.app.libs;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.antrack.app.Init;
@@ -29,7 +28,8 @@ public class Utils {
             final int BUF_SIZE = 8 * 1024;
 
             bis = new BufferedInputStream(context.getAssets().open(file));
-            bos = new BufferedOutputStream(new FileOutputStream(Init.APP_DIR + "/" + file));
+            bos = new BufferedOutputStream(
+                    new FileOutputStream(Init.getInstance().APP_DIR + "/" + file));
 
             byte[] buf = new byte[BUF_SIZE];
             int len;

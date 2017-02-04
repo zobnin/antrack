@@ -34,7 +34,7 @@ public class Logger {
     }
 
     private static void init(Context context) {
-        logfile = Init.MAIN_DIR + C.MAIN_LOG_FILE;
+        logfile = Init.getInstance().MAIN_DIR + C.MAIN_LOG_FILE;
     }
 
     public static void getCommand(Context context, String cmd) {

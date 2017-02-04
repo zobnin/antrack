@@ -17,15 +17,20 @@ import java.io.IOException;
 import java.util.Map;
 
 class Modules {
-    private String TAG = "Modules";
+    private static final String TAG = "Modules";
+
     private Context context;
+    private Settings settings;
+    private Init init;
     private Map<String, ModuleInterface> modules = null;
 
     Modules(Context context) {
         this.context = context;
+        init = Init.getInstance();
+        settings = Settings.getInstance();
 
-        String modulesDir = Init.APP_DIR + C.MODULES_DIR;
-        String odexDir = Init.APP_DIR + C.ODEX_DIR;
+        String modulesDir = init.APP_DIR + C.MODULES_DIR;
+        String odexDir = init.APP_DIR + C.ODEX_DIR;
 
         Files.mkdir(modulesDir);
         Files.mkdir(odexDir);
@@ -40,12 +45,12 @@ class Modules {
     }
 
     private boolean checkForRoot() {
-        String useRoot = Settings.get(C.S_USE_ROOT);
+        String useRoot = settings.get(C.S_USE_ROOT);
         return !(useRoot == null || useRoot.equals(C.FALSE));
     }
 
     private boolean checkForAdmin() {
-        String useAdmin = Settings.get(C.S_USE_ADMIN);
+        String useAdmin = settings.get(C.S_USE_ADMIN);
         return !(useAdmin == null || useAdmin.equals(C.FALSE));
     }
 
@@ -80,7 +85,7 @@ class Modules {
                     break;
                 case "load":
                     if (module.result() != null && module.result().endsWith("/"))
-                        Files.mkdir(Init.MAIN_DIR + module.result());
+                        Files.mkdir(init.MAIN_DIR + module.result());
                     module.onLoad(context);
                     break;
                 case "alarm":
@@ -103,7 +108,7 @@ class Modules {
             return "error: no modules";
 
         try {
-            FileWriter writer = new FileWriter(Init.MAIN_DIR + C.MODULES_FILE);
+            FileWriter writer = new FileWriter(init.MAIN_DIR + C.MODULES_FILE);
 
             for (Map.Entry<String, ModuleInterface> mod : modules.entrySet()) {
                 ModuleInterface module = modules.get(mod.getKey());
@@ -136,7 +141,7 @@ class Modules {
 
     String dumpJSON() {
         try {
-            FileWriter writer = new FileWriter(Init.MAIN_DIR + C.MODULES_JSON_FILE);
+            FileWriter writer = new FileWriter(init.MAIN_DIR + C.MODULES_JSON_FILE);
             for (Map.Entry<String, ModuleInterface> mod : modules.entrySet()) {
                 ModuleInterface module = mod.getValue();
                 JSONObject obj = new JSONObject();

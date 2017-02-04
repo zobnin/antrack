@@ -19,9 +19,13 @@ import java.security.PublicKey;
 public class OSService extends NotificationExtenderService {
     private static final String TAG = "OSService";
 
+    Init init;
+
     @Override
     protected boolean onNotificationProcessing(OSNotificationReceivedResult receivedResult) {
         L.d(TAG, "Received notification: " + receivedResult.payload.body);
+
+        init = Init.getInstance();
 
         // Message format: "device_name encrypted_command"
         String[] message = receivedResult.payload.body.split(" ");
@@ -40,13 +44,13 @@ public class OSService extends NotificationExtenderService {
 
         String cmd;
 
-        if (!new File(Init.DEVICES_DIR + remoteDeviceName + C.PUBLIC_KEY_FILE).exists()) {
-            Files.mkdir(Init.DEVICES_DIR + remoteDeviceName);
+        if (!new File(init.DEVICES_DIR + remoteDeviceName + C.PUBLIC_KEY_FILE).exists()) {
+            Files.mkdir(init.DEVICES_DIR + remoteDeviceName);
             Pw pw = Pw.getInstance();
 
             if (pw.isConnected()) {
                 try {
-                    pw.getFile(Init.DEVICES_DIR + remoteDeviceName + C.PUBLIC_KEY_FILE,
+                    pw.getFile(init.DEVICES_DIR + remoteDeviceName + C.PUBLIC_KEY_FILE,
                             "/" + remoteDeviceName + C.PUBLIC_KEY_FILE);
                 } catch (InterruptedException e) {
                     L.e(TAG, "Can't download public key: " + e.toString());
@@ -82,7 +86,7 @@ public class OSService extends NotificationExtenderService {
         PublicKey publicKey = null;
 
         try {
-            String stringKey = Files.readTextFile(Init.DEVICES_DIR + deviceName + C.PUBLIC_KEY_FILE);
+            String stringKey = Files.readTextFile(init.DEVICES_DIR + deviceName + C.PUBLIC_KEY_FILE);
             publicKey = Crypto.stringToPublicKey(stringKey.trim());
         } catch (Exception e) {
             L.e(TAG, "Can't read public key file: " + e.toString());

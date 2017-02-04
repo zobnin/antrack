@@ -27,9 +27,12 @@ import java.io.IOException;
 public class MainService extends Service {
     final String TAG = "MainService";
 
+    Context context;
+
     FileWatcher fileWatcher;
     CloudWatcher cloudWatcher;
-    Context context;
+    Init init;
+    Settings settings;
     Pw pw;
     CC cc;
 
@@ -43,11 +46,9 @@ public class MainService extends Service {
         // Error reporting
         Mint.initAndStartSession(MainService.this, "8af105a4");
 
-        // Dirs and settings
-        Init.all(context);
-        // Cloud connection
+        init = Init.getInstance();
+        settings = Settings.getInstance();
         pw = Pw.getInstance();
-        // Control Center / load modules
         cc = new CC(context);
 
         new Thread(new Runnable() {
@@ -74,7 +75,7 @@ public class MainService extends Service {
 
                 /*** Set alarm timer ***/
 
-                String updateInterval = Settings.get(C.S_UPDATE_INTERVAL);
+                String updateInterval = settings.get(C.S_UPDATE_INTERVAL);
                 long time = Long.parseLong(updateInterval) * 60 * 1000;
                 Alarm.set(context, time);
 
@@ -94,7 +95,7 @@ public class MainService extends Service {
                 /*** Write device features ***/
 
                 Features feat = new Features();
-                feat.write(MainService.this, Init.MAIN_DIR + C.FEATURES_FILE);
+                feat.write(MainService.this, init.MAIN_DIR + C.FEATURES_FILE);
 
                 /*** Write OneSignal Id and generate key pair ***/
 
@@ -164,7 +165,7 @@ public class MainService extends Service {
         }
 
         public String getWatchFile() {
-            return "/" + Init.DEVICE_NAME_IMEI + "/";
+            return "/" + init.DEVICE_NAME_IMEI + "/";
         }
     }
 
@@ -174,14 +175,14 @@ public class MainService extends Service {
             try {
                 Pw pw = Pw.getInstance();
                 if (pw.isConnected())
-                    pw.getFile(Init.DEVICES_DIR + path, path);
+                    pw.getFile(init.DEVICES_DIR + path, path);
             } catch (Exception e) {
                 L.e(TAG, "CloudFileUpdated exception: " + e);
             }
         }
 
         public String getWatchFile() {
-            return "/" + Init.DEVICE_NAME_IMEI + C.CONTROL_FILE;
+            return "/" + init.DEVICE_NAME_IMEI + C.CONTROL_FILE;
         }
     }
 
@@ -262,7 +263,7 @@ public class MainService extends Service {
         }
         */
 
-        String enabled = Settings.get(C.S_ENABLE_SERVICE);
+        String enabled = settings.get(C.S_ENABLE_SERVICE);
         if (enabled == null || enabled.equals("false")) {
             Alarm.cancel(this);
         }
