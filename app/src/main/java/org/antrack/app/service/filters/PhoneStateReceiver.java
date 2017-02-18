@@ -8,8 +8,6 @@ import org.antrack.app.C;
 import org.antrack.app.service.MainService;
 
 public class PhoneStateReceiver extends BroadcastReceiver {
-    private final String TAG = "PhoneStateReceiver";
-
     @Override
     public void onReceive(Context context, Intent intent) {
         String phoneNumber;

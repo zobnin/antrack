@@ -6,14 +6,20 @@
         android:summary="@string/main_enable_service_more"
         android:defaultValue="true" />
     <CheckBoxPreference
-        android:dependency="enable_service"
         android:key="start_at_boot"
+        android:dependency="enable_service"
         android:title="@string/main_start_at_boot"
         android:summary="@string/main_start_at_boot_more"
         android:defaultValue="true" />
-    <ListPreference
+    <CheckBoxPreference
+        android:key="enable_ctl"
         android:dependency="enable_service"
-        android:key="screen_part"
+        android:title="@string/main_enable_ctl"
+        android:summary="@string/main_enable_ctl_more"
+        android:defaultValue="false" />
+    <ListPreference
+        android:key="update_interval"
+        android:dependency="enable_service"
         android:title="@string/main_update_interval"
         android:summary="@string/main_update_interval_more"
         android:entries="@array/pref_update_interval_entries"

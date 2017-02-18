@@ -114,4 +114,6 @@ Coming soon
     <string name="pref_3_hours">3 hours</string>
     <string name="main_enable_service_more">Service will respond to request from other devices and send data to the cloud</string>
     <string name="main_start_at_boot_more">Automatic start at boot allows AnTrack stay connected to other devices</string>
+    <string name="main_enable_ctl">Enable control over Dropbox</string>
+    <string name="main_enable_ctl_more">Application will execute commands, written to ctl file</string>
 </resources>

@@ -129,7 +129,11 @@ class Modules {
                     info += module.result() + "\n";
                 }
 
-                info += "Start when: " + Utils.arrayToString(module.startWhen()) + "\n\n";
+                if (module.startWhen() != null) {
+                    info += "Start when: " + Utils.arrayToString(module.startWhen()) + "\n\n";
+                } else {
+                    info += "Start when: never\n\n";
+                }
                 writer.write(info);
             }
             writer.close();

@@ -117,20 +117,33 @@ public class MainService extends Service {
 
                 /*** Get and watch for clt / ctlq ***/
 
-                String ctlEnabled = settings.get(C.S_ENABLE_CTL);
-                if (C.TRUE.equals(ctlEnabled)) {
-                    try {
-                        U.getFile(C.CONTROL_Q_FILE);
-                        cloudWatcher = CloudWatcher.getInstance();
-                        cloudWatcher.addCallback("service", new CloudFileUpdated());
-                    } catch (Exception e) {
-                        L.d(TAG, "Can't parse ctlq file: " + e);
-                    }
-                }
+                startCtlWatching();
 
                 Logger.started(MainService.this);
             }
         }).start();
+    }
+
+    private void startCtlWatching() {
+        String ctlEnabled = settings.get(C.S_ENABLE_CTL);
+        if (C.TRUE.equals(ctlEnabled)) {
+            try {
+                U.getFile(C.CONTROL_Q_FILE);
+                cloudWatcher = CloudWatcher.getInstance();
+                cloudWatcher.addCallback("service", new CloudFileUpdated());
+            } catch (Exception e) {
+                L.d(TAG, "Can't parse ctlq file: " + e);
+            }
+        }
+    }
+
+    private void stopCtlWatching() {
+        String ctlEnabled = settings.get(C.S_ENABLE_CTL);
+        if (C.TRUE.equals(ctlEnabled)) {
+            if (cloudWatcher != null) {
+                cloudWatcher.removeCallback("service");
+            }
+        }
     }
 
     // Callback waits for local file changes
@@ -225,6 +238,12 @@ public class MainService extends Service {
                             case C.ACTION_COMMAND:
                                 cc.parseCommand(intent.getStringExtra("command"));
                                 break;
+                            case C.ACTION_CTL_ENABLED:
+                                startCtlWatching();
+                                break;
+                            case C.ACTION_CTL_DISABLED:
+                                stopCtlWatching();
+                                break;
                             case C.ACTION_PUSH:
                                 try {
                                     /*
@@ -258,13 +277,6 @@ public class MainService extends Service {
 
         if (fileWatcher != null) {
             fileWatcher.removeCallback("service");
-        }
-
-        String ctlEnabled = settings.get(C.S_ENABLE_CTL);
-        if (C.TRUE.equals(ctlEnabled)) {
-            if (cloudWatcher != null) {
-                cloudWatcher.removeCallback("service");
-            }
         }
 
         String enabled = settings.get(C.S_ENABLE_SERVICE);

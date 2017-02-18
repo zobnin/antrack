@@ -46,6 +46,7 @@ public class ModuleLoader {
             Class<?> loadedClass = loadClass(file, odexDir);
 
             if (loadedClass == null) continue;
+
             try {
                 ModuleInterface obj = (ModuleInterface) loadedClass.newInstance();
                 hashmap.put(file.getName().replace(".jar", ""), obj);

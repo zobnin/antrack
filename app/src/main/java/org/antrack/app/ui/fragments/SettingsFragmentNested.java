@@ -24,11 +24,13 @@ public class SettingsFragmentNested extends PreferenceFragment implements Shared
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        context = getActivity().getApplicationContext();
         settings = Settings.getInstance();
 
         addPreferencesFromResource(R.xml.preferences);
     }
 
+    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         boolean enabled;
         switch (key) {
@@ -53,6 +55,19 @@ public class SettingsFragmentNested extends PreferenceFragment implements Shared
                     settings.put(C.S_START_AT_BOOT, "false");
                 }
                 break;
+            case "enable_ctl":
+                enabled = sharedPreferences.getBoolean(key, false);
+                if (enabled) {
+                    settings.put(C.S_ENABLE_CTL, "true");
+                    serviceIntent = new Intent(context, MainService.class);
+                    serviceIntent.setAction(C.ACTION_CTL_ENABLED);
+                } else {
+                    settings.put(C.S_ENABLE_CTL, "false");
+                    serviceIntent = new Intent(context, MainService.class);
+                    serviceIntent.setAction(C.ACTION_CTL_DISABLED);
+                }
+                context.startService(serviceIntent);
+                break;
             case "update_interval":
                 String interval = sharedPreferences.getString(key, "30");
                 settings.put(C.S_UPDATE_INTERVAL, interval);
@@ -64,5 +79,19 @@ public class SettingsFragmentNested extends PreferenceFragment implements Shared
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+
+    }
+
+    @Override
+    public void onPause() {
+        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
     }
 }

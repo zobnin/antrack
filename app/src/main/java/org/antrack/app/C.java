@@ -54,6 +54,8 @@ public class C {
     public static final String ACTION_INCOMINGCALL = "incomingCall";
     public static final String ACTION_COMMAND = "command";
     public static final String ACTION_PUSH = "push";
+    public static final String ACTION_CTL_ENABLED = "ctlEnabled";
+    public static final String ACTION_CTL_DISABLED = "ctlDisabled";
 
     public static final String S_USE_ADMIN = "useAdmin"; // false
     public static final String S_USE_ROOT = "useRoot"; // false

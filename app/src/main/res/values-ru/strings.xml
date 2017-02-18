@@ -175,4 +175,6 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="pref_3_hours">3 часа</string>
     <string name="main_enable_service_more">Сервис отвечает на запросы с других устройств и отправляет данные в облако</string>
     <string name="main_start_at_boot_more">Запуск при загрузке позволяет AnTrack всегда оставаться на связи с другими устройствами</string>
+    <string name="main_enable_ctl">Включить управление через Dropbox</string>
+    <string name="main_enable_ctl_more">Приложение будет выполнять команды, записанные в файл ctl</string>
 </resources>
