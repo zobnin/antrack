@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.Media;
 
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import app.R;
@@ -61,6 +62,12 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
             }
         });
 
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            public void onCancel(DialogInterface dialog) {
+                mp.stop();
+            }
+        });
+
         builder.show();
 
         play(this.file);
@@ -87,7 +94,7 @@ class AudioPlayDialog implements SeekBar.OnSeekBarChangeListener {
                         @Override
                         public void run() {
                             seek.setProgress(mp.getCurrentPosition() / 1000);
-                            progress.setText(String.format("%02d:%02d",
+                            progress.setText(String.format(Locale.US, "%02d:%02d",
                                     TimeUnit.MILLISECONDS.toMinutes(mp.getCurrentPosition()),
                                     TimeUnit.MILLISECONDS.toSeconds(mp.getCurrentPosition()) %
                                             TimeUnit.MINUTES.toSeconds(1)
