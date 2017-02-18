@@ -1,7 +1,6 @@
 package org.antrack.app.ui.fragments;
 
 import android.app.Activity;
-import android.util.Log;
 
 import org.antrack.app.Pw;
 import org.antrack.app.libs.Files;
@@ -64,7 +63,7 @@ class Mod {
             public void run() {
                 try {
                     Pw pw = Pw.getInstance();
-                    pw.delete(U.getCloudPath(getFile(moduleName)), false);
+                    pw.delete(U.getCloudPath(getFile(moduleName).replaceAll("/$", "")), false);
                 } catch (Exception e) {
                     L.e("Mod", "Delete exception: " + e.toString());
                 }
