@@ -56,6 +56,8 @@ public class C {
     public static final String ACTION_PUSH = "push";
     public static final String ACTION_CTL_ENABLED = "ctlEnabled";
     public static final String ACTION_CTL_DISABLED = "ctlDisabled";
+    public static final String ACTION_UPLOADER_ENABLED = "uploaderEnabled";
+    public static final String ACTION_UPLOADER_DISABLED = "uploaderDisabled";
 
     public static final String S_USE_ADMIN = "useAdmin"; // false
     public static final String S_USE_ROOT = "useRoot"; // false
@@ -73,4 +75,5 @@ public class C {
     public static final String S_SHOW_HELP = "showHelp"; // true
     public static final String S_LAST_CMD_TIME = "lastCmdId"; // null
     public static final String S_ENABLE_CTL = "enableCtl"; // false
+    public static final String S_ENABLE_UPLOADER = "enableUploader"; // true
 }

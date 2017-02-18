@@ -51,14 +51,10 @@ public class MainService extends Service {
         pw = Pw.getInstance();
         cc = new CC(context);
 
-        /*** Ctl ***/
-
-
         new Thread(new Runnable() {
             @Override
             public void run() {
                 /*** Check trial and integrity ***/
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -88,8 +84,7 @@ public class MainService extends Service {
                 // Catalogs for modules created on load step
                 cc.runModules("load", null);
 
-                fileWatcher = FileWatcher.getInstance();
-                fileWatcher.addCallback("service", new LocalFileUpdated());
+                startFileWatcher();
 
                 // Wait for file watcher
                 // FIXME
@@ -122,6 +117,17 @@ public class MainService extends Service {
                 Logger.started(MainService.this);
             }
         }).start();
+    }
+
+    private void startFileWatcher() {
+        fileWatcher = FileWatcher.getInstance();
+        fileWatcher.addCallback("service", new LocalFileUpdated());
+    }
+
+    private void stopFileWatcher() {
+        if (fileWatcher != null) {
+            fileWatcher.removeCallback("service");
+        }
     }
 
     private void startCtlWatching() {
@@ -173,7 +179,10 @@ public class MainService extends Service {
             // Other file changed -> upload to cloud
             else {
                 try {
-                    U.uploadFile(path);
+                    String isUploaderEnabled = settings.get(C.S_ENABLE_UPLOADER);
+                    if (isUploaderEnabled == null || C.TRUE.equals(isUploaderEnabled)) {
+                        U.uploadFile(path);
+                    }
                 } catch (InterruptedException e) {
                     L.e(TAG, "processFile interrupted: " + e.toString());
                 }
@@ -275,9 +284,8 @@ public class MainService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        if (fileWatcher != null) {
-            fileWatcher.removeCallback("service");
-        }
+        stopFileWatcher();
+        stopCtlWatching();
 
         String enabled = settings.get(C.S_ENABLE_SERVICE);
         if (enabled == null || enabled.equals("false")) {
