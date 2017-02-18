@@ -24,14 +24,13 @@ public class SettingsFragmentNested extends PreferenceFragment implements Shared
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        context = getActivity().getApplicationContext();
         settings = Settings.getInstance();
-
         addPreferencesFromResource(R.xml.preferences);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        context = getActivity().getApplicationContext();
         boolean enabled;
         switch (key) {
             case "enable_service":
