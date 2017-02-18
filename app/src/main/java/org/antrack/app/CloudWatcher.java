@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 // Watch for control file changes in cloud
 public class CloudWatcher {
@@ -31,7 +32,6 @@ public class CloudWatcher {
         watchers = new HashMap<>();
     }
 
-
     public interface Callback {
         void onFileUpdate(String path);
 
@@ -39,17 +39,17 @@ public class CloudWatcher {
     }
 
     private class Watcher {
-        private HashMap<String, Callback> callbacks;
+        private ConcurrentHashMap<String, Callback> callbacks;
         private boolean active = false;
         private String device;
 
         Watcher(String dev) {
             this.device = dev;
-            callbacks = new HashMap<>();
+            callbacks = new ConcurrentHashMap<>();
 
         }
 
-        HashMap<String, Callback> getCallbacks() {
+        ConcurrentHashMap<String, Callback> getCallbacks() {
             return callbacks;
         }
 

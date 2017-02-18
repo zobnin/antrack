@@ -6,10 +6,9 @@ import org.antrack.app.libs.RecursiveFileObserver;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FileWatcher {
-    private static final String TAG = "FileWatcher";
-
     private static volatile FileWatcher instance;
     public static FileWatcher getInstance() {
         FileWatcher localInstance = instance;
@@ -24,6 +23,8 @@ public class FileWatcher {
         return localInstance;
     }
 
+    private static final String TAG = "FileWatcher";
+
     private HashMap<String, Watcher> watchers;
 
     private FileWatcher() {
@@ -37,14 +38,15 @@ public class FileWatcher {
     }
 
     private class Watcher extends RecursiveFileObserver {
-        private HashMap<String, Callback> callbacks;
+        // ConcurrentModificationException workaround
+        private ConcurrentHashMap<String, Callback> callbacks;
 
         Watcher(String device) {
             super(Init.getInstance().DEVICES_DIR + device);
-            callbacks = new HashMap<>();
+            callbacks = new ConcurrentHashMap<>();
         }
 
-        HashMap<String, Callback> getCallbacks() {
+        ConcurrentHashMap<String, Callback> getCallbacks() {
             return callbacks;
         }
 
@@ -65,7 +67,7 @@ public class FileWatcher {
         }
     }
 
-    public void addCallback(String name, Callback callback) {
+    public synchronized void addCallback(String name, Callback callback) {
         if (callback == null) {
             L.e(TAG, "addCallback: callback == null");
             return;
@@ -94,7 +96,7 @@ public class FileWatcher {
 
     }
 
-    public void removeCallback(String name) {
+    public synchronized void removeCallback(String name) {
         Iterator it = watchers.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();
@@ -112,7 +114,7 @@ public class FileWatcher {
         L.d(TAG, "removeCallback name: " + name);
     }
 
-    // FIXME колбэк может быть удален пока выполняется эта функция
+    // FIXME штука в том, что callback может быть добавлен/удален пока выполняется processFile
     private void processFile(String path) {
         path = path.replace("//", "/");
         String device = path.replace(Init.getInstance().DEVICES_DIR, "/").split("/")[1];
@@ -123,7 +125,6 @@ public class FileWatcher {
         if (watcher == null)
             return;
 
-        // FIXME Unhandled exception in FileObserver org.antrack.app.libs.RecursiveFileObserver$SingleFileObserver@5850edd
         for (Callback callback : watcher.getCallbacks().values()) {
             // проблема в том, что к моменту вызова callback'а фрагмент просто может быть еще не загружен
             if (callback.getWatchFile() != null) {
