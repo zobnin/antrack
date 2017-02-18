@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.DeletedMetadata;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderLongpollResult;
@@ -187,6 +188,10 @@ public class Dropbox {
                     fileList = new ArrayList<>();
                     for (Metadata md : folderResult.getEntries()) {
                         String changedFilePath = md.getPathLower();
+
+                        if (md instanceof DeletedMetadata || md instanceof FolderMetadata)
+                            continue;
+
                         L.d(TAG, "watchForChanges: modified file: " + changedFilePath);
                         fileList.add(changedFilePath);
                     }

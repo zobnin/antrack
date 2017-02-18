@@ -9,7 +9,7 @@ import java.util.Stack;
 
 public class RecursiveFileObserver extends FileObserver {
 
-    private static int CHANGES_ONLY = CLOSE_WRITE | MOVED_TO | DELETE;
+    private static int CHANGES_ONLY = CLOSE_WRITE | MOVED_TO;
 
     private List<SingleFileObserver> mObservers;
     private String mPath;

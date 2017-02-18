@@ -64,7 +64,7 @@ public class U {
         }
 
         if (!file.exists()) {
-            L.d("U/uploadFile", "File don't exist: " + path);
+            L.e("U/uploadFile", "File don't exist: " + path);
             return;
         }
 
