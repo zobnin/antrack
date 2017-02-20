@@ -160,7 +160,7 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="message_fill_number_and_text">Заполните поля Номер и Текст</string>
     <string name="outgoing">Исходящий</string>
     <string name="answered">Отвеченный</string>
-    <string name="message_loading">Секундочку...</string>
+    <string name="message_loading">Ждем ответа устройства...</string>
     <string name="wipe_warning">Это действие удалит все данные с устройства.</string>
     <string name="wipe_sd_checkbox">Удалить файлы с карты памяти</string>
     <string name="lock_warning">Ввдеите PIN-код чтобы заблокировать устройство</string>
@@ -177,4 +177,7 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="main_start_at_boot_more">Запуск при загрузке позволяет AnTrack всегда оставаться на связи с другими устройствами</string>
     <string name="main_enable_ctl">Включить управление через Dropbox</string>
     <string name="main_enable_ctl_more">Приложение будет выполнять команды, записанные в файл ctl</string>
+    <string name="enable_updater">Отправлять данные в облако</string>
+    <string name="main_enable_updater">Отправлять данные в облако</string>
+    <string name="main_enable_updater_more">После отключения опции данное устройство станет невидимым для других</string>
 </resources>

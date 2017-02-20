@@ -67,6 +67,13 @@ public class SettingsFragmentNested extends PreferenceFragment implements Shared
                 }
                 context.startService(serviceIntent);
                 break;
+            case "enable_updater":
+                enabled = sharedPreferences.getBoolean(key, true);
+                if (enabled) {
+                    settings.put(C.S_ENABLE_UPLOADER, "true");
+                } else {
+                    settings.put(C.S_ENABLE_UPLOADER, "false");
+                }
             case "update_interval":
                 String interval = sharedPreferences.getString(key, "30");
                 settings.put(C.S_UPDATE_INTERVAL, interval);

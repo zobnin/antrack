@@ -99,7 +99,7 @@ Coming soon
     <string name="message_fill_number_and_text">Fill number and text fields</string>
     <string name="outgoing">Outgoing</string>
     <string name="answered">Answered</string>
-    <string name="message_loading">One second...</string>
+    <string name="message_loading">Waiting for device response</string>
     <string name="wipe_warning">This action will delete all data on the device.</string>
     <string name="wipe_sd_checkbox">Wipe SD card</string>
     <string name="lock_warning">This action will lock device with given PIN-code.</string>
@@ -116,4 +116,7 @@ Coming soon
     <string name="main_start_at_boot_more">Automatic start at boot allows AnTrack stay connected to other devices</string>
     <string name="main_enable_ctl">Enable control over Dropbox</string>
     <string name="main_enable_ctl_more">Application will execute commands, written to ctl file</string>
+    <string name="enable_updater">Send data to cloud</string>
+    <string name="main_enable_updater">Send data to cloud</string>
+    <string name="main_enable_updater_more">After disabling this device will be invisible to others</string>
 </resources>
