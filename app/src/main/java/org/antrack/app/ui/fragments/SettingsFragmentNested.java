@@ -92,8 +92,6 @@ public class SettingsFragmentNested extends PreferenceFragment implements Shared
     public void onResume() {
         super.onResume();
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-
-
     }
 
     @Override

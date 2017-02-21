@@ -14,9 +14,10 @@ import java.io.IOException;
 
 public class Logger {
     static private String TAG = "Logger";
-    static private String logfile;
 
     private static void put(String txt) {
+        String logfile = Init.getInstance().MAIN_DIR + C.MAIN_LOG_FILE;
+
         try {
             L.d(TAG, "New record: " + txt);
 
@@ -33,72 +34,71 @@ public class Logger {
         }
     }
 
-    private static void init(Context context) {
-        logfile = Init.getInstance().MAIN_DIR + C.MAIN_LOG_FILE;
+    public static void getCommand(Context context, String cmd) {
+        put("[info] Get command: " + cmd);
     }
 
-    public static void getCommand(Context context, String cmd) {
-        init(context);
-        put("Get command: " + cmd);
+    public static void getPush(String device, String cmd) {
+        put("[info] Get command: " + cmd + ", from device: " + device);
     }
 
     public static void booted(Context context) {
-        init(context);
-        put("Phone booted");
+        put("[info] Phone booted");
     }
 
     public static void shutdown(Context context) {
-        init(context);
-        put("Phone power off");
+        put("[info] Phone power off");
     }
 
     public static void connected(Context context) {
-        init(context);
-        put("Connected to network");
+        put("[info] Connected to network");
     }
 
     public static void disconnected(Context context) {
-        init(context);
-        put("Disconnected from network");
+        put("[info] Disconnected from network");
     }
 
     public static void started(Context context) {
-        init(context);
-        put("Service started");
+        put("[info] Service started");
     }
 
     public static void stopped(Context context) {
-        init(context);
-        put("Service stopped");
+        put("[warning] Service stopped");
     }
 
     public static void hided(Context context) {
-        init(context);
-        put("App hided");
+        put("[warning] App hided");
     }
 
     public static void unhided(Context context) {
-        init(context);
-        put("App unhided");
+        put("[info] App unhided");
     }
 
     public static void lost(Context context) {
-        init(context);
-        put("Phone marked as lost");
+        put("[warning] Phone marked as lost");
     }
 
     public static void unlost(Context context) {
-        init(context);
-        put("Phone market as not lost");
+        put("[info] Phone market as not lost");
     }
 
     public static void simChanged(Context context) {
-        init(context);
-        put("SIM Change detected!");
+        put("[warning] SIM Change detected!");
     }
 
     public static void alarm(Context context) {
-        init(context);
-        put("Periodic tasks launched");
+        put("[info] Periodic tasks launched");
+    }
+
+    public static void cantDecrypt(String deviceName) {
+        put("[warning] Can't decrypt message from " + deviceName);
+    }
+
+    public static void trusted(String deviceName) {
+        put("[info] Device " + deviceName + " now trusted");
+    }
+
+    public static void banned(String deviceName) {
+        put("[info] Device " + deviceName + " now banned");
     }
 }

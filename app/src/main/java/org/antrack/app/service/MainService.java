@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Base64;
 
 import com.splunk.mint.Mint;
 
@@ -18,6 +19,7 @@ import org.antrack.app.Pw;
 import org.antrack.app.Settings;
 import org.antrack.app.Trial;
 import org.antrack.app.libs.Checks;
+import org.antrack.app.libs.Crypto;
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
 import org.antrack.app.libs.WakeLocks;
@@ -219,6 +221,8 @@ public class MainService extends Service {
                 WakeLocks wl = new WakeLocks(MainService.this, "ServiceWakelock");
                 wl.lock();
 
+                TrustedDevices td;
+
                 if (intent != null) {
                     String action = intent.getAction();
                     L.d(TAG, "onStartCommand get: " + action);
@@ -254,19 +258,19 @@ public class MainService extends Service {
                                 stopCtlWatching();
                                 break;
                             case C.ACTION_PUSH:
-                                try {
-                                    /*
-                                    pw.getFile(Init.DEVICES_DIR + Init.DEVICE_NAME_IMEI + C.CONTROL_Q_FILE,
-                                            "/" + Init.DEVICE_NAME_IMEI + C.CONTROL_Q_FILE);
-                                    U.parseCtlq(cc);
-                                    */
-                                    String cmd = intent.getStringExtra("command");
-                                    if (cmd != null) {
-                                        cc.parseCommand(cmd);
-                                    }
-                                } catch (Exception e) {
-                                    L.d(TAG, "Error getting file: " + e.toString());
-                                }
+                                String device = intent.getStringExtra("device");
+                                String message = intent.getStringExtra("message");
+                                processPush(device, message);
+                                break;
+                            case C.ACTION_AUTH_DEVICE:
+                                td = TrustedDevices.getInstance();
+                                td.trust(intent.getStringExtra("device"));
+                                Logger.trusted(intent.getStringExtra("device"));
+                                break;
+                            case C.ACTION_BAN_DEVICE:
+                                td = TrustedDevices.getInstance();
+                                td.ban(intent.getStringExtra("device"));
+                                Logger.banned(intent.getStringExtra("device"));
                                 break;
                             }
                         }
@@ -278,6 +282,38 @@ public class MainService extends Service {
         }).start();
 
         return START_STICKY;
+    }
+
+    private void processPush(String remoteDeviceName, String remoteEncMessage) {
+        TrustedDevices trustedDevices = TrustedDevices.getInstance();
+        String key = trustedDevices.getKey(remoteDeviceName);
+
+        if (key == null) {
+            Notify.show(getApplicationContext(),
+                    "auth", "auth " + remoteDeviceName, remoteDeviceName);
+            return;
+        } else if (key.equals("banned")) {
+            L.d(TAG, "Device " + remoteDeviceName + " banned");
+            return;
+        }
+
+        String cmd;
+
+        try {
+            cmd = Crypto.decryptStringRSA(
+                    Base64.decode(remoteEncMessage, Base64.DEFAULT),
+                    Crypto.stringToPublicKey(key.trim()));
+        } catch (Exception e) {
+            Logger.cantDecrypt(remoteDeviceName);
+            L.e(TAG, "Can't decrypt message: " + e.toString());
+            return;
+        }
+
+
+        Logger.getPush(remoteDeviceName, cmd);
+        L.d(TAG, "Push command: " + cmd + ", from device: " + remoteDeviceName);
+
+        cc.parseCommand(cmd);
     }
 
     @Override

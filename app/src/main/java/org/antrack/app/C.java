@@ -24,6 +24,7 @@ public class C {
     public static final String PRIVATE_KEY_FILE = "/.private_key";
     public static final String TOKEN_FILE = "/.token";
     public static final String WIZARD_COMPLETE_FILE = "/.wizard_complete";
+    public static final String TRUSTED_DEVICES_FILE = "/trusted";
 
     public static final String BOOTSTRAP_ASSET = "bootstrap";
     public static final String ALARM_ASSET = "alarm.ogg";
@@ -56,6 +57,8 @@ public class C {
     public static final String ACTION_PUSH = "push";
     public static final String ACTION_CTL_ENABLED = "ctlEnabled";
     public static final String ACTION_CTL_DISABLED = "ctlDisabled";
+    public static final String ACTION_AUTH_DEVICE = "authDevice";
+    public static final String ACTION_BAN_DEVICE = "banDevice";
 
     public static final String S_USE_ADMIN = "useAdmin"; // false
     public static final String S_USE_ROOT = "useRoot"; // false
