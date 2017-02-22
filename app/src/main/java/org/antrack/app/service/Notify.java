@@ -30,6 +30,7 @@ class Notify {
                 .setSmallIcon(R.drawable.ic_notify_main)
                 .setContentIntent(pendingYesIntent)
                 .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS)
                 .addAction(R.drawable.ic_yes, "Yes", pendingYesIntent)
                 .addAction(R.drawable.ic_no, "No", pendingNoIntent);
 
