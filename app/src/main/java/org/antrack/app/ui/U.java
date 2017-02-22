@@ -11,6 +11,7 @@ import org.antrack.app.Pw;
 import org.antrack.app.libs.Crypto;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
+import org.antrack.app.libs.SessionIdGenerator;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -160,7 +161,12 @@ public class U {
             }
             */
             try {
-                byte[] encrypted = Crypto.encryptStringRSA(cmd, Keys.getPrivateKey());
+                // Message format: command <command> <salt>
+
+                SessionIdGenerator idGenerator = new SessionIdGenerator();
+                String message = "command " + cmd + " " + idGenerator.nextSessionId();
+                byte[] encrypted = Crypto.encryptStringRSA(message, Keys.getPrivateKey());
+
                 OSignal.push(State.device.getOSId().trim(),
                         Init.getInstance().DEVICE_NAME_IMEI + " " +
                         Base64.encodeToString(encrypted, Base64.DEFAULT));

@@ -9,7 +9,6 @@ import org.antrack.app.Pw;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
@@ -55,22 +54,20 @@ class TrustedDevices {
     boolean trust(String deviceName) {
         Init init = Init.getInstance();
 
-        if (!new File(init.DEVICES_DIR + deviceName + C.PUBLIC_KEY_FILE).exists()) {
-            Files.mkdir(init.DEVICES_DIR + deviceName);
-            Pw pw = Pw.getInstance();
+        Files.mkdir(init.DEVICES_DIR + deviceName);
+        Pw pw = Pw.getInstance();
 
-            if (pw.isConnected()) {
-                try {
-                    pw.getFile(init.DEVICES_DIR + deviceName + C.PUBLIC_KEY_FILE,
-                            "/" + deviceName + C.PUBLIC_KEY_FILE);
-                } catch (Exception e) {
-                    L.e(TAG, "Can't download public key: " + e.toString());
-                    return false;
-                }
-            } else {
-                L.e(TAG, "Can't download public key: not connected");
+        if (pw.isConnected()) {
+            try {
+                pw.getFile(init.DEVICES_DIR + deviceName + C.PUBLIC_KEY_FILE,
+                        "/" + deviceName + C.PUBLIC_KEY_FILE);
+            } catch (Exception e) {
+                L.e(TAG, "Can't download public key: " + e.toString());
                 return false;
             }
+        } else {
+            L.e(TAG, "Can't download public key: not connected");
+            return false;
         }
 
         try {

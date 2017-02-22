@@ -289,18 +289,17 @@ public class MainService extends Service {
         String key = trustedDevices.getKey(remoteDeviceName);
 
         if (key == null) {
-            Notify.show(getApplicationContext(),
-                    "auth", "auth " + remoteDeviceName, remoteDeviceName);
+            showNotify(remoteDeviceName);
             return;
         } else if (key.equals("banned")) {
             L.d(TAG, "Device " + remoteDeviceName + " banned");
             return;
         }
 
-        String cmd;
+        String decrypted;
 
         try {
-            cmd = Crypto.decryptStringRSA(
+            decrypted = Crypto.decryptStringRSA(
                     Base64.decode(remoteEncMessage, Base64.DEFAULT),
                     Crypto.stringToPublicKey(key.trim()));
         } catch (Exception e) {
@@ -309,11 +308,28 @@ public class MainService extends Service {
             return;
         }
 
+        // Message format: command <command> <salt>
+        String[] decryptedA = decrypted.split(" ");
+
+        // Decryption with wrong key?
+        if (!"command".equals(decryptedA[0])) {
+            showNotify(remoteDeviceName);
+            return;
+        }
+
+        String cmd = decryptedA[1];
 
         Logger.getPush(remoteDeviceName, cmd);
         L.d(TAG, "Push command: " + cmd + ", from device: " + remoteDeviceName);
 
         cc.parseCommand(cmd);
+    }
+
+    private void showNotify(String remoteDeviceName) {
+        // FIXME translate
+        Notify.show(getApplicationContext(),
+                "Device authentication", "Auth " + remoteDeviceName +
+                        " to control this device?", remoteDeviceName);
     }
 
     @Override
