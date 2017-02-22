@@ -120,4 +120,6 @@ Coming soon
     <string name="main_enable_updater">Send data to cloud</string>
     <string name="main_enable_updater_more">After disabling this device will be invisible to others</string>
     <string name="buy">Buy</string>
+    <string name="battery_alert_title">Attention</string>
+    <string name="battery_alert_message">To work correctly AnTrack requires that you add it to the list of energy saving mode exceptions.\n\nAfter you click Ok a \"Battery optimization\" wnindow appears on the screen. Click on the \"Not optimized\" and select \"All apps\" in the list that appears. Find AnTrack in the list, click on it, choose the option \"Don't optimize\" and click \"Done\". Press the back button to return to this screen.</string>
 </resources>

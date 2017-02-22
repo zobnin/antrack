@@ -21,7 +21,7 @@ public class Battery {
     }
 
     @TargetApi(23)
-    public static void switchToBatteryOptimizationSettings(Context context) {
+    public static void openBatteryOptimizationSettings(Context context) {
         Intent intent = new Intent();
         String packageName = context.getPackageName();
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);

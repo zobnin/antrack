@@ -160,7 +160,7 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="message_fill_number_and_text">Заполните поля Номер и Текст</string>
     <string name="outgoing">Исходящий</string>
     <string name="answered">Отвеченный</string>
-    <string name="message_loading">Ждем ответа устройства...</string>
+    <string name="message_loading">Ждем ответ устройства…</string>
     <string name="wipe_warning">Это действие удалит все данные с устройства.</string>
     <string name="wipe_sd_checkbox">Удалить файлы с карты памяти</string>
     <string name="lock_warning">Ввдеите PIN-код чтобы заблокировать устройство</string>
@@ -181,4 +181,6 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="main_enable_updater">Отправлять данные в облако</string>
     <string name="main_enable_updater_more">После отключения опции данное устройство станет невидимым для других</string>
     <string name="buy">Купить</string>
+    <string name="battery_alert_title">Внимание</string>
+    <string name="battery_alert_message">Чтобы AnTrack работал корректно вы должны добавить его в список исключений режима энергосбережения.\n\nПосле того, как вы нажмете на кнопку Ok на экране появится окно \"Экономия заряда батареи\". Нажмите на \"Не экономят заряд\" и выберете \"Все приложения\". Найдите в списке AnTrack, нажмите на него, в появившемся списке выберете пункт \"Не экономить\" и нажмите \"Готово\". Нажмите кнопку назад чтобы вернуться на этот экран.</string>
 </resources>

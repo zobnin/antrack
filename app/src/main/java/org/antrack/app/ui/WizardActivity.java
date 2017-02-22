@@ -2,8 +2,10 @@ package org.antrack.app.ui;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -63,7 +65,17 @@ public class WizardActivity extends AppCompatActivity {
             public void onPermissionsChecked(MultiplePermissionsReport report) {
                 if (report.areAllPermissionsGranted()) {
                     if (Build.VERSION.SDK_INT >= 23) {
-                        Battery.requestIgnoreBatteryOptimisation(WizardActivity.this);
+                        //Battery.requestIgnoreBatteryOptimisation(WizardActivity.this);
+                        new AlertDialog.Builder(WizardActivity.this)
+                                .setTitle(R.string.battery_alert_title)
+                                .setMessage(R.string.battery_alert_message)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Battery.openBatteryOptimizationSettings(WizardActivity.this);
+                                    }
+                                })
+                                .show();
                     }
                     main();
                 } else {
@@ -136,7 +148,7 @@ public class WizardActivity extends AppCompatActivity {
     }
 
     private void exit() {
-        settings.wizardComplete();
+        Settings.wizardComplete();
         // Pw is singleton and will be used by service and activity
         pw.connect();
         finish();
@@ -148,7 +160,7 @@ public class WizardActivity extends AppCompatActivity {
             // FIXME translate
             Utils.showToast(WizardActivity.this, "Authentication required");
         } else {
-            settings.wizardComplete();
+            Settings.wizardComplete();
             finish();
         }
     }

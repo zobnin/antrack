@@ -49,13 +49,15 @@ public class Settings {
     }
 
 
-    public boolean needLaunchWizard() {
-        String wizardCompleteFile = context.getApplicationInfo().dataDir + C.WIZARD_COMPLETE_FILE;
+    public static boolean needLaunchWizard() {
+        String wizardCompleteFile = AntrackApplication.getAppContext()
+                .getApplicationInfo().dataDir + C.WIZARD_COMPLETE_FILE;
         return !new File(wizardCompleteFile).exists();
     }
 
-    public void wizardComplete() {
-        String wizardCompleteFile = context.getApplicationInfo().dataDir + C.WIZARD_COMPLETE_FILE;
+    public static void wizardComplete() {
+        String wizardCompleteFile = AntrackApplication.getAppContext()
+                .getApplicationInfo().dataDir + C.WIZARD_COMPLETE_FILE;
         Files.touch(wizardCompleteFile);
     }
 

@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity
 
         /*** Start wizard ***/
 
-        if (Settings.getInstance().needLaunchWizard()) {
+        if (Settings.needLaunchWizard()) {
             Intent intent = new Intent(this, WizardActivity.class);
             startActivityForResult(intent, 1);
         } else {
