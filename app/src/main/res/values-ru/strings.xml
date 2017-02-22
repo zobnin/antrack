@@ -118,7 +118,7 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="device_info">Устройство</string>
     <string name="current_status">Статус</string>
     <string name="trial_status">Пробная версия</string>
-    <string name="days_remaining">Осталось дней:</string>
+    <string name="days_remaining">осталось дней:</string>
     <string name="message_nodata">Нет данных</string>
     <string name="message_nomodule">Модуль не найден</string>
     <string name="message_noroot">Нет прав root</string>
@@ -180,4 +180,5 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="enable_updater">Отправлять данные в облако</string>
     <string name="main_enable_updater">Отправлять данные в облако</string>
     <string name="main_enable_updater_more">После отключения опции данное устройство станет невидимым для других</string>
+    <string name="buy">Купить</string>
 </resources>

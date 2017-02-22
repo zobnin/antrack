@@ -82,7 +82,6 @@ class TrustedDevices {
             return false;
         }
 
-        // FIXME log
         return true;
     }
 

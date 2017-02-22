@@ -4,8 +4,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -105,6 +107,8 @@ public class MainActivity extends AppCompatActivity
     Button deviceArrow;
 
     View fragmentContainer;
+
+    Snackbar trialSnackbar;
 
     ArrayList<Device> devices;
 
@@ -280,6 +284,7 @@ public class MainActivity extends AppCompatActivity
                     });
                     L.e(TAG, "Trial is expired");
                 }
+
                 // Crash app
                 if (!Checks.all(MainActivity.this)) {
                     //Pw zz = null;
@@ -287,8 +292,30 @@ public class MainActivity extends AppCompatActivity
                     L.e(TAG, "Checks failed");
                 }
 
+                showTrialSnackbar();
             }
         }).start();
+    }
+
+    public void showTrialSnackbar() {
+        trialSnackbar = Snackbar
+                .make(container, getString(R.string.trial_status) + ", " +
+                        getString(R.string.days_remaining) + " " +
+                        Trial.getRemainingDays(), Snackbar.LENGTH_INDEFINITE);
+
+        View sbView = trialSnackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.YELLOW);
+
+        // FIXME translate
+        trialSnackbar.setAction(R.string.buy, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // FIXME
+            }
+        });
+
+        trialSnackbar.show();
     }
 
     public void rotateArrowUp() {
@@ -356,6 +383,9 @@ public class MainActivity extends AppCompatActivity
         State.fragment = fragment;
         addCallbacks();
         setToolbarTitle();
+
+        if (trialSnackbar != null)
+            trialSnackbar.show();
 
         L.d(TAG, "Fragment loaded");
     }

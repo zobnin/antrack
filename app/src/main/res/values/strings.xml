@@ -56,7 +56,7 @@ Coming soon
     <string name="device_info">Device info</string>
     <string name="current_status">Current status</string>
     <string name="trial_status">Trial Status</string>
-    <string name="days_remaining">Days remaining:</string>
+    <string name="days_remaining">days remaining:</string>
     <string name="message_nodata">No data</string>
     <string name="message_nomodule">Module not found</string>
     <string name="message_noroot">No root rights</string>
@@ -119,4 +119,5 @@ Coming soon
     <string name="enable_updater">Send data to cloud</string>
     <string name="main_enable_updater">Send data to cloud</string>
     <string name="main_enable_updater_more">After disabling this device will be invisible to others</string>
+    <string name="buy">Buy</string>
 </resources>

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.antrack.app.Trial;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
 import org.antrack.app.ui.RecyclerViewAnim;
@@ -111,13 +110,8 @@ public class InfoFragment extends BaseFragment {
                     return;
                 }
 
-                Info trial = new Info();
-                trial.title = getString(R.string.trial_status);
-                trial.data = getString(R.string.days_remaining) + " " + Trial.getRemainingDays();
-
                 infos.add(info);
                 infos.add(status);
-                infos.add(trial);
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
