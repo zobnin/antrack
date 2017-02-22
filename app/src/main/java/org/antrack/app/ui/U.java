@@ -161,10 +161,10 @@ public class U {
             }
             */
             try {
-                // Message format: command <command> <salt>
+                // Message format: command::<command>::<salt>
 
                 SessionIdGenerator idGenerator = new SessionIdGenerator();
-                String message = "command " + cmd + " " + idGenerator.nextSessionId();
+                String message = "command::" + cmd + "::" + idGenerator.nextSessionId();
                 byte[] encrypted = Crypto.encryptStringRSA(message, Keys.getPrivateKey());
 
                 OSignal.push(State.device.getOSId().trim(),

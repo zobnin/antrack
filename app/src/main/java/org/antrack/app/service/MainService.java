@@ -308,8 +308,8 @@ public class MainService extends Service {
             return;
         }
 
-        // Message format: command <command> <salt>
-        String[] decryptedA = decrypted.split(" ");
+        // Message format: command::<command>::<salt>
+        String[] decryptedA = decrypted.split("::");
 
         // Decryption with wrong key?
         if (!"command".equals(decryptedA[0])) {
