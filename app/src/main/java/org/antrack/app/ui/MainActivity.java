@@ -22,9 +22,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
-
 import org.antrack.app.C;
 import org.antrack.app.CloudWatcher;
 import org.antrack.app.FileWatcher;
@@ -68,6 +65,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import app.R;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -196,12 +194,11 @@ public class MainActivity extends AppCompatActivity
                 Keyboard.hide(MainActivity.this);
 
                 if (Settings.getInstance().get(C.S_SHOW_HELP) == null) {
-                    new ShowcaseView.Builder(MainActivity.this)
-                            .setTarget(new ViewTarget(R.id.nav_header_main_text1, MainActivity.this))
-                            .setContentTitle(R.string.overlay_help_titile)
+                    new MaterialShowcaseView.Builder(MainActivity.this)
+                            .setTarget(findViewById(R.id.nav_header_main_text1))
                             .setContentText(R.string.overlay_help_message)
-                            .hideOnTouchOutside()
-                            .build();
+                            .setDismissText(R.string.ok)
+                            .show();
                     Settings.getInstance().put(C.S_SHOW_HELP, C.FALSE);
                 }
             }

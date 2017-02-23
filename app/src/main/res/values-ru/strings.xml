@@ -164,8 +164,7 @@ DropTracker продолжит работу в прежнем режиме, но
     <string name="wipe_warning">Это действие удалит все данные с устройства.</string>
     <string name="wipe_sd_checkbox">Удалить файлы с карты памяти</string>
     <string name="lock_warning">Ввдеите PIN-код чтобы заблокировать устройство</string>
-    <string name="overlay_help_titile">Текущее устройство</string>
-    <string name="overlay_help_message">Нажмите для переключения на другие устройства</string>
+    <string name="overlay_help_message">Нажмите для переключения на другие устройства.</string>
     <string name="wizard_nopermissions">Вы должны дать приложению все разрешения</string>
     <string name="main_update_interval_more">Промежуток времени между отправкой данных в облако</string>
     <string name="pref_15_minutes">15 минут</string>

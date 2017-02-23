@@ -103,8 +103,7 @@ Coming soon
     <string name="wipe_warning">This action will delete all data on the device.</string>
     <string name="wipe_sd_checkbox">Wipe SD card</string>
     <string name="lock_warning">This action will lock device with given PIN-code.</string>
-    <string name="overlay_help_titile">Current device</string>
-    <string name="overlay_help_message">Tap on it to switch to other connected device</string>
+    <string name="overlay_help_message">Tap on it to switch to other connected devices.</string>
     <string name="wizard_nopermissions">You must grant all permissions to app</string>
     <string name="main_update_interval_more">The time interval between sending data to cloud</string>
     <string name="pref_15_minutes">15 minutes</string>

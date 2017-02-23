@@ -41,7 +41,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:10.2.0'
     compile 'com.dropbox.core:dropbox-core-sdk:2.1.2'
     compile 'com.splunk.mint:mint:5.0.0'
-    compile 'com.github.amlcurran.showcaseview:library:5.4.3'
+    //compile 'com.github.amlcurran.showcaseview:library:5.4.3'
+    compile 'com.github.deano2390:MaterialShowcaseView:1.1.0@aar'
     compile 'com.karumi:dexter:3.0.0'
 
     // OSignal
