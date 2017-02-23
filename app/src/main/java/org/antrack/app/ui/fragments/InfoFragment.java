@@ -100,13 +100,13 @@ public class InfoFragment extends BaseFragment {
 
                 Info info = readFile(infoFile, getString(R.string.device_info));
                 if (info == null) {
-                    showNoData();
+                    showNoDataOrLoading();
                     return;
                 }
 
                 Info status = readFile(statusFile, getString(R.string.current_status));
                 if (status == null) {
-                    showNoData();
+                    showNoDataOrLoading();
                     return;
                 }
 

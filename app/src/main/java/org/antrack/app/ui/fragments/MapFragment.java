@@ -88,7 +88,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             @Override
             public void run() {
                 if (!readFile()) {
-                    showNoData();
+                    showNoDataOrLoading();
                     return;
                 }
 

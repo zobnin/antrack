@@ -92,7 +92,7 @@ public class ContactsFragment extends BaseFragment {
                 readFile();
 
                 if (contacts.isEmpty()) {
-                    showNoData();
+                    showNoDataOrLoading();
                     return;
                 }
 

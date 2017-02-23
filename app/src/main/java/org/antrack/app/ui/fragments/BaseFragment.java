@@ -78,7 +78,7 @@ public class BaseFragment extends Fragment {
             });
     }
 
-    protected void showNoData() {
+    protected void showNoDataOrLoading() {
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -114,12 +114,26 @@ public class BaseFragment extends Fragment {
             });
     }
 
+    protected void showNoData() {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getActivity() == null) return;
+                    View noData = getActivity().findViewById(R.id.nodata);
+                    setVisible(noData);
+                }
+            });
+    }
+
     protected void hideNoData() {
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (getActivity() == null) return;
                     getActivity().findViewById(R.id.nodata).setVisibility(View.GONE);
+                    getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
                 }
             });
     }
@@ -142,6 +156,7 @@ public class BaseFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (getActivity() == null) return;
                     getActivity().findViewById(R.id.nomodule).setVisibility(View.GONE);
                 }
             });

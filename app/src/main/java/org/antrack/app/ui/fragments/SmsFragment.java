@@ -106,7 +106,7 @@ public class SmsFragment extends BaseFragment {
                 smses = new ArrayList<>();
 
                 if (!readFile()) {
-                    showNoData();
+                    showNoDataOrLoading();
                     return;
                 }
 

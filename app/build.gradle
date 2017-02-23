@@ -13,8 +13,8 @@ android {
         applicationId "org.antrack.app"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "0.1.2"
 
         manifestPlaceholders = [onesignal_app_id: "90b00836-3c46-43ca-930d-1d4dca449771",
                                 // Project number pulled from dashboard, local value is ignored.
@@ -22,7 +22,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {

@@ -102,7 +102,7 @@ public class AppsFragment extends BaseFragment {
                 apps = new ArrayList<>();
 
                 if (!readFile() || apps.isEmpty()) {
-                    showNoData();
+                    showNoDataOrLoading();
                     return;
                 }
 

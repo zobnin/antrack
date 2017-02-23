@@ -3,7 +3,6 @@ package org.antrack.app.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +105,7 @@ public class CallsFragment extends BaseFragment {
                 calls = new ArrayList<>();
 
                 if (!readFile() || calls.isEmpty()) {
-                    showNoData();
+                    showNoDataOrLoading();
                     return;
                 }
 

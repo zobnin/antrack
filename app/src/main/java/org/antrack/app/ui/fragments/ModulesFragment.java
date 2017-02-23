@@ -24,7 +24,7 @@ public class ModulesFragment extends BaseFragment {
         context = getActivity().getApplicationContext();
 
         if (State.modules.isEmpty())
-            showNoData();
+            showNoDataOrLoading();
 
         View view = inflater.inflate(R.layout.fragment_cardview, null);
 
