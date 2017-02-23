@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -30,7 +31,6 @@ import app.R;
 
 public class SmsFragment extends BaseFragment {
     private final String TAG = "SmsFragment";
-    private Context context;
 
     private ExecutorService executor;
 
@@ -64,7 +64,7 @@ public class SmsFragment extends BaseFragment {
         smsDir = Mod.getFile(Mod.DUMPSMS);
         smsCmd = Mod.getCommand(Mod.DUMPSMS);
 
-        context = getActivity().getApplicationContext();
+        Context context = getActivity().getApplicationContext();
 
         View view = inflater.inflate(R.layout.fragment_cardview, container, false);
 
@@ -123,17 +123,17 @@ public class SmsFragment extends BaseFragment {
         });
     }
 
-    public class SmsComaparator implements Comparator<Sms> {
+    public class SmsComparator implements Comparator<Sms> {
         @Override
         public int compare(Sms o1, Sms o2) {
             Date date1, date2;
 
-            SimpleDateFormat format = new SimpleDateFormat(C.DEFAULT_TIME_FORMAT);
+            SimpleDateFormat format = new SimpleDateFormat(C.DEFAULT_TIME_FORMAT, Locale.US);
             try {
                 date1 = format.parse(o1.date);
                 date2 = format.parse(o2.date);
             } catch (Exception e) {
-                L.e(TAG, "DateComparator exception: " + e.toString());
+                e.printStackTrace();
                 return -1;
             }
             return date1.compareTo(date2);
@@ -157,7 +157,7 @@ public class SmsFragment extends BaseFragment {
         }
 
         // FIXME DateComparator exception: java.lang.NullPointerException: Attempt to invoke virtual method 'int java.lang.String.length()' on a null object reference
-        Collections.sort(smses, new SmsComaparator());
+        Collections.sort(smses, new SmsComparator());
         Collections.reverse(smses);
 
         return true;
@@ -172,6 +172,7 @@ public class SmsFragment extends BaseFragment {
                 String[] pair = line.split(":");
                 switch(pair[0]) {
                     case "From":
+                    case "To":
                         sms.from = line.replaceAll(pair[0] + ":", "").trim();
                         break;
                     case "Date":
@@ -186,7 +187,9 @@ public class SmsFragment extends BaseFragment {
                         } else {
                             sms.direction = "Outgoing";
                         }
-                        smses.add(sms);
+                        if (sms.from != null && sms.date != null && sms.body != null) {
+                            smses.add(sms);
+                        }
                         sms = new Sms();
                 }
             }
