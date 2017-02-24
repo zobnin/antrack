@@ -55,7 +55,6 @@ public class MainService extends Service {
 
         init = Init.getInstance();
         settings = Settings.getInstance();
-        Pw.getInstance();
         cc = new CC(context);
 
         /*** Trial and integrity ***/
@@ -137,7 +136,7 @@ public class MainService extends Service {
 
     private void startCtlWatching() {
         String ctlEnabled = settings.get(C.S_ENABLE_CTL);
-        if (C.TRUE.equals(ctlEnabled)) {
+        if (ctlEnabled != null && ctlEnabled.equals(C.TRUE)) {
             try {
                 U.getFile(C.CONTROL_Q_FILE);
                 cloudWatcher = CloudWatcher.getInstance();
@@ -150,7 +149,7 @@ public class MainService extends Service {
 
     private void stopCtlWatching() {
         String ctlEnabled = settings.get(C.S_ENABLE_CTL);
-        if (C.TRUE.equals(ctlEnabled)) {
+        if (ctlEnabled != null && ctlEnabled.equals(C.TRUE)) {
             if (cloudWatcher != null) {
                 cloudWatcher.removeCallback("service");
             }
@@ -160,6 +159,10 @@ public class MainService extends Service {
     // Callback waits for local file changes
     public class LocalFileUpdated implements FileWatcher.Callback {
         public void onFileUpdate(String path) {
+            if (path == null || path.equals("")) {
+                return;
+            }
+
             // Current device ctl changed -> read and execute command
             if (path.endsWith(C.CONTROL_FILE)) {
                 try {

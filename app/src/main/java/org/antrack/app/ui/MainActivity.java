@@ -185,6 +185,23 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        final View drawerHeader = navigationView.getHeaderView(0);
+
+        deviceArrow = (Button) drawerHeader.findViewById(R.id.arrow);
+
+        deviceTextView = (TextView) drawerHeader.findViewById(R.id.nav_header_main_text1);
+        deviceTextView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                rotateArrowUp();
+                createDevicesMenu();
+            }
+        });
+
+        deviceTextView2 = (TextView) drawerHeader.findViewById(R.id.nav_header_main_text2);
+
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             // Hide keyboard on drawer open
@@ -200,6 +217,21 @@ public class MainActivity extends AppCompatActivity
                             .setDismissText(R.string.ok)
                             .show();
                     Settings.getInstance().put(C.S_SHOW_HELP, C.FALSE);
+                }
+
+                if (deviceTextView2.getText().equals("")) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final String mail = Pw.getInstance().getEmail();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    deviceTextView2.setText(mail);
+                                }
+                            });
+                        }
+                    }).start();
                 }
             }
             // Change fragment on drawer close
@@ -223,39 +255,6 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(drawerToggle);
         // Calling sync state is necessary or hamburger icon wont show up
         drawerToggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        /*** Drawer header ***/
-
-        View drawerHeader = navigationView.getHeaderView(0);
-
-        deviceArrow = (Button) drawerHeader.findViewById(R.id.arrow);
-
-        deviceTextView = (TextView) drawerHeader.findViewById(R.id.nav_header_main_text1);
-        deviceTextView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                rotateArrowUp();
-                createDevicesMenu();
-            }
-        });
-
-        deviceTextView2 = (TextView) drawerHeader.findViewById(R.id.nav_header_main_text2);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Pw pw = Pw.getInstance();
-                final String mail = pw.getEmail();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        deviceTextView2.setText(mail);
-                    }
-                });
-            }
-        }).start();
 
         /*** Load default fragment ***/
 
