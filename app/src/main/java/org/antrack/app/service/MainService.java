@@ -35,90 +35,93 @@ public class MainService extends Service {
     CloudWatcher cloudWatcher;
     Init init;
     Settings settings;
-    Pw pw;
     CC cc;
+
+    private boolean initDone = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = this;
+    }
 
-        /*** Init ***/
+    private void init() {
+        if (initDone) {
+            return;
+        }
 
         // Error reporting
         Mint.initAndStartSession(MainService.this, "8af105a4");
 
         init = Init.getInstance();
         settings = Settings.getInstance();
-        pw = Pw.getInstance();
+        Pw.getInstance();
         cc = new CC(context);
+
+        /*** Trial and integrity ***/
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                /*** Check trial and integrity ***/
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!Trial.checkTrial()) {
-                            //System.exit(-1);
-                            L.e(TAG, "Trial is expired");
-                        }
-                        // Crash app
-                        if (!Checks.all(MainService.this)) {
-                            //Pw zz = null;
-                            //zz.isConnected();
-                            L.e(TAG, "Checks failed");
-                        }
+                if (!Trial.checkTrial()) {
+                    //System.exit(-1);
+                    L.e(TAG, "Trial is expired");
+                }
+                // Crash app
+                if (!Checks.all(MainService.this)) {
+                    //Pw zz = null;
+                    //zz.isConnected();
+                    L.e(TAG, "Checks failed");
+                }
 
-                    }
-                }).start();
-
-                /*** Set alarm timer ***/
-
-                String updateInterval = settings.get(C.S_UPDATE_INTERVAL);
-                long time = Long.parseLong(updateInterval) * 60 * 1000;
-                Alarm.set(context, time);
-
-                /*** Start watching for local file changes ***/
-
-                // File watcher must be started AFTER creating all catalogs
-                // Catalogs for modules created on load step
-                cc.runModules("load", null);
-
-                startFileWatcher();
-
-                // Wait for file watcher
-                // FIXME
-                Utils.sleep(1);
-
-                /*** Write device features ***/
-
-                Features feat = new Features();
-                feat.write(MainService.this, init.MAIN_DIR + C.FEATURES_FILE);
-
-                /*** Write OneSignal Id and generate key pair ***/
-
-                OSignal.writeId();
-                Keys.saveKeys();
-
-                /*** Bootstrap ***/
-
-                // Generate /modules file
-                cc.parseCommand("!modules");
-                cc.parseBootstrap();
-
-                /*** Unpack assets ***/
-
-                Utils.unpackAsset(context, C.ALARM_ASSET);
-
-                /*** Get and watch for clt / ctlq ***/
-
-                startCtlWatching();
-
-                Logger.started(MainService.this);
             }
         }).start();
+
+        /*** Set alarm timer ***/
+
+        String updateInterval = settings.get(C.S_UPDATE_INTERVAL);
+        long time = Long.parseLong(updateInterval) * 60 * 1000;
+        Alarm.set(context, time);
+
+        /*** Start watching for local file changes ***/
+
+        // File watcher must be started AFTER creating all catalogs
+        // Catalogs for modules created on load step
+        cc.runModules("load", null);
+
+        startFileWatcher();
+
+        // Wait for file watcher
+        // FIXME
+        Utils.sleep(1);
+
+        /*** Write device features ***/
+
+        Features feat = new Features();
+        feat.write(MainService.this, init.MAIN_DIR + C.FEATURES_FILE);
+
+        /*** Write OneSignal Id and generate key pair ***/
+
+        OSignal.writeId();
+        Keys.saveKeys();
+
+        /*** Bootstrap ***/
+
+        // Generate /modules file
+        cc.parseCommand("!modules");
+        cc.parseBootstrap();
+
+        /*** Unpack assets ***/
+
+        Utils.unpackAsset(context, C.ALARM_ASSET);
+
+        /*** Get and watch for clt / ctlq ***/
+
+        startCtlWatching();
+
+        Logger.started(MainService.this);
+
+        initDone = true;
     }
 
     private void startFileWatcher() {
@@ -221,6 +224,8 @@ public class MainService extends Service {
                 WakeLocks wl = new WakeLocks(MainService.this, "ServiceWakelock");
                 wl.lock();
 
+                init();
+
                 TrustedDevices td;
 
                 if (intent != null) {
@@ -264,8 +269,9 @@ public class MainService extends Service {
                                 break;
                             case C.ACTION_AUTH_DEVICE:
                                 td = TrustedDevices.getInstance();
-                                td.trust(intent.getStringExtra("device"));
-                                Logger.trusted(intent.getStringExtra("device"));
+                                if (td.trust(intent.getStringExtra("device"))) {
+                                    Logger.trusted(intent.getStringExtra("device"));
+                                }
                                 break;
                             case C.ACTION_BAN_DEVICE:
                                 td = TrustedDevices.getInstance();

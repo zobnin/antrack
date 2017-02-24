@@ -67,10 +67,6 @@ class CC {
             internalCommand = false;
         }
 
-        if (!internalCommand) {
-            Logger.getCommand(context, cmd);
-        }
-
         // Parse multi-command
         String[] cmds;
         if (cmd.contains(";")) {
@@ -103,6 +99,11 @@ class CC {
                     writeResult(cmdAndArgs[0], result);
             }
         }
+
+        if (!internalCommand) {
+            Logger.runCommand(context, cmd);
+        }
+
     }
 
     private void writeResult(String cmd, String result) {

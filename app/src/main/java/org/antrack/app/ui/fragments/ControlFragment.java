@@ -266,10 +266,10 @@ public class ControlFragment extends BaseFragment {
                 CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkbox);
                 if (checkBox.isChecked()) {
                     //U.runCommandAsync(
-                    //        Mod.getCommand(Mod.WIPESD) + "; " +
-                    //        Mod.getCommand(Mod.WIPE));
+                    //        Mod.runCommand(Mod.WIPESD) + "; " +
+                    //        Mod.runCommand(Mod.WIPE));
                 } else {
-                    //U.runCommandAsync(Mod.getCommand(Mod.WIPE));
+                    //U.runCommandAsync(Mod.runCommand(Mod.WIPE));
                 }
                 dialog.dismiss();
             }

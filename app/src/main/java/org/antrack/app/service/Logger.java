@@ -34,8 +34,8 @@ public class Logger {
         }
     }
 
-    public static void getCommand(Context context, String cmd) {
-        put("[info] Get command: " + cmd);
+    public static void runCommand(Context context, String cmd) {
+        put("[info] Exec command: " + cmd);
     }
 
     public static void getPush(String device, String cmd) {

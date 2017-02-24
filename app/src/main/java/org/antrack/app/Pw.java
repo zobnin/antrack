@@ -35,7 +35,6 @@ public class Pw {
     private Settings settings;
     private Dropbox dPlugin;
 
-    private String token;
     private boolean connected = false;
 
     private Pw() {
@@ -45,18 +44,19 @@ public class Pw {
     public boolean connect() {
         settings = Settings.getInstance();
 
-        token = settings.readToken();
+        String token = settings.readToken();
         if (token == null || token.equals("")) {
             return false;
         }
 
-        if (settings.get(C.S_PLUGIN).equals("dropbox")) {
+        if ("dropbox".equals(settings.get(C.S_PLUGIN))) {
             dPlugin = new Dropbox(token);
             connected = true;
             L.d(TAG, "Connected to cloud");
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public boolean isConnected() {
