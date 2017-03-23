@@ -12,7 +12,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,7 +66,7 @@ import java.util.Collections;
 import app.R;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BillingActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     final String TAG = "MainActivity";
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity
     Bundle savedInstanceState;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         this.savedInstanceState = savedInstanceState;
@@ -303,14 +302,12 @@ public class MainActivity extends AppCompatActivity
         TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(Color.YELLOW);
 
-        // FIXME translate
         trialSnackbar.setAction(R.string.buy, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // FIXME
+                buyItem("org.antrack.app.full");
             }
         });
-
         trialSnackbar.show();
     }
 
@@ -527,6 +524,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         main();
     }
 

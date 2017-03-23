@@ -31,4 +31,10 @@ public class Battery {
             context.startActivity(intent);
         }
     }
+
+    @TargetApi(23)
+    public static boolean isIgnoringBatteryOptimizations(Context context) {
+        return ((PowerManager)context.getSystemService(Context.POWER_SERVICE)).isIgnoringBatteryOptimizations(context.getPackageName());
+
+}
 }

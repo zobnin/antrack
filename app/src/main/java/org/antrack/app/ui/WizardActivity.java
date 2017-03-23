@@ -64,7 +64,8 @@ public class WizardActivity extends AppCompatActivity {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport report) {
                 if (report.areAllPermissionsGranted()) {
-                    if (Build.VERSION.SDK_INT >= 23) {
+                    if (Build.VERSION.SDK_INT >= 23 &&
+                            !Battery.isIgnoringBatteryOptimizations(WizardActivity.this)) {
                         //Battery.requestIgnoreBatteryOptimisation(WizardActivity.this);
                         new AlertDialog.Builder(WizardActivity.this)
                                 .setTitle(R.string.battery_alert_title)
