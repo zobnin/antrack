@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -121,7 +122,7 @@ public class MainActivity extends BillingActivity
 
         this.savedInstanceState = savedInstanceState;
 
-        /*** Start wizard ***/
+        /* Start wizard */
 
         if (Settings.needLaunchWizard()) {
             Intent intent = new Intent(this, WizardActivity.class);
@@ -132,7 +133,7 @@ public class MainActivity extends BillingActivity
     }
 
     private void main() {
-        /*** Init ***/
+        /* Init */
 
         if (savedInstanceState != null) {
             State.firstRun = false;
@@ -144,7 +145,7 @@ public class MainActivity extends BillingActivity
 
         L.d(TAG, "Running on: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
 
-        /*** Start service ***/
+        /* Start service */
 
         final String serviceEnabled = Settings.getInstance().get(C.S_ENABLE_SERVICE);
 
@@ -152,7 +153,7 @@ public class MainActivity extends BillingActivity
             startService();
         }
 
-        /*** Load fragments ***/
+        /* Load fragments */
 
         setContentView(R.layout.activity_main);
 
@@ -175,12 +176,12 @@ public class MainActivity extends BillingActivity
         settingsFragment = new SettingsFragment();
         howtoFragment    = new HowtoFragment();
 
-        /*** Toolbar ***/
+        /* Toolbar */
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*** Drawer ***/
+        /* Drawer */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -255,7 +256,7 @@ public class MainActivity extends BillingActivity
         // Calling sync state is necessary or hamburger icon wont show up
         drawerToggle.syncState();
 
-        /*** Load default fragment ***/
+        /* Load default fragment */
 
         if (State.firstRun) {
             waitFilesAndSwitchDevice();
@@ -264,7 +265,7 @@ public class MainActivity extends BillingActivity
             State.initDone = true;
         }
 
-        /*** Check trial and integrity ***/
+        /* Check trial and integrity */
 
         new Thread(new Runnable() {
             @Override
@@ -293,8 +294,8 @@ public class MainActivity extends BillingActivity
     }
 
     public void showTrialSnackbar() {
-        trialSnackbar = Snackbar
-                .make(container, getString(R.string.trial_status) + ", " +
+        trialSnackbar = Snackbar.make(container,
+                        getString(R.string.trial_status) + ", " +
                         getString(R.string.days_remaining) + " " +
                         Trial.getRemainingDays(), Snackbar.LENGTH_INDEFINITE);
 
@@ -423,7 +424,7 @@ public class MainActivity extends BillingActivity
     // 1. with items from app folder (fast, not synced)
     // 2. with items from cloud (slow, synced)
     private void createDevicesMenu() {
-        /*** Show devices from app folder ***/
+        /* Show devices from app folder */
 
         ArrayList<String> deviceDirs = new ArrayList<>(
                 Arrays.asList(new File(Init.getInstance().DEVICES_DIR).list()));
@@ -448,7 +449,7 @@ public class MainActivity extends BillingActivity
 
         State.deviceMenuActive = true;
 
-        /*** Show devices from cloud ***/
+        /* Show devices from cloud */
 
         // If not connected - don't redraw menu and exit
         Pw pw = Pw.getInstance();
@@ -663,7 +664,7 @@ public class MainActivity extends BillingActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_info:
                 selectedFragment = infoFragment;

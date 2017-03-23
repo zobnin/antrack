@@ -79,7 +79,7 @@ public class BillingActivity extends AppCompatActivity {
                 try {
                     JSONObject jo = new JSONObject(purchaseData);
                     String sku = jo.getString("productId");
-                    L.d("Billing", "You have bought the " + sku + "https://xakep.ru/2017/03/23/john-deere/. Excellent choice, adventurer!");
+                    L.d("Billing", "You have bought the " + sku);
                 }
                 catch (JSONException e) {
                     L.d("Billing", "Failed to parse purchase data.");

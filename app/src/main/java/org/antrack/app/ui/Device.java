@@ -9,9 +9,9 @@ import org.antrack.app.libs.L;
 import java.io.IOException;
 import java.security.PublicKey;
 
-import static android.content.ContentValues.TAG;
-
 public class Device {
+    private final String TAG = "Device";
+
     private String dirName;
     private String OSId = null;
     private PublicKey key;
