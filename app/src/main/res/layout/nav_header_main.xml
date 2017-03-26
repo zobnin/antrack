@@ -49,7 +49,7 @@
             android:id="@+id/nav_header_main_text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="@string/drawer_mail"
             android:textColor="@color/primary_dark_material_dark"
             />
 

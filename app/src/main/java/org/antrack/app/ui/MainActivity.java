@@ -263,7 +263,8 @@ public class MainActivity extends BillingActivity
                     Settings.getInstance().put(C.S_SHOW_HELP, C.FALSE);
                 }
 
-                if (deviceTextView2.getText().equals("")) {
+                if (deviceTextView2.getText().equals(
+                        getResources().getString(R.string.drawer_mail))) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
