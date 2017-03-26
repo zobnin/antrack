@@ -57,8 +57,55 @@ public class MainService extends Service {
         settings = Settings.getInstance();
         cc = new CC(context);
 
-        /*** Trial and integrity ***/
+        checkTrialAndIntegrity();
+        setAlarm();
 
+        // File watcher must be started AFTER creating all catalogs
+        // Catalogs for modules created on load step
+        cc.runModules("load", null);
+
+        startFileWatcher();
+
+        // Wait for file watcher
+        // FIXME
+        Utils.sleep(1);
+
+        /* Write device features */
+
+        Features feat = new Features();
+        feat.write(MainService.this, init.MAIN_DIR + C.FEATURES_FILE);
+
+        /* Write OneSignal Id and generate key pair */
+
+        OSignal.writeId();
+        Keys.saveKeys();
+
+        /* Bootstrap */
+
+        // Generate /modules file
+        cc.parseCommand("!modules");
+        cc.parseBootstrap();
+
+        /* Unpack assets */
+
+        Utils.unpackAsset(context, C.ALARM_ASSET);
+
+        /* Get and watch for clt / ctlq */
+
+        startCtlWatching();
+
+        Logger.started(MainService.this);
+
+        initDone = true;
+    }
+
+    private void setAlarm() {
+        String updateInterval = settings.get(C.S_UPDATE_INTERVAL);
+        long time = Long.parseLong(updateInterval) * 60 * 1000;
+        Alarm.set(context, time);
+    }
+
+    private void checkTrialAndIntegrity() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -72,55 +119,8 @@ public class MainService extends Service {
                     //zz.isConnected();
                     L.e(TAG, "Checks failed");
                 }
-
             }
         }).start();
-
-        /*** Set alarm timer ***/
-
-        String updateInterval = settings.get(C.S_UPDATE_INTERVAL);
-        long time = Long.parseLong(updateInterval) * 60 * 1000;
-        Alarm.set(context, time);
-
-        /*** Start watching for local file changes ***/
-
-        // File watcher must be started AFTER creating all catalogs
-        // Catalogs for modules created on load step
-        cc.runModules("load", null);
-
-        startFileWatcher();
-
-        // Wait for file watcher
-        // FIXME
-        Utils.sleep(1);
-
-        /*** Write device features ***/
-
-        Features feat = new Features();
-        feat.write(MainService.this, init.MAIN_DIR + C.FEATURES_FILE);
-
-        /*** Write OneSignal Id and generate key pair ***/
-
-        OSignal.writeId();
-        Keys.saveKeys();
-
-        /*** Bootstrap ***/
-
-        // Generate /modules file
-        cc.parseCommand("!modules");
-        cc.parseBootstrap();
-
-        /*** Unpack assets ***/
-
-        Utils.unpackAsset(context, C.ALARM_ASSET);
-
-        /*** Get and watch for clt / ctlq ***/
-
-        startCtlWatching();
-
-        Logger.started(MainService.this);
-
-        initDone = true;
     }
 
     private void startFileWatcher() {
@@ -157,7 +157,7 @@ public class MainService extends Service {
     }
 
     // Callback waits for local file changes
-    public class LocalFileUpdated implements FileWatcher.Callback {
+    private class LocalFileUpdated implements FileWatcher.Callback {
         public void onFileUpdate(String path) {
             if (path == null || path.equals("")) {
                 return;
@@ -203,7 +203,7 @@ public class MainService extends Service {
     }
 
     // Callback waits for ctl & ctlq changes
-    public class CloudFileUpdated implements CloudWatcher.Callback {
+    private class CloudFileUpdated implements CloudWatcher.Callback {
         public void onFileUpdate(String path) {
             try {
                 Pw pw = Pw.getInstance();

@@ -31,7 +31,6 @@ public class ControlFragment extends BaseFragment {
     private Switch systemSwitch;
     private Switch lostSwitch;
 
-    private Button lostButton;
     private Button wipeButton;
     private Button lockButton;
     private Button alarmButton;
@@ -77,9 +76,9 @@ public class ControlFragment extends BaseFragment {
         lostSwitch = (Switch) view.findViewById(R.id.fragment_control_lost);
         lostSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // FIXME Mod.LOST not exist
                 if (isChecked) {
                     U.runCommandAsync("lost on");
+                    U.banDevice(State.device.getDir());
                 } else {
                     U.runCommandAsync("lost off");
                 }

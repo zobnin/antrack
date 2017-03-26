@@ -103,7 +103,6 @@ class CC {
         if (!internalCommand) {
             Logger.runCommand(context, cmd);
         }
-
     }
 
     private void writeResult(String cmd, String result) {
@@ -128,15 +127,11 @@ class CC {
 
         if (pin.equals(C.ON)) {
             parseCommand("hide on");
-
             settings.put(C.S_SCREEN_ON_PHOTO, C.TRUE);
-
             Logger.lost(context);
         } else {
             parseCommand("hide off");
-
             settings.put(C.S_SCREEN_ON_PHOTO, C.FALSE);
-
             Logger.unlost(context);
         }
 

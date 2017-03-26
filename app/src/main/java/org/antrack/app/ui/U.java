@@ -1,7 +1,9 @@
 package org.antrack.app.ui;
 
+import android.content.Intent;
 import android.util.Base64;
 
+import org.antrack.app.AntrackApplication;
 import org.antrack.app.C;
 import org.antrack.app.Features;
 import org.antrack.app.Init;
@@ -12,6 +14,7 @@ import org.antrack.app.libs.Crypto;
 import org.antrack.app.libs.Files;
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.SessionIdGenerator;
+import org.antrack.app.service.MainService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -174,6 +177,13 @@ public class U {
                 L.e(TAG, "Can't encrypt command: " + e.toString());
             }
         }
+    }
+
+    public static void banDevice(String deviceName) {
+        Intent intent = new Intent(AntrackApplication.getAppContext(), MainService.class);
+        intent.setAction(C.ACTION_PUSH);
+        intent.putExtra("device", deviceName);
+        AntrackApplication.getAppContext().startService(intent);
     }
 
     static void readFeatures() {
