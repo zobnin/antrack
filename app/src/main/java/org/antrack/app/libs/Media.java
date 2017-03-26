@@ -2,13 +2,12 @@ package org.antrack.app.libs;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Media {
-    private static String TAG="MediaTools";
+    private static String TAG="Media";
     private static MediaRecorder recorder = null;
 
     public static void recordAudio(String file, final int time) {

@@ -1,5 +1,6 @@
 package org.antrack.app.libs;
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.IOException;
@@ -20,7 +21,8 @@ public class L {
 
     private static void writeToFile(String msg) {
         try {
-            Files.addLine("/sdcard/logs", Utils.date("yyyy.MM.dd HH:mm:ss.SSS") + " " + msg);
+            Files.addLine(Environment.getDataDirectory().getPath() + "/logs",
+                    Utils.date("yyyy.MM.dd HH:mm:ss.SSS") + " " + msg);
         } catch (IOException e) {
             Log.e("L", "error: " + e);
         }

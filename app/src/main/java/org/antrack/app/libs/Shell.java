@@ -2,13 +2,12 @@ package org.antrack.app.libs;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Shell {
-    static private String TAG="ShellTools";
+    static private String TAG="Shell";
 
     static public String getWifiPassword() {
         String wpa_supplicant = Shell.runCommand("cat /data/misc/wifi/wpa_supplicant.conf", true, true);

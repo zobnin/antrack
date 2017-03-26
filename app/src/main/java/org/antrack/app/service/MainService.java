@@ -58,6 +58,7 @@ public class MainService extends Service {
         cc = new CC(context);
 
         checkTrialAndIntegrity();
+
         setAlarm();
 
         // File watcher must be started AFTER creating all catalogs

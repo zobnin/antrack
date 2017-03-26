@@ -203,9 +203,9 @@ public class Dropbox {
             return null;
         }
     }
-
-    private String longpollURL="https://notify.dropboxapi.com/2/files/list_folder/longpoll";
 /*
+    private String longpollURL="https://notify.dropboxapi.com/2/files/list_folder/longpoll";
+
     private boolean longpoll(String cursor) {
         try {
             String charset = "UTF-8";

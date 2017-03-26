@@ -30,10 +30,6 @@ public class Net {
 
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
-        if (networkInfo == null) {
-            return false;
-        }
-
-        return networkInfo.isConnected();
+        return networkInfo != null && networkInfo.isConnected();
     }
 }

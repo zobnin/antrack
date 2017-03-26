@@ -119,10 +119,10 @@ class CC {
 
     private String lost(String pin) {
         /*
-         * 1. Hide app
+         * 1. Hide app - done
          * 2. Enable password
          * 3. Remove other devices files
-         * 4. Turn on setting "photo on screen on"
+         * 4. Turn on setting "photo on screen on" - done
          */
 
         if (pin.equals(C.ON)) {

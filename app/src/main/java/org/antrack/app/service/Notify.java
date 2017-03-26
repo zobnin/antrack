@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import org.antrack.app.AntrackApplication;
 import org.antrack.app.C;
 
 import app.R;
@@ -23,7 +24,9 @@ class Notify {
         PendingIntent pendingYesIntent = PendingIntent.getService(context, 0, yesIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent pendingNoIntent = PendingIntent.getService(context, 1, noIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        // FIXME translate
+        String yes = AntrackApplication.getAppContext().getString(R.string.yes);
+        String no  = AntrackApplication.getAppContext().getString(R.string.no);
+
         Notification.Builder mBuilder = new Notification.Builder(context)
                 .setContentTitle(title)
                 .setContentText(txt)
@@ -31,8 +34,8 @@ class Notify {
                 .setContentIntent(pendingYesIntent)
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS)
-                .addAction(R.drawable.ic_yes, "Yes", pendingYesIntent)
-                .addAction(R.drawable.ic_no, "No", pendingNoIntent);
+                .addAction(R.drawable.ic_yes, yes, pendingYesIntent)
+                .addAction(R.drawable.ic_no, no, pendingNoIntent);
 
         NotificationManager nm =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
