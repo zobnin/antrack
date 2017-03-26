@@ -15,7 +15,6 @@ public class Device {
     private String dirName;
     private String OSId = null;
     private PublicKey key;
-
     public String lastUpdate = null;
 
     Device(String dir) {
@@ -24,6 +23,10 @@ public class Device {
 
     public boolean isMain() {
         return dirName.equals(Init.getInstance().DEVICE_NAME_IMEI);
+    }
+
+    public String getLastUpdate() {
+        return lastUpdate;
     }
 
     public String getName() {

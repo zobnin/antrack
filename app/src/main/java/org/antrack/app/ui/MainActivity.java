@@ -106,6 +106,7 @@ public class MainActivity extends BillingActivity
 
     View fragmentContainer;
 
+    Toolbar toolbar;
     Snackbar trialSnackbar;
 
     ArrayList<Device> devices;
@@ -122,8 +123,6 @@ public class MainActivity extends BillingActivity
 
         this.savedInstanceState = savedInstanceState;
 
-        /* Start wizard */
-
         if (Settings.needLaunchWizard()) {
             Intent intent = new Intent(this, WizardActivity.class);
             startActivityForResult(intent, 1);
@@ -133,8 +132,18 @@ public class MainActivity extends BillingActivity
     }
 
     private void main() {
-        /* Init */
+        L.d(TAG, "Running on: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
 
+        initState();
+        initService();
+        initFragments();
+        initToolbar();
+        initDrawer();
+        initDefaultFragment();
+        checkTrialAndIntegrity();
+    }
+
+    private void initState() {
         if (savedInstanceState != null) {
             State.firstRun = false;
             State.device = new Device(savedInstanceState.getString(CURRENT_DEVICE));
@@ -142,19 +151,50 @@ public class MainActivity extends BillingActivity
         } else {
             State.device = new Device(Init.getInstance().DEVICE_NAME_IMEI);
         }
+    }
 
-        L.d(TAG, "Running on: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
+    private void checkTrialAndIntegrity() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (!Trial.checkTrial()) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Utils.showToast(MainActivity.this, getResources().getString(R.string.trial_is_expired));
+                            //System.exit(-1);
+                        }
+                    });
+                    L.e(TAG, "Trial is expired");
+                }
 
-        /* Start service */
+                // Crash app
+                if (!Checks.all(MainActivity.this)) {
+                    //Pw zz = null;
+                    //zz.isConnected();
+                    L.e(TAG, "Checks failed");
+                }
 
-        final String serviceEnabled = Settings.getInstance().get(C.S_ENABLE_SERVICE);
+                showTrialSnackbar();
+            }
+        }).start();
+    }
 
-        if (serviceEnabled == null || serviceEnabled.equals(C.TRUE)) {
-            startService();
+    private void initDefaultFragment() {
+        if (State.firstRun) {
+            waitFilesAndSwitchDevice();
+        } else {
+            switchDevice(false);
+            State.initDone = true;
         }
+    }
 
-        /* Load fragments */
+    private void initToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
 
+    private void initFragments() {
         setContentView(R.layout.activity_main);
 
         container = (FrameLayout) findViewById(R.id.container);
@@ -175,14 +215,18 @@ public class MainActivity extends BillingActivity
         modulesFragment  = new ModulesFragment();
         settingsFragment = new SettingsFragment();
         howtoFragment    = new HowtoFragment();
+    }
 
-        /* Toolbar */
+    private void initService() {
+        final String serviceEnabled = Settings.getInstance().get(C.S_ENABLE_SERVICE);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        if (serviceEnabled == null || serviceEnabled.equals(C.TRUE)) {
+            serviceIntent = new Intent(this, MainService.class);
+            startService(serviceIntent);
+        }
+    }
 
-        /* Drawer */
-
+    private void initDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -255,45 +299,9 @@ public class MainActivity extends BillingActivity
         drawer.addDrawerListener(drawerToggle);
         // Calling sync state is necessary or hamburger icon wont show up
         drawerToggle.syncState();
-
-        /* Load default fragment */
-
-        if (State.firstRun) {
-            waitFilesAndSwitchDevice();
-        } else {
-            switchDevice(false);
-            State.initDone = true;
-        }
-
-        /* Check trial and integrity */
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (!Trial.checkTrial()) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Utils.showToast(MainActivity.this, getResources().getString(R.string.trial_is_expired));
-                            //System.exit(-1);
-                        }
-                    });
-                    L.e(TAG, "Trial is expired");
-                }
-
-                // Crash app
-                if (!Checks.all(MainActivity.this)) {
-                    //Pw zz = null;
-                    //zz.isConnected();
-                    L.e(TAG, "Checks failed");
-                }
-
-                showTrialSnackbar();
-            }
-        }).start();
     }
 
-    public void showTrialSnackbar() {
+    private void showTrialSnackbar() {
         trialSnackbar = Snackbar.make(container,
                         getString(R.string.trial_status) + ", " +
                         getString(R.string.days_remaining) + " " +
@@ -332,15 +340,7 @@ public class MainActivity extends BillingActivity
         U.readModules();
         U.readFeatures();
 
-        // Reload menu
-        deviceTextView.setText(State.device.getName());
-        navigationView.getMenu().clear();
-        navigationView.inflateMenu(R.menu.activity_main_drawer);
-        navigationView.getMenu().getItem(0).setChecked(true);
-
-        rotateArrowDown();
-
-        State.deviceMenuActive = false;
+        loadDefaultMenu();
 
         // If this is just screen orientation change fragment reloaded in onResume()
         if (bootstrap) {
@@ -348,7 +348,15 @@ public class MainActivity extends BillingActivity
             loadFragment(infoFragment);
             State.initDone = true;
         }
+    }
 
+    private void loadDefaultMenu() {
+        deviceTextView.setText(State.device.getName());
+        navigationView.getMenu().clear();
+        navigationView.inflateMenu(R.menu.activity_main_drawer);
+        navigationView.getMenu().getItem(0).setChecked(true);
+        rotateArrowDown();
+        State.deviceMenuActive = false;
     }
 
     private void loadFragment(BaseFragment fragment) {
@@ -408,14 +416,13 @@ public class MainActivity extends BillingActivity
                 return;
             }
 
-            String lastUpdate = State.device.lastUpdate;
+            String lastUpdate = State.device.getLastUpdate();
             if (lastUpdate == null) {
                 actionBar.setSubtitle(State.device.getName());
             } else {
                 actionBar.setSubtitle(
                         State.device.getName() + " (" + lastUpdate + ")");
             }
-
         }
     }
 
@@ -504,12 +511,6 @@ public class MainActivity extends BillingActivity
 
             }
         }).start();
-    }
-
-    private void startService() {
-        serviceIntent = new Intent(this, MainService.class);
-        startService(serviceIntent);
-
     }
 
     @Override
