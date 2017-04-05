@@ -57,7 +57,7 @@ public class MainService extends Service {
         settings = Settings.getInstance();
         cc = new CC(context);
 
-        checkTrialAndIntegrity();
+        //checkTrialAndIntegrity();
 
         setAlarm();
 

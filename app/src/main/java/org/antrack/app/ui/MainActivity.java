@@ -140,7 +140,7 @@ public class MainActivity extends BillingActivity
         initToolbar();
         initDrawer();
         initDefaultFragment();
-        checkTrialAndIntegrity();
+        //checkTrialAndIntegrity();
     }
 
     private void initState() {
