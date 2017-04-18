@@ -4,11 +4,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -28,8 +25,6 @@ import org.antrack.app.FileWatcher;
 import org.antrack.app.Init;
 import org.antrack.app.Pw;
 import org.antrack.app.Settings;
-import org.antrack.app.Trial;
-import org.antrack.app.libs.Checks;
 import org.antrack.app.libs.Keyboard;
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.LoadingDialog;
@@ -107,7 +102,7 @@ public class MainActivity extends BillingActivity
     View fragmentContainer;
 
     Toolbar toolbar;
-    Snackbar trialSnackbar;
+    //Snackbar trialSnackbar;
 
     ArrayList<Device> devices;
 
@@ -152,7 +147,7 @@ public class MainActivity extends BillingActivity
             State.device = new Device(Init.getInstance().DEVICE_NAME_IMEI);
         }
     }
-
+/*
     private void checkTrialAndIntegrity() {
         new Thread(new Runnable() {
             @Override
@@ -175,11 +170,11 @@ public class MainActivity extends BillingActivity
                     L.e(TAG, "Checks failed");
                 }
 
-                showTrialSnackbar();
+                //showTrialSnackbar();
             }
         }).start();
     }
-
+*/
     private void initDefaultFragment() {
         if (State.firstRun) {
             waitFilesAndSwitchDevice();
@@ -301,7 +296,7 @@ public class MainActivity extends BillingActivity
         // Calling sync state is necessary or hamburger icon wont show up
         drawerToggle.syncState();
     }
-
+/*
     private void showTrialSnackbar() {
         trialSnackbar = Snackbar.make(container,
                         getString(R.string.trial_status) + ", " +
@@ -320,7 +315,7 @@ public class MainActivity extends BillingActivity
         });
         trialSnackbar.show();
     }
-
+*/
     public void rotateArrowUp() {
         deviceArrow.animate().rotation(180);
     }
@@ -386,10 +381,10 @@ public class MainActivity extends BillingActivity
         State.fragment = fragment;
         addCallbacks();
         setToolbarTitle();
-
+/*
         if (trialSnackbar != null)
             trialSnackbar.show();
-
+*/
         L.d(TAG, "Fragment loaded");
     }
 
@@ -666,7 +661,7 @@ public class MainActivity extends BillingActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_info:
                 selectedFragment = infoFragment;

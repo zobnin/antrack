@@ -17,8 +17,6 @@ import org.antrack.app.Keys;
 import org.antrack.app.OSignal;
 import org.antrack.app.Pw;
 import org.antrack.app.Settings;
-import org.antrack.app.Trial;
-import org.antrack.app.libs.Checks;
 import org.antrack.app.libs.Crypto;
 import org.antrack.app.libs.L;
 import org.antrack.app.libs.Utils;
@@ -104,24 +102,6 @@ public class MainService extends Service {
         String updateInterval = settings.get(C.S_UPDATE_INTERVAL);
         long time = Long.parseLong(updateInterval) * 60 * 1000;
         Alarm.set(context, time);
-    }
-
-    private void checkTrialAndIntegrity() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (!Trial.checkTrial()) {
-                    //System.exit(-1);
-                    L.e(TAG, "Trial is expired");
-                }
-                // Crash app
-                if (!Checks.all(MainService.this)) {
-                    //Pw zz = null;
-                    //zz.isConnected();
-                    L.e(TAG, "Checks failed");
-                }
-            }
-        }).start();
     }
 
     private void startFileWatcher() {
