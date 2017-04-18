@@ -83,6 +83,9 @@ public class ModuleLoader {
             for (String module : moduleList) {
                 L.d(TAG, "unpackModules: unpacking " + module);
                 try {
+                    if (new File(modulePath + "/" + module).exists())
+                        continue;
+
                     bis = new BufferedInputStream(context.getAssets().open("modules/" + module));
                     dexWriter = new BufferedOutputStream(
                             new FileOutputStream(modulePath + "/" + module));

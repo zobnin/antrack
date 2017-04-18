@@ -8,6 +8,7 @@ import org.antrack.app.Init;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,13 +24,17 @@ public class Utils {
 
     public static void unpackAsset(Context context, String file) {
         try {
+            String path = Init.getInstance().APP_DIR + "/" + file;
+
+            if (new File(path).exists())
+                return;
+
             BufferedInputStream bis;
             OutputStream bos;
             final int BUF_SIZE = 8 * 1024;
 
             bis = new BufferedInputStream(context.getAssets().open(file));
-            bos = new BufferedOutputStream(
-                    new FileOutputStream(Init.getInstance().APP_DIR + "/" + file));
+            bos = new BufferedOutputStream(new FileOutputStream(path));
 
             byte[] buf = new byte[BUF_SIZE];
             int len;
