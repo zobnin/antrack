@@ -477,6 +477,11 @@ public class MainActivity extends BillingActivity
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            // Workaround: if device menu is not shown don't redraw it
+                            if (!State.deviceMenuActive) {
+                                return;
+                            }
+
                             navigationView.getMenu().clear();
 
                             devices = new ArrayList<>();
@@ -492,11 +497,8 @@ public class MainActivity extends BillingActivity
                                 //noinspection ResultOfMethodCallIgnored
                                 new File(Init.getInstance().DEVICES_DIR + deviceDir).mkdir();
 
-                                // Workaround: if device menu is not shown don't redraw it
-                                if (State.deviceMenuActive) {
-                                    navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE, device.getName())
-                                            .setIcon(R.drawable.ic_menu_device);
-                                }
+                                navigationView.getMenu().add(0, Menu.FIRST + i, Menu.NONE, device.getName())
+                                        .setIcon(R.drawable.ic_menu_device);
                                 i = i + 1;
                             }
                         }

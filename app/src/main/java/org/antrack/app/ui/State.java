@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 public class State {
     public static boolean firstRun = true;
     public static boolean initDone = false;
-    // For CreateDeviceMenu
     public static boolean deviceMenuActive = false;
 
     public static Device device;
