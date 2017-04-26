@@ -47,14 +47,14 @@ public class Shell {
     }
 
     static public boolean checkSu() {
-        String[] places = {"/system/bin/", "/system/xbin/"};
-        for (String where : places) {
-            if (new File(where + "su").exists()) {
-                return true;
-            }
+        String[] paths = { "/system/app/Superuser.apk", "/sbin/su", "/system/bin/su",
+                "/system/xbin/su", "/data/local/xbin/su", "/data/local/bin/su",
+                "/system/sd/xbin/su", "/system/bin/failsafe/su", "/data/local/su",
+                "/su/bin/su"};
+        for (String path : paths) {
+            if (new File(path).exists()) return true;
         }
-        // System less SU
-        return new File("/su/bin").exists();
+        return false;
     }
 
     static public boolean remountSystemRW() {

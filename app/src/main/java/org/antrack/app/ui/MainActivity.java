@@ -180,7 +180,6 @@ public class MainActivity extends BillingActivity
             waitFilesAndSwitchDevice();
         } else {
             switchDevice(false);
-            State.initDone = true;
         }
     }
 
@@ -342,8 +341,9 @@ public class MainActivity extends BillingActivity
         if (bootstrap) {
             State.menuItemTitle = getResources().getString(R.string.menu_device_info);
             loadFragment(infoFragment);
-            State.initDone = true;
         }
+
+        State.initDone = true;
     }
 
     private void loadDefaultMenu() {
