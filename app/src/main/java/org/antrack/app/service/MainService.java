@@ -91,7 +91,7 @@ public class MainService extends Service {
 
         /* Get and watch for clt / ctlq */
 
-        startCtlWatching();
+        startCtlWatcher();
 
         Logger.started(MainService.this);
 
@@ -115,7 +115,7 @@ public class MainService extends Service {
         }
     }
 
-    private void startCtlWatching() {
+    private void startCtlWatcher() {
         String ctlEnabled = settings.get(C.S_ENABLE_CTL);
         if (ctlEnabled != null && ctlEnabled.equals(C.TRUE)) {
             try {
@@ -128,7 +128,7 @@ public class MainService extends Service {
         }
     }
 
-    private void stopCtlWatching() {
+    private void stopCtlWatcher() {
         String ctlEnabled = settings.get(C.S_ENABLE_CTL);
         if (ctlEnabled != null && ctlEnabled.equals(C.TRUE)) {
             if (cloudWatcher != null) {
@@ -241,10 +241,10 @@ public class MainService extends Service {
                                 cc.parseCommand(intent.getStringExtra("command"));
                                 break;
                             case C.ACTION_CTL_ENABLED:
-                                startCtlWatching();
+                                startCtlWatcher();
                                 break;
                             case C.ACTION_CTL_DISABLED:
-                                stopCtlWatching();
+                                stopCtlWatcher();
                                 break;
                             case C.ACTION_PUSH:
                                 String device = intent.getStringExtra("device");
@@ -253,8 +253,11 @@ public class MainService extends Service {
                                 break;
                             case C.ACTION_AUTH_DEVICE:
                                 td = TrustedDevices.getInstance();
-                                if (td.trust(intent.getStringExtra("device"))) {
-                                    Logger.trusted(intent.getStringExtra("device"));
+                                String device2 = intent.getStringExtra("device");
+                                if (td.trust(device2)) {
+                                    Logger.trusted(device2);
+                                    String message2 = intent.getStringExtra("message");
+                                    processPush(device2, message2);
                                 }
                                 break;
                             case C.ACTION_BAN_DEVICE:
@@ -327,7 +330,7 @@ public class MainService extends Service {
         super.onDestroy();
 
         stopFileWatcher();
-        stopCtlWatching();
+        stopCtlWatcher();
 
         String enabled = settings.get(C.S_ENABLE_SERVICE);
         if (enabled == null || enabled.equals("false")) {
