@@ -38,6 +38,10 @@
                 android:icon="@drawable/ic_menu_audio"
                 android:title="@string/menu_audio" />
             <item
+                android:id="@+id/nav_control"
+                android:icon="@drawable/ic_menu_control"
+                android:title="@string/menu_control" />
+            <item
                 android:id="@+id/nav_shell"
                 android:icon="@drawable/ic_menu_shell"
                 android:title="@string/menu_shell" />
