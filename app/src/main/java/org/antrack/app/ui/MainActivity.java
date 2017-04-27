@@ -621,29 +621,49 @@ public class MainActivity extends BillingActivity
         });
     }
 
+    // Get modules list, features and osid if not exist
     private void waitFilesAndSwitchDevice() {
-        // Get modules list, features and osid if not exist
         String modulesFile = U.getLocalPath(C.MODULES_FILE);
         String featuresFile = U.getLocalPath(C.FEATURES_FILE);
         String osidFile = U.getLocalPath(C.OSID_FILE);
         String keyFile = U.getLocalPath(C.PUBLIC_KEY_FILE);
 
-        if (!new File(modulesFile).exists() ||
-                !new File(featuresFile).exists() ||
-                !new File(osidFile).exists() ||
-                !new File(keyFile).exists()) {
+        fileWatcher = FileWatcher.getInstance();
+        boolean isWaiting = false;
 
-            fileWatcher = FileWatcher.getInstance();
+        if (!new File(modulesFile).exists()) {
             fileWatcher.addCallback("modules", new ModulesCallback(this));
+            if (!State.device.isMain()) {
+                U.getFileAsync(C.MODULES_FILE);
+            }
+            isWaiting = true;
+        }
+
+        if (!new File(featuresFile).exists()) {
             fileWatcher.addCallback("features", new FeaturesCallback(this));
+            if (!State.device.isMain()) {
+                U.getFileAsync(C.FEATURES_FILE);
+            }
+            isWaiting = true;
+        }
+
+        if (!new File(osidFile).exists()) {
             fileWatcher.addCallback("osid", new OsidCallback(this));
+            if (!State.device.isMain()) {
+                U.getFileAsync(C.OSID_FILE);
+            }
+            isWaiting = true;
+        }
+
+        if (!new File(keyFile).exists()) {
             fileWatcher.addCallback("key", new KeyCallback(this));
+            if (!State.device.isMain()) {
+                U.getFileAsync(C.PUBLIC_KEY_FILE);
+            }
+            isWaiting = true;
+        }
 
-            U.getFileAsync(C.MODULES_FILE);
-            U.getFileAsync(C.FEATURES_FILE);
-            U.getFileAsync(C.OSID_FILE);
-            U.getFileAsync(C.PUBLIC_KEY_FILE);
-
+        if (isWaiting) {
             LoadingDialog.show(MainActivity.this, getResources().getString(R.string.loading_dialog));
 
             // Workaround to stop loading dialog if don't get modules
