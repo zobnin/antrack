@@ -16,6 +16,10 @@
 #   public *;
 #}
 
+-keep public interface org.antrack.app.ModuleInterface {*;}
+
+-keep class com.onesignal.** { *; }
+
 # for Dropbox
 -dontwarn okio.**
 -dontwarn okhttp3.**
