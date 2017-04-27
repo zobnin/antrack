@@ -715,9 +715,11 @@ public class MainActivity extends BillingActivity
             case R.id.nav_shell:
                 selectedFragment = shellFragment;
                 break;
+            /*
             case R.id.nav_control:
                 selectedFragment = controlFragment;
                 break;
+                */
             case R.id.nav_logs:
                 selectedFragment = logsFragment;
                 break;
