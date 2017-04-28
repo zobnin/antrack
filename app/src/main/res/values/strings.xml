@@ -122,4 +122,7 @@ Coming soon
     <string name="battery_alert_title">Attention</string>
     <string name="battery_alert_message">To work correctly AnTrack requires that you add it to the list of energy saving mode exceptions.\n\nAfter you click Ok a \"Battery optimization\" wnindow appears on the screen. Click on the \"Not optimized\" and select \"All apps\" in the list that appears. Find AnTrack in the list, click on it, choose the option \"Don\'t optimize\" and click \"Done\". Press the back button to return to this screen.</string>
     <string name="drawer_mail">not connected</string>
+    <string name="auth_request">Authentification request</string>
+    <string name="allow">Allow</string>
+    <string name="to_control_this_device">to control this device?</string>
 </resources>

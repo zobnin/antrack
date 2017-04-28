@@ -24,6 +24,8 @@ import org.antrack.app.libs.WakeLocks;
 
 import java.io.IOException;
 
+import app.R;
+
 public class MainService extends Service {
     final String TAG = "MainService";
 
@@ -319,10 +321,11 @@ public class MainService extends Service {
     }
 
     private void showNotify(String remoteDeviceName) {
-        // FIXME translate
         Notify.show(getApplicationContext(),
-                "Device authentication", "Auth " + remoteDeviceName +
-                        " to control this device?", remoteDeviceName);
+                getResources().getString(R.string.auth_request),
+                getResources().getString(R.string.allow) + " " +
+                        remoteDeviceName + " " +
+                        getResources().getString(R.string.to_control_this_device), remoteDeviceName);
     }
 
     @Override
