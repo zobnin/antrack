@@ -38,7 +38,15 @@ class Notify {
                 .addAction(R.drawable.ic_no, no, pendingNoIntent);
 
         NotificationManager nm =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                (NotificationManager) AntrackApplication.getAppContext()
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(0, mBuilder.build());
+    }
+
+    static public void cancel() {
+        NotificationManager nm =
+                (NotificationManager) AntrackApplication.getAppContext()
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancel(0);
     }
 }

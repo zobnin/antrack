@@ -254,6 +254,7 @@ public class MainService extends Service {
                                 processPush(device, message);
                                 break;
                             case C.ACTION_AUTH_DEVICE:
+                                Notify.cancel();
                                 td = TrustedDevices.getInstance();
                                 String device2 = intent.getStringExtra("device");
                                 if (td.trust(device2)) {
@@ -263,6 +264,7 @@ public class MainService extends Service {
                                 }
                                 break;
                             case C.ACTION_BAN_DEVICE:
+                                Notify.cancel();
                                 td = TrustedDevices.getInstance();
                                 td.ban(intent.getStringExtra("device"));
                                 Logger.banned(intent.getStringExtra("device"));
