@@ -46,7 +46,7 @@ public class ImagesFragment extends BaseFragment {
 
         imageList = new File(fullDir).list();
         if (imageList.length == 0)
-            showNoData();
+            showNoDataOrLoading();
 
         View view = inflater.inflate(R.layout.fragment_gridview, container, false);
 

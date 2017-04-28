@@ -4,8 +4,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -103,6 +105,7 @@ public class MainActivity extends BillingActivity
 
     Toolbar toolbar;
     //Snackbar trialSnackbar;
+    Snackbar snackbar;
 
     ArrayList<Device> devices;
 
@@ -315,6 +318,23 @@ public class MainActivity extends BillingActivity
         trialSnackbar.show();
     }
 */
+
+    public void showSnackbar(String message) {
+        snackbar = Snackbar.make(container, message, Snackbar.LENGTH_INDEFINITE);
+
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.CYAN);
+
+        snackbar.show();
+    }
+
+    public void hideSnackbar() {
+        if (snackbar != null && snackbar.isShown()) {
+            snackbar.dismiss();
+        }
+    }
+
     public void rotateArrowUp() {
         deviceArrow.animate().rotation(180);
     }

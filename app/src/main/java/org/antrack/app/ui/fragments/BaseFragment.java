@@ -1,6 +1,5 @@
 package org.antrack.app.ui.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
@@ -85,27 +84,8 @@ public class BaseFragment extends Fragment {
                 public void run() {
                     if (getActivity() == null) return;
                     if (!State.device.isMain()) {
-                        final View loading = getActivity().findViewById(R.id.loading);
-                        setVisible(loading);
-                        waitThread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Utils.sleep(15);
-                                if (loading.getVisibility() != View.GONE) {
-                                    if (getActivity() != null) {
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                View noData = getActivity().findViewById(R.id.nodata);
-                                                setVisible(noData);
-                                                loading.setVisibility(View.GONE);
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        });
-                        waitThread.start();
+                        MainActivity mainActivity = (MainActivity)getActivity();
+                        mainActivity.showSnackbar(getString(R.string.message_loading));
                     } else {
                         View noData = getActivity().findViewById(R.id.nodata);
                         setVisible(noData);
@@ -211,13 +191,15 @@ public class BaseFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Activity a = getActivity();
+                    MainActivity a = (MainActivity)getActivity();
                     a.findViewById(R.id.error).setVisibility(View.GONE);
                     a.findViewById(R.id.nodata).setVisibility(View.GONE);
                     a.findViewById(R.id.loading).setVisibility(View.GONE);
                     a.findViewById(R.id.nomodule).setVisibility(View.GONE);
                     a.findViewById(R.id.noroot).setVisibility(View.GONE);
                     a.findViewById(R.id.nophone).setVisibility(View.GONE);
+                    a.hideSnackbar();
+
                     if (waitThread != null)
                         waitThread.interrupt();
                 }

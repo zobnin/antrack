@@ -146,7 +146,7 @@ public class AudioFragment extends BaseFragment implements SeekBar.OnSeekBarChan
                 audios = new ArrayList<>();
 
                 if(!readFiles() || audios.isEmpty()) {
-                    showNoData();
+                    showNoDataOrLoading();
                     return;
                 }
 
