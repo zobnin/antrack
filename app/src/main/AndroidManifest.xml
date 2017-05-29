@@ -3,7 +3,6 @@
     package="app" >
 
     <uses-permission android:name="com.android.vending.BILLING" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -36,7 +35,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:name="org.antrack.app.AntrackApplication"
+        android:name="org.antrack.app.App"
         >
 
         <meta-data
@@ -77,6 +76,7 @@
 
         <receiver android:name="org.antrack.app.service.Alarm"></receiver>
 
+        <!-- TODO
         <receiver
             android:name="org.antrack.app.libs.Admin$myDeviceAdminReceiver"
             android:label="@string/app_name"
@@ -88,6 +88,7 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
+        -->
 
         <receiver android:name="org.antrack.app.service.filters.BootCompletedReceiver">
             <intent-filter>

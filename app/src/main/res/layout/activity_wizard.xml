@@ -22,7 +22,7 @@
         android:text="@string/wizard_welcome"
         android:id="@+id/textView_greetings"
         android:layout_marginBottom="20dp" />
-
+<!-- TODO
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,6 +36,7 @@
         android:text="@string/wizard_admin_button"
         android:id="@+id/button_admin"
         android:layout_marginBottom="20dp" />
+        -->
 
     <TextView
         android:layout_width="wrap_content"

@@ -16,8 +16,6 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 public class Files {
-    private final String TAG = "Files";
-
     public static void mkdir(String path) {
         new File(path).mkdir();
     }

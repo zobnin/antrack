@@ -32,7 +32,6 @@ import android.util.Log;
 
 import com.android.vending.billing.IInAppBillingService;
 
-import org.antrack.app.libs.L;
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -1104,11 +1103,11 @@ public class IabHelper {
     }
 
     void logDebug(String msg) {
-        if (mDebugLog) L.d(mDebugTag, msg);
+        if (mDebugLog) Log.d(mDebugTag, msg);
     }
 
     void logError(String msg) {
-        L.e(mDebugTag, "In-app billing error: " + msg);
+        Log.e(mDebugTag, "In-app billing error: " + msg);
     }
 
     void logWarn(String msg) {
