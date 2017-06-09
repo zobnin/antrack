@@ -1,7 +1,6 @@
 package org.antrack.app.ui.fragments
 
 import android.app.Activity
-import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -13,17 +12,9 @@ import org.antrack.app.ui.U
 
 internal class AppsAdapter(private val activity: Activity, private var apps: List<App>?) : RecyclerView.Adapter<AppsAdapter.ModuleViewHolder>() {
     internal class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var cv: CardView
-        var appName: TextView
-        var appPkg: TextView
-        var appStart: Button
-
-        init {
-            cv = itemView.findViewById(R.id.cardview_apps) as CardView
-            appName = itemView.findViewById(R.id.cardview_apps_name) as TextView
-            appPkg = itemView.findViewById(R.id.cardview_apps_pkgname) as TextView
-            appStart = itemView.findViewById(R.id.cardview_apps_start) as Button
-        }
+        var appName: TextView = itemView.findViewById(R.id.cardview_apps_name) as TextView
+        var appPkg: TextView = itemView.findViewById(R.id.cardview_apps_pkgname) as TextView
+        var appStart: Button = itemView.findViewById(R.id.cardview_apps_start) as Button
     }
 
     fun update(apps: List<App>) {

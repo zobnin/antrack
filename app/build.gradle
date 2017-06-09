@@ -8,7 +8,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '26.0.0-rc1'
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "org.antrack.app"
@@ -34,7 +34,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
