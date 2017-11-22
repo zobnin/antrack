@@ -12,7 +12,9 @@ import org.antrack.app.service.Logger
 import org.antrack.app.service.MainService
 
 class ConnChangeReceiver : BroadcastReceiver() {
-    private val TAG = "ConnChangeReceiver"
+    companion object {
+        private const val TAG = "ConnChangeReceiver"
+    }
 
     override fun onReceive(context: Context, intent: Intent) {
 

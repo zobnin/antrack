@@ -35,8 +35,7 @@ internal object Notify {
                 .addAction(R.drawable.ic_yes, yes, pendingYesIntent)
                 .addAction(R.drawable.ic_no, no, pendingNoIntent)
 
-        val context = App.context
-        context!!.notificationManager.notify(0, mBuilder.build())
+        context.notificationManager.notify(0, mBuilder.build())
     }
 
     fun cancel() {

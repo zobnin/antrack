@@ -6,12 +6,8 @@ import java.util.concurrent.ConcurrentHashMap
 
 // Watch for control file changes in cloud
 object CloudWatcher {
-    private val TAG = "CloudWatcher"
-    private val watchers: HashMap<String, Watcher>
-
-    init {
-        watchers = HashMap<String, Watcher>()
-    }
+    private const val TAG = "CloudWatcher"
+    private val watchers: HashMap<String, Watcher> = HashMap()
 
     interface Callback {
         fun onFileUpdate(path: String)

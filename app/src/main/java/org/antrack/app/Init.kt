@@ -11,7 +11,6 @@ import java.io.IOException
 
 object Init {
     private val TAG = "Init"
-    private val context: Context
 
     // This device name
     lateinit var DEVICE_NAME: String
@@ -35,11 +34,9 @@ object Init {
     init {
         L.d(TAG, "Initialization...")
 
-        context = App.context!!
-
-        getIMEI(context)
-        makeDirs(context)
-        initSettings(context)
+        getIMEI(App.context!!)
+        makeDirs(App.context!!)
+        initSettings(App.context!!)
         initLastCmdTime()
         writeName()
     }

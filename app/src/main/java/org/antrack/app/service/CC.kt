@@ -13,8 +13,7 @@ import java.io.InputStreamReader
 import java.util.*
 
 object CC {
-    private val TAG = "CC"
-    private val context = App.context
+    private const val TAG = "CC"
     private var internalCommand = false
 
     fun runModules(action: String, extra: String) {
@@ -23,7 +22,7 @@ object CC {
 
     fun parseBootstrap() {
         try {
-            val `is` = context!!.assets.open(C.BOOTSTRAP_ASSET)
+            val `is` = App.context!!.assets.open(C.BOOTSTRAP_ASSET)
             val reader = BufferedReader(InputStreamReader(`is`))
             for (line in reader.readLines()) {
                 if (line.length > 2) {
@@ -57,11 +56,10 @@ object CC {
         }
 
         // Parse multi-command
-        val cmds: Array<String>
-        if (cmd.contains(";")) {
-            cmds = cmd.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val cmds = if (cmd.contains(";")) {
+            cmd.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         } else {
-            cmds = arrayOf(cmd)
+            arrayOf(cmd)
         }
 
         // Parse command

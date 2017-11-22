@@ -1,6 +1,5 @@
 package org.antrack.app
 
-import android.content.Context
 import org.antrack.app.libs.Files
 import org.antrack.app.libs.L
 import java.io.FileInputStream
@@ -11,7 +10,6 @@ import java.util.*
 object Settings {
     private val TAG = "Settings"
 
-    private val context: Context = App.context!!
     private var prop: Properties = Properties()
     private var settingsFile = Init.MAIN_DIR + C.SETTINGS_FILE
 
@@ -27,7 +25,7 @@ object Settings {
 
     fun saveToken(token: String) {
         try {
-            Files.writeTextFile(context.applicationInfo.dataDir + C.TOKEN_FILE, token)
+            Files.writeTextFile(App.context!!.applicationInfo.dataDir + C.TOKEN_FILE, token)
         } catch (e: IOException) {
             L.e(TAG, "Can't save token: " + e.toString())
         }
@@ -38,7 +36,7 @@ object Settings {
         var token: String? = null
 
         try {
-            token = Files.readTextFile(context.applicationInfo.dataDir + C.TOKEN_FILE)
+            token = Files.readTextFile(App.context!!.applicationInfo.dataDir + C.TOKEN_FILE)
         } catch (e: IOException) {
             L.e(TAG, "Can't read token: " + e.toString())
         }

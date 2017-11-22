@@ -15,12 +15,12 @@ class BootCompletedReceiver : BroadcastReceiver() {
 
         Logger.booted()
 
-        val startAtBoot = Settings.get(C.S_START_AT_BOOT)
+        val startAtBoot = Settings[C.S_START_AT_BOOT]
         if (startAtBoot == C.FALSE) {
             return
         }
 
-        val enabled = Settings.get(C.S_ENABLE_SERVICE)
+        val enabled = Settings[C.S_ENABLE_SERVICE]
         if (enabled == C.FALSE) {
             return
         }

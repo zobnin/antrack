@@ -11,7 +11,7 @@ import java.io.FileOutputStream
 import java.util.*
 
 object TrustedDevices {
-    private val TAG = "TrustedDevices"
+    private const val TAG = "TrustedDevices"
     private var prop: Properties? = null
     private val trustedFile: String
 

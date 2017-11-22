@@ -111,7 +111,7 @@ class MainService : Service() {
     // Callback waits for local file changes
     private inner class LocalFileUpdated : FileWatcher.Callback {
         override fun onFileUpdate(path: String) {
-            if (path.isNullOrEmpty()) {
+            if (path.isEmpty()) {
                 return
             }
 
@@ -232,7 +232,7 @@ class MainService : Service() {
     private fun processPush(remoteDeviceName: String, remoteEncMessage: String) {
         val key = TrustedDevices.getKey(remoteDeviceName)
 
-        if (key.isNullOrEmpty()) {
+        if (key.isEmpty()) {
             showNotify(remoteDeviceName)
             return
         } else if (key == "banned") {

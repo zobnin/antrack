@@ -11,7 +11,7 @@ import java.io.IOException
 
 object OSignal {
     fun writeId() {
-        OneSignal.idsAvailable { userId, registrationId ->
+        OneSignal.idsAvailable { userId, _ ->
             try {
                 Files.writeTextFile(Init.MAIN_DIR + C.OSID_FILE, userId)
             } catch (e: IOException) {
