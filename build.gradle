@@ -2,18 +2,24 @@
 
 buildscript {
     repositories {
-        jcenter()
+        maven { url 'https://maven.google.com' }
+        gradlePluginPortal()
+        mavenCentral()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.2-4'
+        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20'
     }
 }
 
 allprojects {
     repositories {
-        jcenter()
+        google()
+        maven { url 'https://maven.google.com' }
+        maven { url "https://jitpack.io" }
+        mavenCentral()
+        gradlePluginPortal()
         google()
     }
 }

@@ -1,68 +1,37 @@
 package org.antrack.app.service
 
-import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Camera
-import org.antrack.app.C
-import org.antrack.app.Settings
-import org.antrack.app.libs.L
+import org.antrack.app.App
+import org.antrack.app.libs.Shell
 import java.io.FileWriter
 
 class Features {
-    var root = false
-    var admin = false
-    var backCamera = false
-    var frontCamera = false
-    var phone = false
+    val root by lazy { Shell.checkSu() }
+    val admin = false
+    val backCamera by lazy { Camera.getNumberOfCameras() > 0 }
+    val frontCamera by lazy { Camera.getNumberOfCameras() > 1 }
+    val phone by lazy {
+        App.context.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
+    }
 
-    fun write(context: Context, path: String) {
-        getFeatures(context)
-
+    fun write(path: String) {
         try {
-            val writer = FileWriter(path)
+            writeNoCaching(path)
+        } catch (e: Exception) {
+            throw IllegalStateException("Can't write features file", e)
+        }
+    }
 
+    private fun writeNoCaching(path: String) {
+        FileWriter(path).use { writer ->
             var feat = ""
             if (root) feat += "root\n"
             if (admin) feat += "admin\n"
-            if (backCamera) feat += "backCamera\n"
-            if (frontCamera) feat += "frontCamera\n"
+            if (backCamera) feat += "back_camera\n"
+            if (frontCamera) feat += "front_camera\n"
             if (phone) feat += "phone\n"
-
             writer.write(feat)
-            writer.close()
-        } catch (e: Exception) {
-            L.e(TAG, "Write error: " + e.toString())
         }
-    }
-
-    private fun getFeatures(context: Context) {
-        // Do we have root?
-        val haveRoot = Settings[C.S_USE_ROOT]
-        if (haveRoot == C.TRUE) {
-            root = true
-        }
-
-        // Do we have admin?
-        val haveAdmin = Settings[C.S_USE_ADMIN]
-        if (haveAdmin == C.TRUE) {
-            root = true
-        }
-
-        // Do we have cameras?
-        val cameras = Camera.getNumberOfCameras()
-        if (cameras > 0) {
-            backCamera = true
-        }
-        if (cameras > 1) {
-            frontCamera = true
-        }
-
-        // Do we have phone?
-        val pm = context.packageManager
-        phone = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
-    }
-
-    companion object {
-        private val TAG = "Service/Features"
     }
 }

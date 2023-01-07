@@ -1,116 +1,60 @@
-package org.antrack.app.libs;
+package org.antrack.app.libs
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
 
-public class Shell {
-    static private String TAG="Shell";
+object Shell {
 
-    static public String getWifiPassword() {
-        String wpa_supplicant = Shell.runCommand("cat /data/misc/wifi/wpa_supplicant.conf", true, true);
-        if (wpa_supplicant == null || wpa_supplicant.equals("")) {
-            return null;
+    fun checkSuRun(): Boolean {
+        val uid = run("id", true, true)
+        return uid != null && uid.startsWith("uid=0")
+    }
+
+    fun checkSu(): Boolean {
+        val paths = arrayOf(
+            "/system/app/Superuser.apk", "/sbin/su", "/system/bin/su",
+            "/system/xbin/su", "/data/local/xbin/su", "/data/local/bin/su",
+            "/system/sd/xbin/su", "/system/bin/failsafe/su", "/data/local/su",
+            "/su/bin/su"
+        )
+
+        for (path in paths) {
+            if (File(path).exists()) return true
         }
 
-        Pattern pattern = Pattern.compile("psk=\"(.*?)\"");
-        Matcher matcher = pattern.matcher(wpa_supplicant);
-        if (matcher.find()) {
-            return matcher.group(0).replace("psk=", "");
-        }
-
-        return null;
+        return false
     }
 
-    static public String[] getGovs() {
-        String listGovsFile = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors";
-        return runCommand("cat " + listGovsFile, false, true).split(" ");
-    }
+    fun run(
+        cmd: String?,
+        su: Boolean = false,
+        out: Boolean = false
+    ): String? {
 
-    static public boolean changeGov(String gov) {
-        String chGovFile = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor";
-        runCommand("echo " + gov + " > " + chGovFile, true, false);
-        String newgov = runCommand("cat " + chGovFile, false, true);
-        return newgov != null && newgov.equals(gov);
-    }
-
-    static public boolean itsQualcomm() {
-        String cpuinfo = runCommand("cat /proc/cpuinfo", false, true);
-        return cpuinfo != null && (cpuinfo.contains("Qualcomm"));
-    }
-
-    static public boolean checkSuRun() {
-        String uid = runCommand("id", true, true);
-        return uid != null && uid.startsWith("uid=0");
-    }
-
-    static public boolean checkSu() {
-        String[] paths = { "/system/app/Superuser.apk", "/sbin/su", "/system/bin/su",
-                "/system/xbin/su", "/data/local/xbin/su", "/data/local/bin/su",
-                "/system/sd/xbin/su", "/system/bin/failsafe/su", "/data/local/su",
-                "/su/bin/su"};
-        for (String path : paths) {
-            if (new File(path).exists()) return true;
-        }
-        return false;
-    }
-
-    static public boolean remountSystemRW() {
-        return runCommandWait("mount -o remount,rw /system", true);
-    }
-
-    static public boolean remountSystemRO() {
-        return runCommandWait("mount -o remount,ro /system", true);
-    }
-
-    static public boolean runCommandWait(String cmd, boolean needsu) {
-        try {
-            String su = "sh";
-            if (needsu) { su = "su"; }
-
-            Process process = Runtime.getRuntime().exec(new String[]{su, "-c", cmd});
-            int result = process.waitFor();
-
-            return (result == 0);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    static public void runCommand(String cmd) {
-        runCommand(cmd, false, false);
-    }
-
-    static public void runCommand(String cmd, boolean needsu) {
-        runCommand(cmd, needsu, false);
-    }
-
-    static public String runCommand(String cmd, boolean needsu, boolean needout) {
-        try {
-            String su = "sh";
-            if (needsu) { su = "su"; }
-
-            Process process = Runtime.getRuntime().exec(new String[]{su, "-c", cmd});
-
-            if (!needout) { return null; }
-
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
-            int read;
-            char[] buffer = new char[4096];
-            StringBuilder output = new StringBuilder();
-            while ((read = reader.read(buffer)) > 0) {
-                output.append(buffer, 0, read);
+        return try {
+            val sh = when {
+                su -> "su"
+                else -> "sh"
             }
-            reader.close();
 
-            process.waitFor();
-            return output.toString();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            val process = Runtime.getRuntime().exec(arrayOf(sh, "-c", cmd))
+            if (!out) return null
+
+            BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+                var read: Int
+                val buffer = CharArray(4096)
+                val output = StringBuilder()
+
+                while (reader.read(buffer).also { read = it } > 0) {
+                    output.append(buffer, 0, read)
+                }
+
+                process.waitFor()
+                output.toString()
+            }
+        } catch (e: Exception) {
+            throw RuntimeException(e)
         }
     }
 }

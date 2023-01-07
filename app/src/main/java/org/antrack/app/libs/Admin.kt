@@ -6,81 +6,57 @@ import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import org.antrack.app.App
+import org.antrack.app.DEVICE_ADMIN_CODE
 
-import org.antrack.app.C
-import org.antrack.app.Settings
+import org.antrack.app.functions.toast
 
-class Admin(internal var context: Context) {
-    internal var mDPM: DevicePolicyManager = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-    internal lateinit var mDeviceAdmin: ComponentName
+class Admin {
+    private var dpm: DevicePolicyManager = App.context
+        .getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
 
-    fun showDialog(activity: Activity): Boolean {
-        mDeviceAdmin = ComponentName(activity, myDeviceAdminReceiver::class.java)
+    private val deviceAdminComponent = ComponentName(
+        App.context, AnTrackDeviceAdminReceiver::class.java
+    )
 
-        // Launch the activity to have the user enable our admin.
-        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
-        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdmin)
-        //intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
-        //        mActivity.getString(R.string.add_admin_extra_app_text));
+    fun showDialog(activity: Activity) {
+        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
+            putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, deviceAdminComponent)
+        }
 
-        activity.startActivityForResult(intent, 1)
-
-        return true
+        activity.startActivityForResult(intent, DEVICE_ADMIN_CODE)
     }
 
     val isActive: Boolean
-        get() = mDPM.isAdminActive(mDeviceAdmin)
+        get() = dpm.isAdminActive(deviceAdminComponent)
+
+    fun lock() {
+        if (Build.VERSION.SDK_INT >= 26) {
+            dpm.lockNow(DevicePolicyManager.FLAG_EVICT_CREDENTIAL_ENCRYPTION_KEY)
+        } else {
+            dpm.lockNow()
+        }
+    }
 
     fun wipe() {
-        mDPM.wipeData(0)
+        if (Build.VERSION.SDK_INT >= 29) {
+            dpm.wipeData(
+                DevicePolicyManager.WIPE_SILENTLY or
+                        DevicePolicyManager.WIPE_EXTERNAL_STORAGE
+            )
+        } else {
+            dpm.wipeData(DevicePolicyManager.WIPE_EXTERNAL_STORAGE)
+        }
     }
 
-    fun setMaxPassAttempts(max: Int) {
-        mDPM.setMaximumFailedPasswordsForWipe(mDeviceAdmin, max)
-    }
-
-    fun setPin(pin: String): Boolean {
-        if (pin.matches("[0-9]{4}".toRegex()))
-            return mDPM.resetPassword(pin, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY)
-        return false
-    }
-
-    fun lock(): Boolean {
-        mDPM.lockNow()
-        return true
-    }
-
-    class myDeviceAdminReceiver : DeviceAdminReceiver() {
+    class AnTrackDeviceAdminReceiver : DeviceAdminReceiver() {
         override fun onEnabled(context: Context, intent: Intent) {
-            Utils.showToast(context, "Admin rights granted")
-            Settings.put(C.S_USE_ADMIN, "true")
+            context.toast("Admin rights granted")
         }
 
-        /*
-        @Override
-        public CharSequence onDisableRequested(Context context, Intent intent) {
-            return context.getString(R.string.admin_receiver_status_disable_warning);
-        }
-*/
         override fun onDisabled(context: Context, intent: Intent) {
-            Utils.showToast(context, "Admin rights disabled")
-            Settings.put(C.S_USE_ADMIN, "false")
+            context.toast("Admin rights disabled")
         }
-        /*
-        @Override
-        public void onPasswordChanged(Context context, Intent intent) {
-            showToast(context, context.getString(R.string.admin_receiver_status_pw_changed));
-        }
-
-        @Override
-        public void onPasswordFailed(Context context, Intent intent) {
-            showToast(context, context.getString(R.string.admin_receiver_status_pw_failed));
-        }
-
-        @Override
-        public void onPasswordSucceeded(Context context, Intent intent) {
-            showToast(context, context.getString(R.string.admin_receiver_status_pw_succeeded));
-        }
-*/
     }
 }

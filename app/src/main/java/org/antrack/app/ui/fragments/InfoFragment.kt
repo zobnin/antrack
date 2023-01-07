@@ -1,120 +1,110 @@
+@file:Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+
 package org.antrack.app.ui.fragments
 
-import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.graphics.Color
+import android.text.Spannable
 import app.R
-import org.antrack.app.libs.Files
-import org.antrack.app.libs.L
-import org.antrack.app.ui.RecyclerViewAnim
-import org.antrack.app.ui.State
-import org.antrack.app.ui.U
+import org.antrack.app.Env
+import org.antrack.app.FALSE
+import org.antrack.app.TRUE
+import org.antrack.app.functions.*
+import org.antrack.app.ui.AppStatus
+import org.antrack.app.ui.readModulesFile
+import org.antrack.app.ui.runCommandAsync
+import org.antrack.app.watcher.FileWatcher
+import org.antrack.app.watcher.IWatcherCallback
 import java.io.File
-import java.io.IOException
-import java.util.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
-class InfoFragment : BaseFragment() {
-    private val TAG = "InfoFragment"
+class InfoFragment : ListBaseFragment() {
 
-    override val module = Mod.INFO
+    data class Info(
+        val title: CharSequence,
+        val data: CharSequence,
+    )
 
-    private val infoFile: String?
-        get() = State.device.modules[Mod.INFO]?.result
-
-    private val statusFile: String?
-        get() = State.device.modules[Mod.STATUS]?.result
-
-    lateinit private var executor: ExecutorService
-    lateinit private var recyclerView: RecyclerViewAnim
-    lateinit private var infoAdapter: InfoAdapter
-
-    private var infos = ArrayList<Info>()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Otherwise GetActivity() return null after orientation change
-        retainInstance = true
-
-        checkModule(Mod.INFO) || return null
-        checkModule(Mod.STATUS) || return null
-
-        val view = inflater.inflate(R.layout.fragment_cardview, container, false)
-
-        recyclerView = view.findViewById(R.id.fragment_cardview_list) as RecyclerViewAnim
-        val linearLayoutManager = LinearLayoutManager(activity.applicationContext)
-        recyclerView.layoutManager = linearLayoutManager
-
-        infos = ArrayList<Info>()
-        infoAdapter = InfoAdapter(infos)
-        recyclerView.adapter = infoAdapter
-
-        executor = Executors.newFixedThreadPool(1)
-
-        onFileUpdate()
-
-        U.runCommandAsync("info; status")
-
-        if (!State.device.isMain) {
-            infoFile?.let { U.getFileAsync(it) }
-            statusFile?.let { U.getFileAsync(it) }
+    inner class FragmentCallback : IWatcherCallback {
+        override val watchFile = "/status"
+        override fun onFileUpdated(path: String) {
+            readFilesAndUpdateAsync()
         }
-
-        return view
     }
 
-    override fun onFileUpdate() {
-        executor.submit(Runnable {
-            waitCardsDrawn(recyclerView)
-
-            infos = ArrayList<Info>()
-
-            val info = readFile(infoFile!!, getString(R.string.device_info))
-            if (info.data.isEmpty()) {
-                showNoDataOrLoading()
-                return@Runnable
-            }
-
-            val status = readFile(statusFile!!, getString(R.string.current_status))
-            if (status.data.isEmpty()) {
-                showNoDataOrLoading()
-                return@Runnable
-            }
-
-            infos.add(info)
-            infos.add(status)
-
-            if (activity != null) {
-                activity.runOnUiThread {
-                    infoAdapter.updateInfos(infos)
-                    infoAdapter.notifyDataSetChanged()
-                    hideAllMessages()
-                }
-            }
-        })
+    override fun onStart() {
+        super.onStart()
+        readFilesAndUpdateAsync()
+        FileWatcher.addCallback("ui", FragmentCallback())
+        runCommandAsync("info; status")
     }
 
-    private fun readFile(file: String, title: String): Info {
-        val path = U.getLocalPath(file)
+    override fun onStop() {
+        super.onStop()
+        showLoadingIfAdapterEmpty()
+        FileWatcher.removeCallback("ui")
+    }
 
-        val info = Info()
+    private fun readFilesAndUpdateAsync() {
+        async {
+            try {
+                val infos = readInfoAndStatus() + readAppInfo()
+                val strings = infos.map(::infoToSpannable)
+                showListInUiThread(strings)
+                logD(className, "Fragment updated")
+            } catch (e: Exception) {
+                showException(e)
+            }
+        }
+    }
 
-        if (!File(path).exists()) {
-            return info
+    private fun readInfoAndStatus(): List<Info> {
+        val modules = readModulesFile()
+        val infoModule = modules["info"] ?: throw IllegalStateException()
+        val statusModule = modules["status"] ?: throw IllegalStateException()
+
+        val info = fileToInfo(infoModule.result, getString(R.string.device_info))
+        val status = fileToInfo(statusModule.result, getString(R.string.device_status))
+
+        return listOf(info, status)
+    }
+
+    private fun readAppInfo(): Info {
+        val status = AppStatus(context)
+        return Info(
+            title = getString(R.string.app_info),
+            data = "Version: " + status.version + "\n" +
+                    "Cloud plugin: " + status.cloudPlugin + "\n" +
+                    "Service working: " + status.isServiceEnabled + "\n" +
+                    "Can work in background: " + status.isIgnoringBatteryOptimizations + "\n" +
+                    "Have access to all files: " + status.haveAccessToAllFiles + "\n" +
+                    "Have admin rights: " + status.haveAdminRights + "\n" +
+                    "Have root rights: " + status.haveRootRights
+        )
+    }
+
+    private fun fileToInfo(file: String, title: String): Info {
+        val path = Env.mainDirPath + file
+        val infoText = File(path).readText()
+
+        return Info(
+            title = title,
+            data = infoText.trim()
+        )
+    }
+
+    private fun infoToSpannable(info: Info): Spannable {
+        val title = info.title.bold()
+        val data = when {
+            info.data.isNotEmpty() -> info.data.highlightBooleans()
+            else -> getString(R.string.loading)
         }
 
-        try {
-            val infoText = Files.readTextFile(path)
-            info.title = title
+        return "\n".bold() +
+                title + "\n\n" +
+                data + "\n"
+    }
 
-            if (infoText != "")
-                info.data = infoText.trim { it <= ' ' }
-        } catch (e: IOException) {
-            L.e(TAG, "Can't read file: " + e.toString())
-        }
-
-        return info
+    private fun CharSequence.highlightBooleans(): CharSequence {
+        return replace(" $TRUE", " $TRUE".color(Color.GREEN))
+            .replace(" $FALSE", " $FALSE".color(Color.RED))
     }
 }

@@ -1,83 +1,66 @@
-package org.antrack.app.libs;
+@file:Suppress("DEPRECATION")
 
-import android.os.FileObserver;
+package org.antrack.app.libs
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import android.os.FileObserver
+import java.io.File
+import java.util.*
 
-public class RecursiveFileObserver extends FileObserver {
-
-    private static int CHANGES_ONLY = CLOSE_WRITE | MOVED_TO;
-
-    private List<SingleFileObserver> mObservers;
-    private String mPath;
-    private int mMask;
-
-    public RecursiveFileObserver(String path) {
-        this(path, CHANGES_ONLY);
+open class RecursiveFileObserver(
+    private val path: String,
+    private val mask: Int = CHANGES_ONLY
+) : FileObserver(
+    path, mask
+) {
+    companion object {
+        private const val CHANGES_ONLY = CLOSE_WRITE or MOVED_TO
     }
 
-    public RecursiveFileObserver(String path, int mask) {
-        super(path, mask);
-        mPath = path;
-        mMask = mask;
-    }
+    private val observers = mutableListOf<SingleFileObserver>()
 
-    @Override
-    public void startWatching() {
-        if (mObservers != null) return;
-        mObservers = new ArrayList<>();
-        Stack<String> stack = new Stack<>();
-        stack.push(mPath);
-
+    override fun startWatching() {
+        val stack = Stack<String>().apply {
+            push(path)
+        }
         while (!stack.empty()) {
-            String parent = stack.pop();
-            mObservers.add(new SingleFileObserver(parent, mMask));
-            File path = new File(parent);
-            File[] files = path.listFiles();
-            if (files == null) continue;
-            for (int i = 0; i < files.length; ++i) {
-                if (files[i].isDirectory() && !files[i].getName().equals(".")
-                        && !files[i].getName().equals("..")) {
-                    stack.push(files[i].getPath());
+            val parent = stack.pop()
+            observers.add(SingleFileObserver(parent, mask))
+
+            val path = File(parent)
+            val files = path.listFiles() ?: continue
+
+            files.forEach { file ->
+                if (
+                    file.isDirectory &&
+                    file.name != "." &&
+                    file.name != ".."
+                ) {
+                    stack.push(file.path)
                 }
             }
         }
-        for (int i = 0; i < mObservers.size(); i++)
-            mObservers.get(i).startWatching();
-    }
 
-    @Override
-    public void stopWatching() {
-        if (mObservers == null) return;
-
-        for (int i = 0; i < mObservers.size(); ++i)
-            mObservers.get(i).stopWatching();
-
-        mObservers.clear();
-        mObservers = null;
-    }
-
-    @Override
-    public void onEvent(int event, String path) {
-
-    }
-
-    private class SingleFileObserver extends FileObserver {
-        private String mPath;
-
-        public SingleFileObserver(String path, int mask) {
-            super(path, mask);
-            mPath = path;
+        observers.forEach {
+            it.startWatching()
         }
+    }
 
-        @Override
-        public void onEvent(int event, String path) {
-            String newPath = mPath + "/" + path;
-            RecursiveFileObserver.this.onEvent(event, newPath);
+    override fun stopWatching() {
+        observers.forEach {
+            it.stopWatching()
         }
+        observers.clear()
+    }
 
+    override fun onEvent(event: Int, path: String?) {}
+
+    private inner class SingleFileObserver(
+        private val mPath:
+        String, mask: Int
+    ) : FileObserver(mPath, mask) {
+        override fun onEvent(event: Int, path: String?) {
+            val newPath = "$mPath/$path"
+            this@RecursiveFileObserver.onEvent(event, newPath)
+        }
     }
 }

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item name="cardview_title_bg" type="color">#b0bec5</item>
-    <item name="cardview_bg" type="color">#ffffff</item>
-    <item name="primary_text" type="color">#212121</item>
-    <item name="secondary_text" type="color">#424242</item>
-</resources>

@@ -1,36 +1,42 @@
+@file:Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+
 package org.antrack.app.ui.fragments
 
-import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import app.R
-import org.antrack.app.ui.RecyclerViewAnim
-import org.antrack.app.ui.State
+import android.text.Spannable
+import org.antrack.app.functions.bold
+import org.antrack.app.functions.className
+import org.antrack.app.functions.logD
+import org.antrack.app.functions.plus
+import org.antrack.app.ui.Module
+import org.antrack.app.ui.readModulesFile
 
-class ModulesFragment : BaseFragment() {
-    internal val TAG = "ModulesFragment"
+class ModulesFragment : ListBaseFragment() {
 
-    override val module = ""
-    override fun onFileUpdate() {}
+    override fun onStart() {
+        super.onStart()
+        showLoadingIfAdapterEmpty()
+        updateAsync()
+    }
 
-    lateinit var recyclerView: RecyclerViewAnim
-    lateinit var modulesAdapter: ModulesAdapter
+    private fun updateAsync() {
+        async {
+            try {
+                val modules = readModulesFile().values
+                val strings = modules.map { moduleToSpannable(it) }
+                showListInUiThread(strings)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (State.device.modules.isEmpty())
-            showNoDataOrLoading()
+                logD(className, "Fragment updated")
+            } catch (e: Exception) {
+                showException(e)
+            }
+        }
+    }
 
-        val view = inflater.inflate(R.layout.fragment_cardview, null)
-
-        recyclerView = view.findViewById(R.id.fragment_cardview_list) as RecyclerViewAnim
-        val linearLayoutManager = LinearLayoutManager(activity.applicationContext)
-        recyclerView.layoutManager = linearLayoutManager
-
-        modulesAdapter = ModulesAdapter(State.device.modules)
-        recyclerView.adapter = modulesAdapter
-
-        return view
+    private fun moduleToSpannable(module: Module): Spannable {
+        return "\n".bold() +
+                module.name.bold() + "\n" +
+                module.desc + "\n" +
+                "Version: " + module.version + "\n" +
+                "Author: " + module.author + "\n"
     }
 }

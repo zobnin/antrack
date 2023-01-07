@@ -1,5 +1,8 @@
+@file:Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+
 package org.antrack.app.ui.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
@@ -7,69 +10,73 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import app.R
-import org.antrack.app.libs.Files
-import org.antrack.app.libs.L
-import org.antrack.app.libs.Utils
-import org.antrack.app.ui.State
-import org.antrack.app.ui.U
+import org.antrack.app.Env
+import org.antrack.app.functions.color
+import org.antrack.app.functions.plus
+import org.antrack.app.functions.readAsList
 import java.io.File
-import java.io.IOException
 
 class LogsFragment : BaseFragment() {
-    internal val TAG = "LogsFragment"
 
-    override val module = ""
-    val logsFile = "/logs"
-
-    lateinit var textView: TextView
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Otherwise GetActivity() return null after orientation change
         retainInstance = true
 
         val view = inflater.inflate(R.layout.fragment_textview, container, false)
-        textView = view.findViewById(R.id.fragment_textview_text) as TextView
+        val textView = view.findViewById(R.id.fragment_textview_text) as TextView
 
-        onFileUpdate()
-
-        if (!State.device!!.isMain) {
-            U.getFileAsync(watchFile!!)
-        }
-
-        textView.alpha = 0f
-        textView.animate().alpha(1f)
-
+        showLoading()
+        onFileUpdate(textView)
         return view
     }
 
-    override fun onFileUpdate() {
-        val path = U.getLocalPath(logsFile)
-
-        if (!File(path).exists()) {
+    private fun onFileUpdate(textView: TextView) {
+        if (!File(Env.logFilePath).exists()) {
+            showNoData()
             return
         }
 
-        Thread(Runnable {
+        async {
             try {
-                val logsList = Files.textFileToArray(U.getLocalPath(logsFile))
-
-                if (logsList.isEmpty()) {
-                    showNoDataOrLoading()
-                    return@Runnable
+                val logs = File(Env.logFilePath).readAsList()
+                if (logs.isEmpty()) {
+                    showNoData()
+                    return@async
                 }
 
-                val logsText = Utils.arrayToStringReverse(logsList.toTypedArray(), "\n")
+                val logsText = logs
+                    .map(::recolor)
+                    .reversed()
+                    .map { it + "\n" }
+                    .reduce { acc, string -> acc + string }
 
-                if (activity == null) return@Runnable
-
-                activity.runOnUiThread {
+                runOnUiThread {
                     textView.text = logsText
                     textView.movementMethod = ScrollingMovementMethod()
-                    hideAllMessages()
+                    hideMessage()
                 }
-            } catch (e: IOException) {
-                L.e(TAG, "Cat read $logsFile: " + e.toString())
+            } catch (e: Exception) {
+                showException(e)
             }
-        }).start()
+        }
+    }
+
+    private fun recolor(text: CharSequence): CharSequence {
+        if (text.length < 15) return text
+
+        val dateText = text.subSequence(0, 14).trim()
+        val logText = text.subSequence(15, text.length).trim()
+
+        val logText2 = when {
+            logText.startsWith("[E]") -> logText.color(Color.RED)
+            logText.startsWith("Service started") -> logText.color(Color.CYAN)
+            else -> logText
+        }
+
+        return dateText.color(Color.WHITE) + " " + logText2
     }
 }

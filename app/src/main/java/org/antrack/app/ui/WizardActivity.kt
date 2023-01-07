@@ -1,33 +1,48 @@
+@file:Suppress("OVERRIDE_DEPRECATION")
+
 package org.antrack.app.ui
 
 import android.Manifest
+import android.annotation.TargetApi
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.Button
-import android.widget.Toast
+import app.BuildConfig
 import app.R
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import org.antrack.app.App
-import org.antrack.app.C
-import org.antrack.app.Pw
-import org.antrack.app.Settings
-import org.antrack.app.libs.Battery
-import org.antrack.app.libs.Files
-import org.antrack.app.libs.Shell
-import org.antrack.app.libs.Utils
+import org.antrack.app.*
+import org.antrack.app.cloud.Cloud
+import org.antrack.app.functions.requestIgnoreBatteryOptimisation
+import org.antrack.app.functions.toast
+import org.antrack.app.functions.touch
+import org.antrack.app.libs.*
 import java.io.File
 
-class WizardActivity : AppCompatActivity() {
-    internal var pluginChosen = false
-
-    //lateinit var aTools: Admin
+class WizardActivity : PermissionsActivity() {
+    private val admin = Admin()
+    private val appStatus = AppStatus(this)
+    private var pluginChosen = false
     lateinit var closeButton: Button
+
+    companion object {
+        private val wizardCompleteFile = App.dataDir + WIZARD_COMPLETE_FILE
+
+        fun launch(activity: Activity, code: Int) {
+            val intent = Intent(activity, WizardActivity::class.java)
+            activity.startActivityForResult(intent, code)
+        }
+
+        fun isNeedToLaunch(): Boolean {
+            return !File(wizardCompleteFile).exists()
+        }
+
+        fun wizardComplete() {
+            File(wizardCompleteFile).touch()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,106 +50,126 @@ class WizardActivity : AppCompatActivity() {
     }
 
     private fun checkPermissions() {
-        Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_WIFI_STATE,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.SEND_SMS,
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.PROCESS_OUTGOING_CALLS,
-                        Manifest.permission.READ_CONTACTS,
-                        Manifest.permission.READ_SMS
-                ).withListener(object : MultiplePermissionsListener {
-            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                if (report.areAllPermissionsGranted()) {
-                    if (Build.VERSION.SDK_INT >= 23 && !Battery.isIgnoringBatteryOptimizations(this@WizardActivity)) {
-                        //Battery.requestIgnoreBatteryOptimisation(WizardActivity.this);
-                        AlertDialog.Builder(this@WizardActivity)
-                                .setTitle(R.string.battery_alert_title)
-                                .setMessage(R.string.battery_alert_message)
-                                .setPositiveButton(android.R.string.yes) { dialogInterface, i -> Battery.openBatteryOptimizationSettings(this@WizardActivity) }
-                                .show()
-                    }
-                    main()
-                } else {
-                    Toast.makeText(this@WizardActivity,
-                            R.string.wizard_nopermissions, Toast.LENGTH_SHORT).show()
-                    checkPermissions()
-                }
+        requestPermissions(
+            arrayOf(
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.PROCESS_OUTGOING_CALLS,
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.READ_SMS
+            )
+        ) { ok ->
+            if (ok) {
+                main()
+            } else {
+                toast(R.string.wizard_nopermissions)
+                checkPermissions()
             }
-
-            override fun onPermissionRationaleShouldBeShown(permissions: List<PermissionRequest>, token: PermissionToken) {
-                token.continuePermissionRequest()
-            }
-        }).check()
+        }
     }
 
     private fun main() {
-        val context = this
-
         setContentView(R.layout.activity_wizard)
+        setupAllFilesAccessButton()
+        setupBackgroundWorkButton()
+        setupAdminButton()
+        setupRootButton()
+        setupDropboxButton()
+        setupCloseButton()
+    }
 
-        /* TODO
-        val button_admin = findViewById(R.id.button_admin) as Button
-        button_admin.setOnClickListener {
-            aTools = Admin(this@WizardActivity)
-            aTools.showDialog(this@WizardActivity)
-        }
-        */
-
-        val rootButton = findViewById(R.id.button_root) as Button
-        if (Shell.checkSu()) {
-            rootButton.setOnClickListener {
-                if (Shell.checkSuRun()) {
-                    Settings.put(C.S_USE_ROOT, C.TRUE)
-                    Utils.showToast(context, resources.getString(R.string.root_rights_granted))
+    private fun setupAllFilesAccessButton() {
+        val button = findViewById<Button>(R.id.button_files_access)
+        if (Build.VERSION.SDK_INT >= 30) {
+            button.setOnClickListener {
+                if (!appStatus.haveAccessToAllFiles) {
+                    showAllFilesAccessSettingsScreen()
                 } else {
-                    Utils.showToast(context, "No root rights")
+                    toast(R.string.already_allowed)
                 }
             }
         } else {
-            rootButton.isEnabled = false
+            button.visibility = View.GONE
         }
+    }
 
-        val dropboxButton = findViewById(R.id.button_dropbox) as Button
-        dropboxButton.setOnClickListener { v ->
-            Settings.put(C.S_PLUGIN, "dropbox")
-            try {
-                pluginChosen = true
-                Pw.auth(this@WizardActivity)
-            } catch (e: InterruptedException) {
-                Utils.showToast(this@WizardActivity, "No internet, try later")
+    private fun setupBackgroundWorkButton() {
+        val button = findViewById<Button>(R.id.button_background_work)
+        button.setOnClickListener {
+            if (!appStatus.isIgnoringBatteryOptimizations) {
+                requestIgnoreBatteryOptimisation()
+            } else {
+                toast(R.string.already_allowed)
             }
         }
+    }
 
-        closeButton = findViewById(R.id.button_close) as Button
-        closeButton.isEnabled = false
+    private fun setupAdminButton() {
+        val button = findViewById<Button>(R.id.button_admin)
+        button.setOnClickListener {
+            if (!admin.isActive) {
+                admin.showDialog(this)
+            } else {
+                toast(R.string.already_allowed)
+            }
+        }
+    }
+
+    private fun setupRootButton() {
+        val button = findViewById<Button>(R.id.button_root)
+        if (Shell.checkSu()) {
+            button.setOnClickListener {
+                if (Shell.checkSuRun()) {
+                    toast(R.string.root_rights_granted)
+                } else {
+                    toast(R.string.no_root_right)
+                }
+            }
+        } else {
+            button.isEnabled = false
+        }
+    }
+
+    private fun setupDropboxButton() {
+        val button = findViewById<Button>(R.id.button_dropbox)
+        button.setOnClickListener { v ->
+            Settings.plugin = "dropbox"
+            try {
+                pluginChosen = true
+                Cloud.auth(this@WizardActivity)
+            } catch (e: InterruptedException) {
+                toast(R.string.no_internet)
+            }
+        }
+    }
+
+    private fun setupCloseButton() {
+        closeButton = findViewById(R.id.button_close)
+        closeButton.isEnabled = Settings.token.isNotEmpty()
         closeButton.setOnClickListener { exit() }
+    }
+
+    override fun onBackPressed() {
+        if (Settings.token.isEmpty()) {
+            toast(R.string.authentication_required)
+        } else {
+            exit()
+        }
     }
 
     private fun exit() {
         wizardComplete()
         // Pw is singleton and will be used by service and activity
-        Pw.connect()
+        Cloud.connect()
 
         setResult(RESULT_OK, intent)
         finish()
-    }
-
-    override fun onBackPressed() {
-        if (Settings.readToken().isNullOrEmpty()) {
-            // FIXME translate
-            Utils.showToast(this@WizardActivity, "Authentication required")
-        } else {
-            wizardComplete()
-            finish()
-        }
     }
 
     override fun onResume() {
@@ -142,27 +177,30 @@ class WizardActivity : AppCompatActivity() {
 
         // Handle Dropbox plugin auth
         if (pluginChosen) {
-            val token = Pw.resume()
+            val token = Cloud.resume()
             if (token != null) {
-                Settings.saveToken(token)
+                Settings.token = token
                 closeButton.isEnabled = true
             } else {
-                // FIXME здесь надо как-то обрабатывать ситуацию если нет токена
+                toast(R.string.authentication_failed)
             }
         }
     }
 
-    companion object {
-        fun needLaunchWizard(): Boolean {
-            val wizardCompleteFile = App.context!!
-                    .applicationInfo.dataDir + C.WIZARD_COMPLETE_FILE
-            return !File(wizardCompleteFile).exists()
-        }
-
-        fun wizardComplete() {
-            val wizardCompleteFile = App.context!!
-                    .applicationInfo.dataDir + C.WIZARD_COMPLETE_FILE
-            Files.touch(wizardCompleteFile)
+    @TargetApi(Build.VERSION_CODES.R)
+    private fun showAllFilesAccessSettingsScreen() {
+        try {
+            val intent = Intent(
+                android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+            ).apply {
+                // We need CLEAR_TOP flag to remove previous settings screen
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+            startActivity(intent)
+        } catch (e: Exception) {
+            toast(e.message.toString())
         }
     }
 }

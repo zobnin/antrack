@@ -11,18 +11,6 @@
         android:title="@string/main_start_at_boot"
         android:summary="@string/main_start_at_boot_more"
         android:defaultValue="true" />
-    <CheckBoxPreference
-        android:key="enable_ctl"
-        android:dependency="enable_service"
-        android:title="@string/main_enable_ctl"
-        android:summary="@string/main_enable_ctl_more"
-        android:defaultValue="false" />
-    <CheckBoxPreference
-        android:key="enable_updater"
-        android:dependency="enable_service"
-        android:title="@string/main_enable_updater"
-        android:summary="@string/main_enable_updater_more"
-        android:defaultValue="true" />
     <ListPreference
         android:key="update_interval"
         android:dependency="enable_service"
@@ -31,4 +19,7 @@
         android:entries="@array/pref_update_interval_entries"
         android:entryValues="@array/pref_update_interval_values"
         android:defaultValue="30" />
+    <Preference
+        android:key="run_setup_wizard"
+        android:title="@string/run_setup_wizard" />
 </PreferenceScreen>

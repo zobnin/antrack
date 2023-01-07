@@ -1,205 +1,93 @@
+@file:Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+
 package org.antrack.app.ui.fragments
 
 import android.app.Fragment
+import android.os.Bundle
 import android.view.View
-import android.widget.RelativeLayout
 import android.widget.TextView
 import app.R
-import org.antrack.app.Pw
-import org.antrack.app.libs.Files
-import org.antrack.app.libs.L
-import org.antrack.app.libs.Utils
-import org.antrack.app.ui.*
-import org.jetbrains.anko.find
-import org.jetbrains.anko.runOnUiThread
-import java.util.*
-
-/* Фрагмент не должен ничего инициализировать заранее.
-   Иначе можно столкнуться с тем, что объект уже создан, а данных еще нет.
- */
+import org.antrack.app.functions.className
+import org.antrack.app.functions.logE
+import org.antrack.app.functions.toast
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 abstract class BaseFragment : Fragment() {
-    private val waitThread: Thread? = null
+    private val executor: ExecutorService = Executors.newFixedThreadPool(3)
 
-    open val needSubtitle = true
-
-    // Fragment must override them
-    abstract fun onFileUpdate()
-    abstract val module: String
-
-    open val watchFile: String?
-        get() = State.device.modules[module]?.result
-
-    open val command: String?
-        get() = State.device.modules[module]?.name
-
-    fun checkModule(mod: String = module): Boolean {
-        if (!State.device.modules.containsKey(mod)) {
-            showNoModule()
-            return false
-        }
-        return true
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Just to hide old message on fragment change
+        hideMessage()
     }
 
-    fun checkPhone(): Boolean {
-        if (!State.device.features.phone) {
-            showNoPhone()
-            return false
-        }
-        return true
+    protected fun async(block: () -> Unit) {
+        executor.submit(block)
     }
 
-    fun checkRoot(): Boolean {
-        if (!State.device.features.root) {
-            showNoRoot()
-            return false
-        }
-        return true
+    protected fun runOnUiThread(block: () -> Unit) {
+        activity?.runOnUiThread(block)
     }
 
-    fun showNoModuleToast() {
-        activity.runOnUiThread {
-            // FIXME translate
-            Utils.showToast(activity, "Module not found: " + module)
-        }
+    protected fun toast(resId: Int) {
+        toast(getString(resId))
     }
 
-    fun onResult(message: String) {
-        val act = activity as MainActivity
-        runOnUiThread { act.setToolbarTitle() }
-
-        val messageA = message.split(" ".toRegex()).toTypedArray()
-        if (messageA[0] == module) {
-            if (messageA[1].contains("error")) {
-                hideAllMessages()
-                showError(Utils.arrayToString(Arrays.copyOfRange(messageA, 2, messageA.size)))
-            } else {
-                hideAllMessages()
-            }
-        }
-    }
-
-    protected fun waitCardsDrawn(rv: RecyclerViewAnim) {
-        while (true) {
-            if (!rv.mScrollable && !rv.mFirstUpdate) {
-                try {
-                    Thread.sleep(100)
-                } catch (e: Exception) {
-                    break
-                }
-
-            } else {
-                break
-            }
-        }
-    }
-
-    private fun setVisible(v: View) {
-        v.alpha = 0f
-        v.visibility = View.VISIBLE
-        v.animate().alpha(1f)
-    }
-
-    protected fun showError(text: String) {
+    protected fun toast(string: String) {
         runOnUiThread {
-            hideAllMessages()
-            val errorView = activity.find<RelativeLayout>(R.id.error)
-            val errorText = activity.find<TextView>(R.id.error_text)
-            errorText.text = text
-            setVisible(errorView)
+            activity?.toast(string)
         }
     }
 
-    protected fun showNoDataOrLoading() {
-        runOnUiThread {
-            hideAllMessages()
-            if (!State.device.isMain) {
-                SnackBar.show(activity, getString(R.string.message_loading))
-            } else {
-                val noData = activity.find<RelativeLayout>(R.id.nodata)
-                setVisible(noData)
-            }
-        }
+    protected fun showException(e: Exception) {
+        e.printStackTrace()
+        logE(className, "Error: ${e.message}")
+        toast("Error: ${e.message}")
+        showNoData()
+    }
+
+    protected fun showLoading() {
+        hideMessage()
+        showMessage(R.string.loading)
     }
 
     protected fun showNoData() {
-        runOnUiThread {
-            hideAllMessages()
-            setVisible(activity.find(R.id.nodata))
-        }
+        hideMessage()
+        showMessage(R.string.message_nodata)
     }
 
-    protected fun hideNoData() {
-        runOnUiThread {
-            activity.find<RelativeLayout>(R.id.nodata).visibility = View.GONE
-            activity.find<RelativeLayout>(R.id.loading).visibility = View.GONE
-        }
-    }
-
-    // FIXME Module name
     protected fun showNoModule() {
-        runOnUiThread {
-            hideAllMessages()
-            setVisible(activity.find(R.id.nomodule))
+        hideMessage()
+        showMessage(R.string.message_nomodule)
+    }
+
+    fun hideMessage() {
+        activity?.runOnUiThread {
+            activity?.findViewById<TextView>(R.id.message)?.hide()
         }
     }
 
-    protected fun hideNoModule() {
-        runOnUiThread {
-            activity.find<RelativeLayout>(R.id.nomodule).visibility = View.GONE
-        }
+    private fun showMessage(resId: Int) {
+        showMessage(getString(resId))
     }
 
-    protected fun showNoRoot() {
-        runOnUiThread {
-            hideAllMessages()
-            setVisible(activity.find(R.id.noroot))
-        }
-    }
-
-    protected fun hideNoRoot() {
-        runOnUiThread {
-            activity.find<RelativeLayout>(R.id.noroot).visibility = View.GONE
-        }
-    }
-
-    protected fun showNoPhone() {
-        runOnUiThread {
-            hideAllMessages()
-            setVisible(activity.find(R.id.nophone))
-        }
-    }
-
-    protected fun hideNoPhone() {
-        runOnUiThread {
-            activity.find<RelativeLayout>(R.id.nophone).visibility = View.GONE
-        }
-    }
-
-    fun hideAllMessages() {
-        runOnUiThread {
-            with (activity as MainActivity) {
-                findViewById(R.id.error).visibility = View.GONE
-                findViewById(R.id.nodata).visibility = View.GONE
-                findViewById(R.id.loading).visibility = View.GONE
-                findViewById(R.id.nomodule).visibility = View.GONE
-                findViewById(R.id.noroot).visibility = View.GONE
-                findViewById(R.id.nophone).visibility = View.GONE
-                SnackBar.hide()
+    private fun showMessage(message: String) {
+        activity?.runOnUiThread {
+            activity?.findViewById<TextView>(R.id.message)?.apply {
+                text = message
+                show()
             }
-
-            waitThread?.interrupt()
         }
     }
 
-    fun deleteFiles() {
-        Files.deleteDir(U.getLocalPath(watchFile!!), false)
-        Thread(Runnable {
-            try {
-                Pw.delete(U.getCloudPath(watchFile!!.replace("/$".toRegex(), "")), false)
-            } catch (e: Exception) {
-                L.e("Mod", "Delete exception: " + e.toString())
-            }
-        }).start()
+    private fun View.show() {
+        alpha = 0f
+        visibility = View.VISIBLE
+        animate().alpha(1f)
+    }
+
+    private fun View.hide() {
+        visibility = View.GONE
     }
 }

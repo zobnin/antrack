@@ -16,7 +16,7 @@
 #   public *;
 #}
 
--keep public interface org.antrack.app.ModuleInterface {*;}
+-keep public interface org.antrack.app.modules.ModuleInterface {*;}
 
 -keep class com.onesignal.** { *; }
 

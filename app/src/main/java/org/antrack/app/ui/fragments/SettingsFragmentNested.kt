@@ -1,82 +1,62 @@
+@file:Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+
 package org.antrack.app.ui.fragments
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import app.R
-import org.antrack.app.C
+import org.antrack.app.DEFAULT_UPDATE_INTERVAL
 import org.antrack.app.Settings
-import org.antrack.app.libs.L
-import org.antrack.app.service.MainService
+import org.antrack.app.WIZARD_LAUNCH_CODE
+import org.antrack.app.service.CloudService
+import org.antrack.app.ui.WizardActivity
 
 class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedPreferenceChangeListener {
-    internal val TAG = "SettingsFragment"
-
-    lateinit var serviceIntent: Intent
-
+    @Deprecated("Deprecated in Java")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         addPreferencesFromResource(R.xml.preferences)
+
+        findPreference("run_setup_wizard").setOnPreferenceClickListener {
+            WizardActivity.launch(activity, WIZARD_LAUNCH_CODE)
+            true
+        }
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        val enabled: Boolean
+    override fun onSharedPreferenceChanged(sp: SharedPreferences, key: String) {
         when (key) {
-            "enable_service" -> {
-                enabled = sharedPreferences.getBoolean(key, true)
-                if (enabled) {
-                    Settings.put(C.S_ENABLE_SERVICE, "true")
-                    serviceIntent = Intent(activity.applicationContext, MainService::class.java)
-                    activity.startService(serviceIntent)
-                    L.d(TAG, "Service started")
-                } else {
-                    Settings.put(C.S_ENABLE_SERVICE, "false")
-                    activity.stopService(serviceIntent)
-                    L.d(TAG, "Service stopped")
-                }
-            }
-            "start_at_boot" -> {
-                enabled = sharedPreferences.getBoolean(key, true)
-                if (enabled) {
-                    Settings.put(C.S_START_AT_BOOT, "true")
-                } else {
-                    Settings.put(C.S_START_AT_BOOT, "false")
-                }
-            }
-            "enable_ctl" -> {
-                enabled = sharedPreferences.getBoolean(key, false)
-                if (enabled) {
-                    Settings.put(C.S_ENABLE_CTL, "true")
-                    serviceIntent = Intent(activity, MainService::class.java)
-                    serviceIntent.action = C.ACTION_CTL_ENABLED
-                } else {
-                    Settings.put(C.S_ENABLE_CTL, "false")
-                    serviceIntent = Intent(activity, MainService::class.java)
-                    serviceIntent.action = C.ACTION_CTL_DISABLED
-                }
-                activity.startService(serviceIntent)
-            }
-            "enable_updater" -> {
-                enabled = sharedPreferences.getBoolean(key, true)
-                if (enabled) {
-                    Settings.put(C.S_ENABLE_UPLOADER, "true")
-                } else {
-                    Settings.put(C.S_ENABLE_UPLOADER, "false")
-                }
-            }
-            "update_interval" -> {
-                val interval = sharedPreferences.getString(key, "30")
-                Settings.put(C.S_UPDATE_INTERVAL, interval!!)
-                val serviceEnabled = Settings[C.S_ENABLE_SERVICE]
-                if (serviceEnabled == null || serviceEnabled == C.TRUE) {
-                    serviceIntent = Intent(activity, MainService::class.java)
-                    activity.stopService(serviceIntent)
-                    activity.startService(serviceIntent)
-                }
-            }
+            "enable_service" -> toggleEnableService(sp, key)
+            "start_at_boot" -> toggleStartAtBoot(sp, key)
+            "update_interval" -> toggleUpdateInterval(sp, key)
         }
+    }
+
+    private fun toggleUpdateInterval(
+        sp: SharedPreferences,
+        key: String
+    ) {
+        val interval = sp.getLong(key, DEFAULT_UPDATE_INTERVAL)
+        Settings.updateInterval = interval
+
+        if (Settings.isServiceEnabled) {
+            CloudService.stop(activity)
+            CloudService.start(activity)
+        }
+    }
+
+    private fun toggleStartAtBoot(
+        sp: SharedPreferences,
+        key: String
+    ) {
+        Settings.startAtBoot = sp.getBoolean(key, true)
+    }
+
+    private fun toggleEnableService(
+        sp: SharedPreferences,
+        key: String
+    ) {
+        Settings.isServiceEnabled = sp.getBoolean(key, true)
     }
 
     override fun onResume() {

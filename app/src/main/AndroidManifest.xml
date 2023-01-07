@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="app" >
 
     <uses-permission android:name="com.android.vending.BILLING" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -16,15 +15,20 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--suppress DeprecatedClassUsageInspection -->
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
-<!--    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
--->
-<!--    <uses-permission android:name="android.permission.DEVICE_POWER" /> -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -32,19 +36,15 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher2"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:name="org.antrack.app.App"
         >
 
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDEhiDd-_envmnrEb5JpNZOwOIQZNyGcVk"/>
-
         <activity
             android:name="org.antrack.app.ui.MainActivity"
-            android:label="@string/app_name" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -56,96 +56,48 @@
             android:theme="@style/WizardTheme" >
         </activity>
 
-        <activity android:name="org.antrack.app.ui.fragments.ImageActivity"></activity>
-
         <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:exported="true">
             <intent-filter>
-
-                <!-- Change this to be db- followed by your app key -->
                 <data android:scheme="db-otyoz3pz5z9rtmn" />
-
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <receiver android:name="org.antrack.app.service.Alarm"></receiver>
+        <receiver android:name="org.antrack.app.service.Alarm">
+        </receiver>
 
-        <!-- TODO
         <receiver
-            android:name="org.antrack.app.libs.Admin$myDeviceAdminReceiver"
+            android:name="org.antrack.app.libs.Admin$AnTrackDeviceAdminReceiver"
             android:label="@string/app_name"
+            android:exported="true"
             android:permission="android.permission.BIND_DEVICE_ADMIN" >
             <meta-data
                 android:name="android.app.device_admin"
-                android:resource="@xml/device_admin" />
+                android:resource="@xml/admin_policies" />
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
-        -->
 
-        <receiver android:name="org.antrack.app.service.filters.BootCompletedReceiver">
+        <receiver
+            android:name="org.antrack.app.receivers.BootCompletedReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-<!--
-        <receiver android:name="org.antrack.app.service.filters.ConnChangeReceiver"
-            android:label="NetworkConnection">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
--->
-        <receiver android:name="org.antrack.app.service.filters.PhoneStateReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE"/>
-                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name="org.antrack.app.service.filters.SimChangeReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.SIM_STATE_CHANGED"/>
-            </intent-filter>
-        </receiver>
-        <!--
-        <receiver android:name=".filters.ShutdownReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
-            </intent-filter>
-        </receiver>
--->
-        <receiver android:name="org.antrack.app.service.filters.ScreenOnReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_SCREEN_ON" />
-            </intent-filter>
-        </receiver>
 
         <service
-            android:name="org.antrack.app.service.MainService"
+            android:name="org.antrack.app.service.CloudService"
             android:enabled="true"
             android:exported="false">
-            <!--android:process=":MainService" -->
         </service>
-
-        <service
-            android:name="org.antrack.app.service.OSService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.onesignal.NotificationExtender" />
-            </intent-filter>
-        </service>
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="20445a530798eccbab323e666da822ed7713af8b" />
     </application>
 
 </manifest>
