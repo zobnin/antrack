@@ -13,7 +13,7 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 
-class Modules {
+object Modules {
     private val modules by lazy { loadModules() }
 
     fun get(): Map<String, ModuleInterface> {

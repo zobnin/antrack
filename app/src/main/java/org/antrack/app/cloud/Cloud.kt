@@ -7,7 +7,7 @@ import org.antrack.app.cloud.provider.Dropbox
 import org.antrack.app.functions.className
 import org.antrack.app.functions.isNetConnected
 import org.antrack.app.functions.logD
-import org.antrack.app.functions.sleep
+import org.antrack.app.functions.sleepS
 import java.util.*
 
 object Cloud {
@@ -88,7 +88,7 @@ object Cloud {
         var seconds = 10
         while (!App.context.isNetConnected()) {
             logD(className, "No internet, sleep $seconds seconds")
-            sleep(seconds)
+            sleepS(seconds)
 
             if (seconds < MAX_SLEEP)
                 seconds *= 2

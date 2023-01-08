@@ -23,3 +23,12 @@ fun File.readAsList(): List<String> {
         return br.lineSequence().toList()
     }
 }
+
+
+fun File.purgeDir() {
+    try {
+        for (file in listFiles()) file.delete()
+    } catch (e: Exception) {
+        //
+    }
+}
