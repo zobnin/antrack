@@ -1,4 +1,4 @@
-package org.antrack.app.service
+package org.antrack.app.service.watcher
 
 import org.antrack.app.Env
 import org.antrack.app.cloud.Cloud
@@ -7,7 +7,7 @@ import org.antrack.app.functions.logE
 import org.antrack.app.watcher.IWatcherCallback
 
 // Callback waits for ctl & ctlq changes
-class CloudCtlFileCallback : IWatcherCallback {
+class CloudCtlChangeCallback : IWatcherCallback {
 
     override val watchFile by lazy { Env.cloudCtlPath }
 

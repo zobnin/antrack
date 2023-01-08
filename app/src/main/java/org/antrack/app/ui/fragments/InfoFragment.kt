@@ -2,12 +2,9 @@
 
 package org.antrack.app.ui.fragments
 
-import android.graphics.Color
 import android.text.Spannable
 import app.R
 import org.antrack.app.Env
-import org.antrack.app.FALSE
-import org.antrack.app.TRUE
 import org.antrack.app.functions.*
 import org.antrack.app.ui.AppStatus
 import org.antrack.app.ui.readModulesFile
@@ -39,7 +36,6 @@ class InfoFragment : ListBaseFragment() {
 
     override fun onStop() {
         super.onStop()
-        showLoadingIfAdapterEmpty()
         FileWatcher.removeCallback("ui")
     }
 
@@ -57,7 +53,13 @@ class InfoFragment : ListBaseFragment() {
     }
 
     private fun readInfoAndStatus(): List<Info> {
-        val modules = readModulesFile()
+        // On first run there is no modules file so we don't throw the exception
+        val modules = try {
+            readModulesFile()
+        } catch (e: Exception) {
+            return emptyList()
+        }
+
         val infoModule = modules["info"] ?: throw IllegalStateException()
         val statusModule = modules["status"] ?: throw IllegalStateException()
 
@@ -101,10 +103,5 @@ class InfoFragment : ListBaseFragment() {
         return "\n".bold() +
                 title + "\n\n" +
                 data + "\n"
-    }
-
-    private fun CharSequence.highlightBooleans(): CharSequence {
-        return replace(" $TRUE", " $TRUE".color(Color.GREEN))
-            .replace(" $FALSE", " $FALSE".color(Color.RED))
     }
 }

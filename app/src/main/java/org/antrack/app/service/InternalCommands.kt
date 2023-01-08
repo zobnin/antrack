@@ -7,30 +7,56 @@ import org.antrack.app.functions.className
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.touch
 import org.antrack.app.libs.Admin
+import org.antrack.app.modules.Modules
 import java.io.File
 
 class InternalCommands {
+    companion object {
+        const val LOST = "lost"
+        const val MODULES = "modules"
+        const val DUMP_JSON = "dumpjson"
+        const val LOCK = "lock"
+        const val WIPE = "wipe"
+    }
+
     private val admin = Admin()
 
-    fun wipeDevice(): String {
+    private val commands = listOf(
+        LOST, LOCK, MODULES, DUMP_JSON, LOCK, WIPE
+    )
+
+    fun isInternal(cmd: String): Boolean {
+        return commands.contains(cmd)
+    }
+
+    fun run(cmd: String, args: String) = when (cmd) {
+        LOST -> markAsLost(args)
+        LOCK -> lockDevice()
+        WIPE -> wipeDevice()
+        MODULES -> Modules.writeModulesFile()
+        DUMP_JSON -> Modules.writeJsonFile()
+        else -> "error: command not found"
+    }
+
+    private fun wipeDevice(): String {
         try {
             admin.wipe()
         } catch (e: Exception) {
-            return "Error: ${e.message}"
+            return "error: ${e.message}"
         }
         return DONE
     }
 
-    fun lockDevice(): String {
+    private fun lockDevice(): String {
         try {
             admin.lock()
         } catch (e: Exception) {
-            return "Error: ${e.message}"
+            return "error: ${e.message}"
         }
         return DONE
     }
 
-    fun markAsLost(switch: String): String {
+    private fun markAsLost(switch: String): String {
         if (switch == ON) {
             File(Env.lostFilePath).touch()
             logD(className, "Marked as lost")

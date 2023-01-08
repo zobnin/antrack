@@ -27,7 +27,7 @@ object Env {
         else -> App.dataDir
     }
 
-    // App directory + devices + main device name
+    // App directory + main device name
     val mainDirPath = "$appDirPath/$deviceNameId"
 
     // Directory where modules is located

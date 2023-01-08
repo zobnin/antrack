@@ -26,4 +26,24 @@ object FileWatcher : IWatcher, RecursiveFileObserver(Env.mainDirPath) {
 
         logD(className, "File modified, path: $path")
     }
+
+    fun waitForFile(
+        id: String,
+        fileName: String,
+        block: () -> Unit,
+    ) {
+        class InitCallback : IWatcherCallback {
+            override val watchFile = fileName
+            override fun onFileUpdated(path: String) {
+                try {
+                    removeCallback(id)
+                    block()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        addCallback(id, InitCallback())
+    }
 }

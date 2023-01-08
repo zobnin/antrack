@@ -14,20 +14,11 @@ import java.io.InputStreamReader
 import java.util.*
 
 class CommandRunner {
-    private val modules = Modules()
     private val intCommands = InternalCommands()
     private var internalCommand = false
 
-    companion object {
-        const val LOST = "lost"
-        const val MODULES = "modules"
-        const val DUMP_JSON = "dumpjson"
-        const val LOCK = "lock"
-        const val WIPE = "wipe"
-    }
-
     fun executeModules(action: String, extra: String) {
-        modules.run(action, extra)
+        Modules.run(action, extra)
     }
 
     fun executeBootstrap() {
@@ -74,13 +65,9 @@ class CommandRunner {
     }
 
     private fun executeSingleCommand(cmd: String, args: String) {
-        val result = when (cmd) {
-            LOST -> intCommands.markAsLost(args)
-            LOCK -> intCommands.lockDevice()
-            WIPE -> intCommands.wipeDevice()
-            MODULES -> modules.writeModulesFile()
-            DUMP_JSON -> modules.writeJsonFile()
-            else -> modules.command(cmd, args.split(" "))
+        val result = when {
+            intCommands.isInternal(cmd) -> intCommands.run(cmd, args)
+            else -> Modules.command(cmd, args.split(" "))
         }
 
         writeResult(cmd, result)

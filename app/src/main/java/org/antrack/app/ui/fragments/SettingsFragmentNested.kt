@@ -10,6 +10,7 @@ import org.antrack.app.DEFAULT_UPDATE_INTERVAL
 import org.antrack.app.Settings
 import org.antrack.app.WIZARD_LAUNCH_CODE
 import org.antrack.app.service.CloudService
+import org.antrack.app.tests.TestRunner
 import org.antrack.app.ui.WizardActivity
 
 class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -18,7 +19,12 @@ class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedP
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
 
-        findPreference("run_setup_wizard").setOnPreferenceClickListener {
+        findPreference("run_tests")?.setOnPreferenceClickListener {
+            TestRunner(activity).run()
+            true
+        }
+
+        findPreference("run_setup_wizard")?.setOnPreferenceClickListener {
             WizardActivity.launch(activity, WIZARD_LAUNCH_CODE)
             true
         }

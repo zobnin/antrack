@@ -15,9 +15,11 @@ import org.antrack.app.functions.logD
 import org.antrack.app.functions.logE
 import org.antrack.app.functions.wakelock
 import org.antrack.app.receivers.Receivers
+import org.antrack.app.service.watcher.CloudCtlChangeCallback
+import org.antrack.app.service.watcher.LocalCtlChangeCallback
+import org.antrack.app.service.watcher.UploaderCallback
 import org.antrack.app.watcher.CloudWatcher
 import org.antrack.app.watcher.FileWatcher
-import org.antrack.app.watcher.IWatcherCallback
 import unpackAsset
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -95,7 +97,7 @@ class CloudService : Service() {
             cc.executeModules("load", "")
 
             startFileWatcher()
-            waitForFileWatcher {
+            FileWatcher.waitForFile("init", "/${Env.deviceNameId}/") {
                 init2()
             }
         } catch (e: Exception) {
@@ -141,19 +143,21 @@ class CloudService : Service() {
     }
 
     private fun startFileWatcher() {
-        FileWatcher.addCallback("service", FileChangeCallback(cc))
+        FileWatcher.addCallback("service_ctl_watcher", LocalCtlChangeCallback(cc))
+        FileWatcher.addCallback("service_uploader", UploaderCallback())
     }
 
     private fun stopFileWatcher() {
-        FileWatcher.removeCallback("service")
+        FileWatcher.removeCallback("service_ctl_watcher")
+        FileWatcher.removeCallback("service_uploader")
     }
 
     private fun startCtlWatcher() {
-        CloudWatcher.addCallback("service", CloudCtlFileCallback())
+        CloudWatcher.addCallback("service_cloud_watcher", CloudCtlChangeCallback())
     }
 
     private fun stopCtlWatcher() {
-        CloudWatcher.removeCallback("service")
+        CloudWatcher.removeCallback("service_cloud_watcher")
     }
 
     private fun getCtlqFile() {
@@ -164,18 +168,6 @@ class CloudService : Service() {
         } catch (e: Exception) {
             logE(className, "Can't download ctlq file: ${e.message}")
         }
-    }
-
-    private fun waitForFileWatcher(block: () -> Unit) {
-        class InitCallback : IWatcherCallback {
-            override val watchFile = "/${Env.deviceNameId}/" // Any file
-            override fun onFileUpdated(path: String) {
-                FileWatcher.removeCallback("init")
-                block()
-            }
-        }
-
-        FileWatcher.addCallback("init", InitCallback())
     }
 
     @TargetApi(Build.VERSION_CODES.O)

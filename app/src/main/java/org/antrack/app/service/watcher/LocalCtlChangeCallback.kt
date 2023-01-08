@@ -1,23 +1,22 @@
-package org.antrack.app.service
+package org.antrack.app.service.watcher
 
 import org.antrack.app.CONTROL_FILE
 import org.antrack.app.CONTROL_Q_FILE
 import org.antrack.app.Env
 import org.antrack.app.Settings
-import org.antrack.app.cloud.Cloud
 import org.antrack.app.functions.className
 import org.antrack.app.functions.logE
 import org.antrack.app.functions.readAsList
+import org.antrack.app.service.CommandRunner
 import org.antrack.app.watcher.IWatcherCallback
 import java.io.File
 
-// Callback waits for local file changes
-class FileChangeCallback(
+class LocalCtlChangeCallback(
     private val cc: CommandRunner,
-) : IWatcherCallback {
+): IWatcherCallback {
 
     override val watchFile: String
-        get() = "/${Env.deviceNameId}/"
+        get() = "/ctl"
 
     override fun onFileUpdated(path: String) {
         if (path.isEmpty()) return
@@ -28,27 +27,12 @@ class FileChangeCallback(
                 path.endsWith(CONTROL_FILE) -> parseCtl()
                 // Current device ctlq changed -> read and execute commands
                 path.endsWith(CONTROL_Q_FILE) -> parseCtlq()
-                // Other file changed -> upload to cloud
-                else -> uploadFile(path)
+                // Other file changed -> do nothing
+                else -> {}
             }
         } catch (e: Exception) {
             logE(className, "Error: ${e.message}")
         }
-    }
-
-    private fun uploadFile(path: String) {
-        if (!Cloud.isConnected) return
-
-        val file = File(path)
-        if (file.isDirectory) {
-            return
-        }
-
-        if (!file.exists()) {
-            throw IllegalArgumentException("File don't exist $path")
-        }
-
-        Cloud.putFile(path, path.replace(Env.appDirPath, ""))
     }
 
     private fun parseCtl() {
