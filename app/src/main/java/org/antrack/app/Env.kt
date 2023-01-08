@@ -9,7 +9,7 @@ import java.io.File
 import java.util.*
 
 object Env {
-    private val deviceName = Build.MODEL
+    val deviceName = Build.MODEL
         .lowercase(Locale.ROOT)
         .replace(" ", "_")
 

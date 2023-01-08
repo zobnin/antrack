@@ -25,6 +25,7 @@ class MainActivity : Activity() {
             InfoFragment(),
             ModulesFragment(),
             LogsFragment(),
+            ShellFragment(),
             SettingsFragment(),
         )
     }
@@ -53,6 +54,7 @@ class MainActivity : Activity() {
             findViewById(R.id.status_tv),
             findViewById(R.id.modules_tv),
             findViewById(R.id.logs_tv),
+            findViewById(R.id.shell_tv),
             findViewById(R.id.settings_tv),
         )
 

@@ -30,13 +30,13 @@ class InfoFragment : ListBaseFragment() {
     override fun onStart() {
         super.onStart()
         readFilesAndUpdateAsync()
-        FileWatcher.addCallback("ui", FragmentCallback())
-        runCommandAsync("info; status")
+        FileWatcher.addCallback(className, FragmentCallback())
+        runCommandAsync("!info; status")
     }
 
     override fun onStop() {
         super.onStop()
-        FileWatcher.removeCallback("ui")
+        FileWatcher.removeCallback(className)
     }
 
     private fun readFilesAndUpdateAsync() {

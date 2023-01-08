@@ -7,9 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import app.R
-import org.antrack.app.functions.className
-import org.antrack.app.functions.logE
-import org.antrack.app.functions.toast
+import org.antrack.app.functions.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -20,6 +18,11 @@ abstract class BaseFragment : Fragment() {
         super.onCreate(savedInstanceState)
         // Just to hide old message on fragment change
         hideMessage()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.fadeIn()
     }
 
     protected fun async(block: () -> Unit) {
@@ -64,7 +67,7 @@ abstract class BaseFragment : Fragment() {
 
     fun hideMessage() {
         activity?.runOnUiThread {
-            activity?.findViewById<TextView>(R.id.message)?.hide()
+            activity?.findViewById<TextView>(R.id.message)?.fadeOut()
         }
     }
 
@@ -76,18 +79,8 @@ abstract class BaseFragment : Fragment() {
         activity?.runOnUiThread {
             activity?.findViewById<TextView>(R.id.message)?.apply {
                 text = message
-                show()
+                fadeIn()
             }
         }
-    }
-
-    private fun View.show() {
-        alpha = 0f
-        visibility = View.VISIBLE
-        animate().alpha(1f)
-    }
-
-    private fun View.hide() {
-        visibility = View.GONE
     }
 }
