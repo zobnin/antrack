@@ -7,8 +7,12 @@ import org.antrack.app.functions.touch
 import java.io.File
 
 import java.util.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 object Env {
+    val executor: ExecutorService = Executors.newFixedThreadPool(8)
+
     val deviceName = Build.MODEL
         .lowercase(Locale.ROOT)
         .replace(" ", "_")

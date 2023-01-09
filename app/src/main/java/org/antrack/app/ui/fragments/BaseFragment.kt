@@ -7,13 +7,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import app.R
+import org.antrack.app.Env
 import org.antrack.app.functions.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 abstract class BaseFragment : Fragment() {
-    private val executor: ExecutorService = Executors.newFixedThreadPool(3)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Just to hide old message on fragment change
@@ -26,7 +23,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected fun async(block: () -> Unit) {
-        executor.submit(block)
+        Env.executor.submit(block)
     }
 
     protected fun runOnUiThread(block: () -> Unit) {
