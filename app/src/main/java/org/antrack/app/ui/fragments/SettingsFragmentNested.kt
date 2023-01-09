@@ -62,7 +62,14 @@ class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedP
         sp: SharedPreferences,
         key: String
     ) {
-        Settings.isServiceEnabled = sp.getBoolean(key, true)
+        val enabled = sp.getBoolean(key, true)
+        Settings.isServiceEnabled = enabled
+
+        if (enabled) {
+            CloudService.start(activity)
+        } else {
+            CloudService.stop(activity)
+        }
     }
 
     override fun onResume() {
