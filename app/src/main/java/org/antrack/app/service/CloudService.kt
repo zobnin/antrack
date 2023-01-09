@@ -21,8 +21,10 @@ import org.antrack.app.service.watcher.UploaderCallback
 import org.antrack.app.watcher.CloudWatcher
 import org.antrack.app.watcher.FileWatcher
 import unpackAsset
+import java.util.concurrent.Executors
 
 class CloudService : Service() {
+    private val executor = Executors.newSingleThreadExecutor()
     private val receivers by lazy { Receivers() }
     private val cc by lazy { CommandRunner() }
     private val intentActionProcessor by lazy { IntentActionProcessor(cc) }
@@ -62,7 +64,9 @@ class CloudService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        init1()
+        executor.submit {
+            init1()
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -70,7 +74,7 @@ class CloudService : Service() {
             startForeground(1111, createNotification().build())
         }
 
-        Env.executor.submit {
+        executor.submit {
             wakelock {
                 init1()
                 processAction(intent)
@@ -84,7 +88,7 @@ class CloudService : Service() {
         try {
             if (initDone) return
 
-            Cloud.connect()
+            Cloud.connect(Settings.plugin, Settings.token)
 
             logD(className, "Service started")
 

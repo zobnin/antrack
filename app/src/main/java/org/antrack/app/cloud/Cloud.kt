@@ -15,27 +15,24 @@ object Cloud {
     var isConnected = false
         private set
 
-    fun connect(): Boolean {
+    fun connect(providerName: String, token: String) {
         if (isConnected) {
-            return true
+            return
         }
 
-        val token = Settings.token
-        if (token.isEmpty()) {
-            return false
+        if (token.isBlank()) {
+            throw IllegalStateException("Token is empty")
         }
 
-        if (Settings.plugin == "dropbox") {
+        if (providerName == "dropbox") {
             provider = Dropbox(token)
             isConnected = getConnectionStatus()
 
             if (isConnected) {
                 logD(className, "Connected to cloud")
-                return true
+                return
             }
         }
-
-        return false
     }
 
     private fun getConnectionStatus(): Boolean {
@@ -55,22 +52,16 @@ object Cloud {
     }
 
     fun putFile(lFile: String, rFile: String) {
-        if (!connect()) return
-
         logD(className, "Put file $lFile as $rFile")
         provider?.putFile(lFile, rFile)
     }
 
     fun getFile(lFile: String, rFile: String) {
-        if (!connect()) return
-
         logD(className, "Get file $rFile as $lFile")
         provider?.getFile(lFile, rFile)
     }
 
     fun watchForChanges(dir: String): List<String>? {
-        if (!connect()) return null
-
         logD(className, "Start watching")
         return provider?.watchForChanges(dir)
     }
