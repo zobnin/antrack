@@ -21,6 +21,8 @@ class ModulesTests(private val context: Context) : Test() {
     override fun run(): List<String> {
         // Slows down the tests
         FileWatcher.removeCallback("service_uploader")
+        // Multithreaded execution don't allow to read result on time
+        FileWatcher.multithreded = false
 
         val screenshotResult = when {
             Shell.checkSu() -> testScreenshotModule()
@@ -60,6 +62,7 @@ class ModulesTests(private val context: Context) : Test() {
             "wipesd: " + "not testable",
         )
 
+        FileWatcher.multithreded = true
         FileWatcher.addCallback("service_uploader", UploaderCallback())
 
         return results

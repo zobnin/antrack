@@ -30,7 +30,7 @@ object CloudWatcher : IWatcher {
 
     private fun startWatcherThread() {
         active = true
-        Thread {
+        Env.executor.submit {
             logD(className, "Start thread for device: ${Env.deviceNameId}")
 
             while (active) {
@@ -52,7 +52,7 @@ object CloudWatcher : IWatcher {
                     break
                 }
             }
-        }.start()
+        }
     }
 
     private fun processFile(path: String) {

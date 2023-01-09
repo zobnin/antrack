@@ -8,6 +8,8 @@ import org.antrack.app.libs.RecursiveFileObserver
 import java.util.concurrent.ConcurrentHashMap
 
 object FileWatcher : IWatcher, RecursiveFileObserver(Env.mainDirPath) {
+    var multithreded = true
+
     override val callbacks = ConcurrentHashMap<String, IWatcherCallback>()
 
     override fun onEvent(event: Int, path: String?) {
@@ -18,6 +20,16 @@ object FileWatcher : IWatcher, RecursiveFileObserver(Env.mainDirPath) {
         if (filePath == null) return
         if (filePath.endsWith(LOG_FILE)) return
 
+        if (multithreded) {
+            Env.executor.submit {
+                executeCallbacks(filePath)
+            }
+        } else {
+            executeCallbacks(filePath)
+        }
+    }
+
+    private fun executeCallbacks(filePath: String) {
         val path = filePath.replace("//", "/")
 
         callbacks.values
