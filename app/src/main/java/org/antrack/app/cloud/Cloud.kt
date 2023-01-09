@@ -8,17 +8,12 @@ import org.antrack.app.functions.className
 import org.antrack.app.functions.isNetConnected
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.sleepS
-import java.util.*
 
 object Cloud {
     private var provider: ICloudProvider? = null
 
     var isConnected = false
         private set
-
-    init {
-        connect()
-    }
 
     fun connect(): Boolean {
         if (isConnected) {
@@ -47,7 +42,6 @@ object Cloud {
         return provider?.getStatus()?.isConnected ?: false
     }
 
-    @Throws(InterruptedException::class)
     fun auth(activity: Activity) {
         if (Settings.plugin == "dropbox") {
             provider = Dropbox().apply {

@@ -84,6 +84,8 @@ class CloudService : Service() {
         try {
             if (initDone) return
 
+            Cloud.connect()
+
             logD(className, "Service started")
 
             setAlarm()

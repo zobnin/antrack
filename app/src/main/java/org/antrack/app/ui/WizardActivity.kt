@@ -165,9 +165,6 @@ class WizardActivity : PermissionsActivity() {
 
     private fun exit() {
         wizardComplete()
-        // Pw is singleton and will be used by service and activity
-        Cloud.connect()
-
         setResult(RESULT_OK, intent)
         finish()
     }
