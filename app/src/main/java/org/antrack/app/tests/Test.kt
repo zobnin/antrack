@@ -1,8 +1,6 @@
 package org.antrack.app.tests
 
-import org.antrack.app.DONE
 import org.antrack.app.Env
-import org.antrack.app.RESULT_FILE
 import org.antrack.app.functions.className
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.purgeDir
@@ -35,6 +33,24 @@ abstract class Test {
             e.printStackTrace()
             return false
         }
+    }
+
+    fun testModuleResult(
+        moduleName: String,
+        command: String,
+        expected: String,
+    ): Boolean {
+        val resultFile = File(Env.resultFilePath)
+        resultFile.delete()
+        ctlFile.writeText(command)
+
+        while (!resultFile.exists() || resultFile.length() < 1) {
+            sleep(100)
+        }
+
+        logD(className, "Result: " + resultFile.readText())
+
+        return testResult(moduleName, expected)
     }
 
     private fun noOutTest(
@@ -87,10 +103,10 @@ abstract class Test {
         return File(Env.mainDirPath + module.result()).readText().trim()
     }
 
-    private fun testResult(moduleName: String): Boolean {
-        return File(Env.mainDirPath + RESULT_FILE)
+    private fun testResult(moduleName: String, expected: String): Boolean {
+        return File(Env.resultFilePath)
             .readText()
             .trim()
-            .contains("$moduleName $DONE")
+            .contains("$moduleName $expected")
     }
 }

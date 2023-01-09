@@ -22,35 +22,40 @@ class ModulesTests(private val context: Context) : Test() {
         // Slows down the tests
         FileWatcher.removeCallback("service_uploader")
 
-        val screenShotModResult = when {
+        val screenshotResult = when {
             Shell.checkSu() -> testScreenshotModule()
             else -> "no root rights"
         }
 
-        val notifyModResult = when (PackageManager.PERMISSION_GRANTED) {
+        val notifyResult = when (PackageManager.PERMISSION_GRANTED) {
             context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) -> testNotifyModule()
             else -> "no notifications permission"
         }
 
+        val audioResult = testAudioWithoutArg() && testAudioWithWrongArg() && testAudio()
+        val cameraResult = testCameraWithoutArg() && testCameraWithWrongArg() && testCamera()
+        val cmdResult = testCmdResultWithoutArg() && testCmd()
+        val playResult = testPlayWithoutArg() && testPlayWithWrongArg() && testPlay()
+
         val results = listOf(
             // FIXME alarm влияет на результат теста play
-            "alarm: " + testAlarmModule(),
-            "apps: " + testAppsModule(),
-            "audio: " + testAudioModule(),
-            "camera: " + testCameraModule(),
-            "cmd: " + testCmdModule(),
-            "contacts: " + testContactsModule(),
-            "dumpsms: " + testDumpSmsModule(),
-            "dial: " + "not testable",
-            "hide: " + testHideModule(),
-            "info: " + testInfoModule(),
-            "status: " + testStatusModule(),
-            "startapp: " + "not testable",
-            "locate: " + testLocateModule(),
-            "notify: " + notifyModResult,
+            "alarm: " + testAlarm(),
+            "apps: " + testApps(),
+            "audio: " + audioResult,
+            "camera: " + cameraResult,
+            "cmd: " + cmdResult,
+            "contacts: " + testContacts(),
+            "dumpsms: " + testDumpSms(),
+            "dial: " + testDialWithoutArg(),
+            "hide: " + testHide(),
+            "info: " + testInfo(),
+            "status: " + testStatus(),
+            "startapp: " + testStartAppWithoutArg(),
+            "locate: " + testLocate(),
+            "notify: " + notifyResult,
             "logcalls: " + "not testable",
-            "play: " + testPlayModule(),
-            "screenshot: " + screenShotModResult,
+            "play: " + playResult,
+            "screenshot: " + screenshotResult,
             "sms: " + "not testable",
             "wipesd: " + "not testable",
         )
@@ -60,13 +65,13 @@ class ModulesTests(private val context: Context) : Test() {
         return results
     }
 
-    private fun testAlarmModule(): Boolean {
+    private fun testAlarm(): Boolean {
         return testModule("alarm") { out ->
             isMusicActive()
         }
     }
 
-    private fun testAppsModule(): Boolean {
+    private fun testApps(): Boolean {
         return testModule("apps") { out ->
             out.split("\n", limit = 2)
                 .first()
@@ -75,13 +80,29 @@ class ModulesTests(private val context: Context) : Test() {
         }
     }
 
-    private fun testAudioModule(): Boolean {
+    private fun testAudioWithoutArg(): Boolean {
+        return testModuleResult("audio", "audio", "error")
+    }
+
+    private fun testAudioWithWrongArg(): Boolean {
+        return testModuleResult("audio", "audio 601", "error")
+    }
+
+    private fun testAudio(): Boolean {
         return testModule("audio", "audio 1") { out ->
             out.split("\n").first().endsWith(".3gp")
         }
     }
 
-    private fun testCameraModule(): Boolean {
+    private fun testCameraWithoutArg(): Boolean {
+        return testModuleResult("camera", "camera", "error")
+    }
+
+    private fun testCameraWithWrongArg(): Boolean {
+        return testModuleResult("camera", "camera foobar", "error")
+    }
+
+    private fun testCamera(): Boolean {
         return testModule("camera", "camera front") { out ->
             try {
                 val isNameOk = out.split("\n").first().endsWith(".jpg")
@@ -94,8 +115,12 @@ class ModulesTests(private val context: Context) : Test() {
         }
     }
 
+    private fun testCmdResultWithoutArg(): Boolean {
+        return testModuleResult("cmd", "cmd", "error")
+    }
+
     @SuppressLint("SimpleDateFormat")
-    private fun testCmdModule(): Boolean {
+    private fun testCmd(): Boolean {
         return testModule("cmd", "cmd uname") { out ->
             val outLines = out.split("\n")
 
@@ -111,7 +136,7 @@ class ModulesTests(private val context: Context) : Test() {
         }
     }
 
-    private fun testContactsModule(): Boolean {
+    private fun testContacts(): Boolean {
         return testModule("contacts") { out ->
             out.split("\n")
                 .first()
@@ -120,7 +145,7 @@ class ModulesTests(private val context: Context) : Test() {
         }
     }
 
-    private fun testDumpSmsModule(): Boolean {
+    private fun testDumpSms(): Boolean {
         return testModule("dumpsms") { out ->
             try {
                 val fileNames = out.split("\n")
@@ -140,7 +165,11 @@ class ModulesTests(private val context: Context) : Test() {
         }
     }
 
-    private fun testHideModule(): Boolean {
+    private fun testDialWithoutArg(): Boolean {
+        return testModuleResult("dial", "dial", "error")
+    }
+
+    private fun testHide(): Boolean {
         return testModule("hide", "hide on") {
             val pm = context.packageManager
             val cn = ComponentName(context, MainActivity::class.java)
@@ -155,13 +184,13 @@ class ModulesTests(private val context: Context) : Test() {
         }
     }
 
-    private fun testInfoModule(): Boolean {
+    private fun testInfo(): Boolean {
         return testModule("info") { out ->
             out.contains("Device name:")
         }
     }
 
-    private fun testLocateModule(): Boolean {
+    private fun testLocate(): Boolean {
         // FIXME проверять формат
         return testModule("locate") { out ->
             out.split("\n")
@@ -180,7 +209,15 @@ class ModulesTests(private val context: Context) : Test() {
         }
     }
 
-    private fun testPlayModule(): Boolean {
+    private fun testPlayWithoutArg(): Boolean {
+        return testModuleResult("play", "play", "error")
+    }
+
+    private fun testPlayWithWrongArg(): Boolean {
+        return testModuleResult("play", "play /foo/bar", "error")
+    }
+
+    private fun testPlay(): Boolean {
         val samplePath = "/data/data/${BuildConfig.APPLICATION_ID}/alarm.ogg"
         return testModule("play", "play $samplePath") { out ->
             isMusicActive()
@@ -200,10 +237,14 @@ class ModulesTests(private val context: Context) : Test() {
         }
     }
 
-    private fun testStatusModule(): Boolean {
+    private fun testStatus(): Boolean {
         return testModule("status") { out ->
             out.contains("Battery:")
         }
+    }
+
+    private fun testStartAppWithoutArg(): Boolean {
+        return testModuleResult("startapp", "startapp", "error")
     }
 
     private fun isMusicActive(): Boolean {
