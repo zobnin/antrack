@@ -23,6 +23,7 @@ class CommandRunner {
 
     fun executeBootstrap() {
         val iStream = App.context.assets.open(BOOTSTRAP_ASSET)
+
         BufferedReader(InputStreamReader(iStream)).use { reader ->
             reader.forEachLine { line ->
                 if (line.length > 2) {
@@ -42,16 +43,18 @@ class CommandRunner {
         }
 
         // Parse multi-command
-        cmd.skipInternalCmdFlag()
-            .split(";")
-            .dropLastWhile { it.isEmpty() }
-            .map { it.trim() }
-            .map { it.split(" ", limit = 2) }
-            .associate { it[0] to it.getOrElse(1) { "" } }
-            .forEach { (cmd, args) ->
-                executeSingleCommand(cmd, args)
-            }
+        parseMultiCommand(cmd).forEach { (cmd, args) ->
+            executeSingleCommand(cmd, args)
+        }
     }
+
+    private fun parseMultiCommand(cmd: String) = cmd
+        .skipInternalCmdFlag()
+        .split(";")
+        .dropLastWhile { it.isEmpty() }
+        .map { it.trim() }
+        .map { it.split(" ", limit = 2) }
+        .associate { it[0] to it.getOrElse(1) { "" } }
 
     // Commands that start with "!" are internal: no write /result
     private fun String.skipInternalCmdFlag(): String {
