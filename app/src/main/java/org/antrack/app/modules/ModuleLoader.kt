@@ -4,6 +4,7 @@ import android.content.Context
 import copyTo
 import dalvik.system.DexClassLoader
 import org.antrack.app.APP_NAME
+import org.antrack.app.MODULES_ASSET_DIR
 import org.antrack.app.functions.className
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.logE
@@ -26,7 +27,9 @@ class ModuleLoader(
         val files = File(modDir).listFiles()
             ?: throw IllegalArgumentException("There is no module files")
 
-        return files.toList().filter { it.isFile }
+        return files
+            .toList()
+            .filter { it.isFile }
     }
 
     private fun loadModules(
@@ -36,7 +39,7 @@ class ModuleLoader(
         val hashmap = mutableMapOf<String, ModuleInterface>()
 
         files.forEach { file ->
-            val modName = file.name.removeSuffix(".jar")
+            val modName = file.name.removeJarExt()
             try {
                 val modObj = loadClass(file).newInstance() as ModuleInterface
                 hashmap[modName] = modObj
@@ -55,20 +58,20 @@ class ModuleLoader(
             file.path, null, null, javaClass.classLoader
         )
 
-        val moduleName = file.name.removeSuffix(".jar")
-        val className = "$APP_NAME.modules.$moduleName.Module"
+        val moduleName = file.name.removeJarExt()
+        val className = moduleName.toModuleClassName()
 
         return classLoader.loadClass(className)
     }
 
     private fun unpackModules(): Boolean {
-        val modules = context.assets.list("modules")
+        val modules = context.assets.list(MODULES_ASSET_DIR)
             ?: throw IllegalStateException("no modules")
 
         modules.forEach { module ->
             try {
                 logD(className, "unpackModules: unpacking $module")
-                val iStream = context.assets.open("modules/$module")
+                val iStream = context.assets.open("$MODULES_ASSET_DIR/$module")
                 val oStream = File("$modDir/$module").outputStream()
                 iStream.copyTo(oStream)
             } catch (e: Exception) {
@@ -78,4 +81,8 @@ class ModuleLoader(
 
         return true
     }
+
+    private fun String.removeJarExt() = removeSuffix(".jar")
+
+    private fun String.toModuleClassName() = "$APP_NAME.modules.$this.Module"
 }

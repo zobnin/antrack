@@ -21,20 +21,17 @@ object Modules {
     }
 
     fun command(moduleName: String, args: List<String>): String {
-        val module = modules[moduleName]
-        if (module != null) {
-            if (module.usesRoot() && !checkForRoot()) return "error: no root rights"
-            if (module.usesAdmin() && !checkForAdmin()) return "error: no admin rights"
+        val module = modules[moduleName] ?: return "error: no such module"
 
-            return try {
-                module.onCommand(App.context, args.toTypedArray())
-            } catch (e: Exception) {
-                e.printStackTrace()
-                "error: ${e.message.toString()}"
-            }
+        if (module.usesRoot() && !checkForRoot()) return "error: no root rights"
+        if (module.usesAdmin() && !checkForAdmin()) return "error: no admin rights"
+
+        return try {
+            module.onCommand(App.context, args.toTypedArray())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "error: ${e.message.toString()}"
         }
-
-        return "error: no such module"
     }
 
     fun run(action: String, extra: String) {
@@ -54,15 +51,7 @@ object Modules {
                     "screenOn" -> module.onScreenOn(App.context)
                     "incomingCall" -> module.onIncomingCall(App.context, extra)
                     "outgoingCall" -> module.onOutgoingCall(App.context, extra)
-                    "load" -> {
-                        if (
-                            module.result() != null &&
-                            module.result().endsWith("/")
-                        ) {
-                            File(Env.mainDirPath + module.result()).mkdirs()
-                        }
-                        module.onLoad(App.context)
-                    }
+                    "load" -> processLoadAction(module)
                 }
             } catch (e: Exception) {
                 logE(className, "error: ${e.message}")
@@ -79,8 +68,8 @@ object Modules {
 
             for ((key) in modules) {
                 val module = modules[key]
-
                 var info = ""
+
                 info += "Name: $key\n"
                 info += "Version: ${module!!.version()}\n"
                 info += "Author: ${module.author()}\n"
@@ -88,19 +77,16 @@ object Modules {
                 info += "Command: ${module.command()}\n"
                 info += "Uses root: ${module.usesRoot()}\n"
                 info += "Uses admin: ${module.usesAdmin()}\n"
+
                 info += "Result file: "
-                info += when {
-                    module.result() == "" -> "none\n"
-                    else -> module.result() + "\n"
-                }
+                info += module.result() ?: "none"
+                info += "\n"
 
                 info += "Start when: "
-                info += when {
-                    module.startWhen() != null -> module.startWhen().joinToString(" ")
-                    else -> "never"
-                }
+                info += module.startWhen()?.joinToString(" ") ?: "never"
+                info += "\n"
 
-                info += "\n\n"
+                info += "\n"
                 writer.write(info)
             }
             writer.close()
@@ -114,8 +100,7 @@ object Modules {
 
     fun writeJsonFile(): String {
         try {
-            val fileName = Env.mainDirPath + MODULES_JSON_FILE
-            FileWriter(fileName).use { writer ->
+            FileWriter(Env.mainDirPath + MODULES_JSON_FILE).use { writer ->
                 modules.forEach { (name, module) ->
                     val json = genJson(name, module)
                     writer.write(json)
@@ -139,6 +124,17 @@ object Modules {
         }
 
         return emptyMap()
+    }
+
+    private fun processLoadAction(module: ModuleInterface) {
+        if (
+            module.result() != null &&
+            module.result().endsWith("/")
+        ) {
+            File(Env.mainDirPath + module.result()).mkdirs()
+        }
+
+        module.onLoad(App.context)
     }
 
     private fun genJson(key: String, module: ModuleInterface): String {

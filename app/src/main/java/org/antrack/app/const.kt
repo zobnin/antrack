@@ -16,6 +16,7 @@ const val LONG_POLL_TIMEOUT = 300
 const val APP_NAME = "org.antrack.app"
 const val DEFAULT_UPDATE_INTERVAL = 30L
 
+const val MODULES_ASSET_DIR = "modules"
 const val MODULES_DIR = "/modules/"
 const val MODULES_FILE = "/modules"
 const val MODULES_JSON_FILE = "/modules.json"
