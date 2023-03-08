@@ -7,7 +7,7 @@ import java.io.InputStreamReader
 object Shell {
 
     fun checkSuRun(): Boolean {
-        val uid = run("id", true, true)
+        val uid = run("id", su = true, out = true)
         return uid != null && uid.startsWith("uid=0")
     }
 
@@ -33,10 +33,7 @@ object Shell {
     ): String? {
 
         return try {
-            val sh = when {
-                su -> "su"
-                else -> "sh"
-            }
+            val sh = if (su) "su" else "sh"
 
             val process = Runtime.getRuntime().exec(arrayOf(sh, "-c", cmd))
             if (!out) return null
