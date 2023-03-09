@@ -12,7 +12,6 @@ class Receivers {
     private var registered = false
 
     private val context = App.context
-    private val connChangeReceiver = ConnChangeReceiver()
     private val phoneStateReceiver = PhoneStateReceiver()
     private val screenOnReceiver = ScreenOnReceiver()
     private val simChangeReceiver = SimChangeReceiver()
@@ -20,10 +19,6 @@ class Receivers {
     @SuppressLint("InlinedApi")
     fun registerPersistentReceivers() {
         if (registered) return
-
-        registerExtReceiver(connChangeReceiver, IntentFilter().apply {
-            addAction("android.net.CONNECTIVITY_CHANGE")
-        })
 
         registerExtReceiver(phoneStateReceiver, IntentFilter().apply {
             addAction("android.intent.action.PHONE_STATE")

@@ -11,10 +11,12 @@ import org.antrack.app.service.CloudService
 
 class BootCompletedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        logD(className, "Booted")
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+            logD(className, "Booted")
 
-        if (Settings.startAtBoot) {
-            CloudService.start(context)
+            if (Settings.startAtBoot) {
+                CloudService.start(context)
+            }
         }
     }
 }
