@@ -7,7 +7,7 @@ import java.io.*
 import java.util.*
 
 fun logD(tag: String, msg: String) {
-    if (LOG_TO_LOGCAT) Log.d(tag, msg)
+    if (LOG_TO_LOGCAT) Log.d("AnTrack", "$tag: $msg")
     if (LOG_TO_FILE) addLineToFile(msg)
 }
 

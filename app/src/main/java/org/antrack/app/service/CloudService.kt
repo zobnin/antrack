@@ -163,7 +163,7 @@ class CloudService : Service() {
     private fun getCtlqFile() {
         try {
             if (Cloud.isConnected) {
-                Cloud.getFile(Env.ctlqFilePath, Env.cloudCtlqPath)
+                Cloud.getFile(Env.cloudCtlqPath, Env.ctlqFilePath)
             }
         } catch (e: Exception) {
             logE(className, "Can't download ctlq file: ${e.message}")

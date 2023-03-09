@@ -28,6 +28,7 @@ class UploaderCallback : IWatcherCallback {
             }
         } catch (e: Exception) {
             logE(className, "Error: ${e.message}")
+            e.printStackTrace()
         }
     }
 

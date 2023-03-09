@@ -56,9 +56,9 @@ object Cloud {
         provider?.putFile(lFile, rFile)
     }
 
-    fun getFile(lFile: String, rFile: String) {
+    fun getFile(rFile: String, lFile: String) {
         logD(className, "Get file $rFile as $lFile")
-        provider?.getFile(lFile, rFile)
+        provider?.getFile(rFile, lFile)
     }
 
     fun watchForChanges(dir: String): List<String>? {

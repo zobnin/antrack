@@ -13,10 +13,12 @@ class CloudCtlChangeCallback : IWatcherCallback {
 
     override fun onFileUpdated(path: String) {
         try {
-            if (Cloud.isConnected)
-                Cloud.getFile(Env.mainDirPath + "/" + path, path)
+            if (Cloud.isConnected) {
+                Cloud.getFile(path, Env.appDirPath + path)
+            }
         } catch (e: Exception) {
             logE(className, "Error: $e")
+            e.printStackTrace()
         }
     }
 }

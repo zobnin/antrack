@@ -32,6 +32,7 @@ class LocalCtlChangeCallback(
             }
         } catch (e: Exception) {
             logE(className, "Error: ${e.message}")
+            e.printStackTrace()
         }
     }
 

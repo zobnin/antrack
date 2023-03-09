@@ -12,14 +12,6 @@ object CloudWatcher : IWatcher {
     override val callbacks = ConcurrentHashMap<String, IWatcherCallback>()
     var active = false
 
-    override fun addCallback(name: String, callback: IWatcherCallback) {
-        callbacks[name] = callback
-    }
-
-    override fun removeCallback(name: String) {
-        callbacks.remove(name)
-    }
-
     override fun startWatching() {
         startWatcherThread()
     }
