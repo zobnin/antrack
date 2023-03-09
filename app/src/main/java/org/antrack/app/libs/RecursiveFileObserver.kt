@@ -22,6 +22,7 @@ open class RecursiveFileObserver(
         val stack = Stack<String>().apply {
             push(path)
         }
+
         while (!stack.empty()) {
             val parent = stack.pop()
             observers.add(SingleFileObserver(parent, mask))
@@ -29,15 +30,9 @@ open class RecursiveFileObserver(
             val path = File(parent)
             val files = path.listFiles() ?: continue
 
-            files.forEach { file ->
-                if (
-                    file.isDirectory &&
-                    file.name != "." &&
-                    file.name != ".."
-                ) {
-                    stack.push(file.path)
-                }
-            }
+            files
+                .filter { it.isRegularDirectory }
+                .forEach { stack.push(it.path) }
         }
 
         observers.forEach {
@@ -58,9 +53,15 @@ open class RecursiveFileObserver(
         private val mPath:
         String, mask: Int
     ) : FileObserver(mPath, mask) {
+
         override fun onEvent(event: Int, path: String?) {
             val newPath = "$mPath/$path"
             this@RecursiveFileObserver.onEvent(event, newPath)
         }
     }
+
+    private val File.isRegularDirectory: Boolean
+        get() = isDirectory &&
+                name != "." &&
+                name != ".."
 }

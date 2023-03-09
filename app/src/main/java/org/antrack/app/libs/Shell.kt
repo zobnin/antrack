@@ -5,6 +5,17 @@ import java.io.File
 import java.io.InputStreamReader
 
 object Shell {
+    private val suPaths = arrayOf(
+        "/sbin/su",
+        "/system/bin/su",
+        "/system/xbin/su",
+        "/data/local/xbin/su",
+        "/data/local/bin/su",
+        "/system/sd/xbin/su",
+        "/system/bin/failsafe/su",
+        "/data/local/su",
+        "/su/bin/su"
+    )
 
     fun checkSuRun(): Boolean {
         val uid = run("id", su = true, out = true)
@@ -12,18 +23,7 @@ object Shell {
     }
 
     fun checkSu(): Boolean {
-        val paths = arrayOf(
-            "/system/app/Superuser.apk", "/sbin/su", "/system/bin/su",
-            "/system/xbin/su", "/data/local/xbin/su", "/data/local/bin/su",
-            "/system/sd/xbin/su", "/system/bin/failsafe/su", "/data/local/su",
-            "/su/bin/su"
-        )
-
-        for (path in paths) {
-            if (File(path).exists()) return true
-        }
-
-        return false
+        return suPaths.find { File(it).exists() } != null
     }
 
     fun run(

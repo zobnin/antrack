@@ -79,5 +79,4 @@ object Cloud {
                 seconds *= 2
         }
     }
-
 }
