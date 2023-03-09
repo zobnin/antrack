@@ -17,7 +17,7 @@ private fun lock() {
     try {
         wakeLock.acquire(1 * 60 * 1000L /* 1 minute */)
     } catch (e: Exception) {
-        logE("wakelock", "Error getting Lock: " + e.message)
+        e.printStackTrace()
     }
 }
 

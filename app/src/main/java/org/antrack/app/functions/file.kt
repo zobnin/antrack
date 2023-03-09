@@ -24,7 +24,6 @@ fun File.readAsList(): List<String> {
     }
 }
 
-
 fun File.purgeDir() {
     try {
         for (file in listFiles()) file.delete()
