@@ -12,6 +12,9 @@ import java.io.File
 abstract class Test {
     private val ctlFile = File(Env.ctlFilePath)
 
+    open fun before() {}
+    open fun after() {}
+
     abstract fun run(): List<String>
 
     fun testModule(

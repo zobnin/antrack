@@ -7,14 +7,6 @@ import org.antrack.app.functions.highlightBooleans
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.toast
 
-/*
- * What to test
- * - Internal commands
- * - Module commands
- * - Multi commands
- * - Dumb cloud provider to test cloud send
- */
-
 class TestRunner(private val activity: Activity) {
 
     fun run() {
@@ -22,21 +14,35 @@ class TestRunner(private val activity: Activity) {
         activity.toast("Testing started")
 
         Thread {
-            val results = ModulesTests(activity.applicationContext).run()
+            val modTestResults = runModulesTests()
+
             activity.runOnUiThread {
-                showResultDialog(
-                    results.joinToString("\n")
-                        .highlightBooleans()
-                )
+                showResultDialog(modTestResults)
             }
         }.start()
     }
 
-    private fun showResultDialog(result: CharSequence) {
+    private fun runModulesTests(): List<String> {
+        val modTests = ModulesTests(activity.applicationContext)
+
+        modTests.before()
+        val results = modTests.run()
+        modTests.after()
+
+        return results
+    }
+
+    private fun showResultDialog(results: List<String>) {
         AlertDialog.Builder(activity)
             .setTitle("Test results")
-            .setMessage(result)
+            .setMessage(formatResults(results))
             .setPositiveButton(android.R.string.ok) { _, _ -> }
             .show()
+    }
+
+    private fun formatResults(results: List<String>): CharSequence {
+        return results
+            .joinToString("\n")
+            .highlightBooleans()
     }
 }

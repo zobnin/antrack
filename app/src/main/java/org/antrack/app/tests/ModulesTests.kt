@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.media.AudioManager
 import app.BuildConfig
 import org.antrack.app.libs.Shell
+import org.antrack.app.service.CloudService
 import org.antrack.app.service.watcher.UploaderCallback
 import org.antrack.app.ui.MainActivity
 import org.antrack.app.watcher.FileWatcher
@@ -18,12 +19,20 @@ import java.text.SimpleDateFormat
 
 
 class ModulesTests(private val context: Context) : Test() {
-    override fun run(): List<String> {
+    override fun before() {
         // Slows down the tests
         FileWatcher.removeCallback("service_uploader")
         // Multithreaded execution don't allow to read result on time
         FileWatcher.multithreded = false
+    }
 
+    override fun after() {
+        FileWatcher.multithreded = true
+        CloudService.stop(context)
+        CloudService.start(context)
+    }
+
+    override fun run(): List<String> {
         val screenshotResult = when {
             Shell.checkSu() -> testScreenshotModule()
             else -> "no root rights"
