@@ -16,6 +16,7 @@ class Alarm : BroadcastReceiver() {
 
     companion object {
         private val am by lazy { App.context.getSystemService(Context.ALARM_SERVICE) as AlarmManager }
+
         private val pIntent by lazy {
             PendingIntent.getBroadcast(
                 App.context,
