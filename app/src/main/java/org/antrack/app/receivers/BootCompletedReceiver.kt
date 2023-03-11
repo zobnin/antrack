@@ -13,10 +13,13 @@ class BootCompletedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             logD(className, "Booted")
+            startServiceIfNeeded(context)
+        }
+    }
 
-            if (Settings.startAtBoot) {
-                CloudService.start(context)
-            }
+    private fun startServiceIfNeeded(context: Context) {
+        if (Settings.startAtBoot) {
+            CloudService.start(context)
         }
     }
 }
