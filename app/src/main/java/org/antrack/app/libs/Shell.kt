@@ -34,24 +34,27 @@ object Shell {
 
         return try {
             val sh = if (su) "su" else "sh"
-
             val process = Runtime.getRuntime().exec(arrayOf(sh, "-c", cmd))
-            if (!out) return null
-
-            BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
-                var read: Int
-                val buffer = CharArray(4096)
-                val output = StringBuilder()
-
-                while (reader.read(buffer).also { read = it } > 0) {
-                    output.append(buffer, 0, read)
-                }
-
-                process.waitFor()
-                output.toString()
-            }
+            readCommandOutIfNeeded(out, process)
         } catch (e: Exception) {
             throw RuntimeException(e)
+        }
+    }
+
+    private fun readCommandOutIfNeeded(out: Boolean, process: Process): String? {
+        if (!out) return null
+
+        return BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+            var read: Int
+            val buffer = CharArray(4096)
+            val output = StringBuilder()
+
+            while (reader.read(buffer).also { read = it } > 0) {
+                output.append(buffer, 0, read)
+            }
+
+            process.waitFor()
+            output.toString()
         }
     }
 }
