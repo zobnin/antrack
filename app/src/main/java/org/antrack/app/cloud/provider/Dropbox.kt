@@ -28,23 +28,24 @@ class Dropbox(token: String = "") : ICloudProvider {
     private var watchCursors = hashMapOf<String, String>()
 
     init {
-        val credential = try {
+        val credential = getCredential(token)
+        initDropbox(credential, token)
+    }
+
+    private fun getCredential(token: String): DbxCredential? {
+        return try {
             DbxCredential.Reader.readFully(token)
         } catch (e: Exception) {
             null
         }
+    }
 
+    private fun initDropbox(credential: DbxCredential?, token: String) {
         if (credential != null) {
             initDropbox(credential)
         } else {
             initDropboxOld(token)
         }
-    }
-
-    private fun initDropboxOld(token: String) {
-        d("Dropbox token: $token")
-
-        client = DbxClientV2(config, token)
     }
 
     private fun initDropbox(credential: DbxCredential) {
@@ -55,6 +56,12 @@ class Dropbox(token: String = "") : ICloudProvider {
         d("Dropbox token expires at: $expiresAtStr")
 
         client = DbxClientV2(config, credential)
+    }
+
+    private fun initDropboxOld(token: String) {
+        d("Dropbox token: $token")
+
+        client = DbxClientV2(config, token)
     }
 
     override fun auth(activity: Activity) {
@@ -165,15 +172,19 @@ class Dropbox(token: String = "") : ICloudProvider {
         rPathTo: String
     ): CloudMetadata {
 
+        createFolder(rPathTo)
+
+        val result = client.files().moveV2(rPathFrom, rPathTo)
+
+        return dropboxMetaToCloudMeta(result.metadata)
+    }
+
+    private fun createFolder(rPathTo: String) {
         try {
             client.files().createFolderV2(rPathTo.getBaseDir())
         } catch (e: Exception) {
             //
         }
-
-        val result = client.files().moveV2(rPathFrom, rPathTo)
-
-        return dropboxMetaToCloudMeta(result.metadata)
     }
 
     private fun String.getBaseDir(): String {
@@ -247,8 +258,9 @@ class Dropbox(token: String = "") : ICloudProvider {
         val fileList2 = ArrayList<CloudMetadata>()
 
         for (meta in fileList1) {
-            if (meta.path.endsWith("/"))
+            if (meta.path.endsWith("/")) {
                 listDirRecursive(meta.path, fileList)
+            }
             fileList2.add(meta)
         }
 
@@ -267,15 +279,19 @@ class Dropbox(token: String = "") : ICloudProvider {
         rDir: String
     ): Boolean {
 
-        val result = if (checkCursors[rDir] == null) {
-            client.files().listFolder(rDir)
-        } else {
-            client.files().listFolderContinue(checkCursors[rDir])
-        }
+        val result = listFolder(rDir)
 
         checkCursors[rDir] = result.cursor
 
         return result.entries.isNotEmpty()
+    }
+
+    private fun listFolder(rDir: String): ListFolderResult {
+        return if (checkCursors[rDir] == null) {
+            client.files().listFolder(rDir)
+        } else {
+            client.files().listFolderContinue(checkCursors[rDir])
+        }
     }
 
     override fun watchForChanges(
