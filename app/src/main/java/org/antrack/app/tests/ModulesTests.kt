@@ -1,7 +1,6 @@
 package org.antrack.app.tests
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
@@ -15,7 +14,6 @@ import org.antrack.app.service.watcher.UploaderCallback
 import org.antrack.app.ui.MainActivity
 import org.antrack.app.watcher.FileWatcher
 import java.io.File
-import java.text.SimpleDateFormat
 
 
 class ModulesTests(private val context: Context) : Test() {
@@ -78,17 +76,18 @@ class ModulesTests(private val context: Context) : Test() {
     }
 
     private fun testAlarm(): Boolean {
-        return testModule("alarm") { out ->
+        return testModule("alarm") {
             isMusicActive()
         }
     }
 
     private fun testApps(): Boolean {
         return testModule("apps") { out ->
-            out.split("\n", limit = 2)
+            val fields = out.split("\n", limit = 2)
                 .first()
-                .split(": ").size == 2 &&
-                    out.contains("AnTrack: org.antrack.app")
+                .split(": ")
+
+            fields.size == 2 && out.contains("AnTrack: org.antrack.app")
         }
     }
 
@@ -119,6 +118,7 @@ class ModulesTests(private val context: Context) : Test() {
             try {
                 val isNameOk = out.split("\n").first().endsWith(".jpg")
                 val lastFile = File(out.split("\n").last())
+
                 isNameOk && lastFile.exists() && lastFile.length() > 0
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -131,17 +131,11 @@ class ModulesTests(private val context: Context) : Test() {
         return testModuleResult("cmd", "cmd", "error")
     }
 
-    @SuppressLint("SimpleDateFormat")
     private fun testCmd(): Boolean {
         return testModule("cmd", "cmd uname") { out ->
             val outLines = out.split("\n")
 
-            val isDateOk = try {
-                SimpleDateFormat("yyyy.MM.dd HH:mm:ss:SSS").parse(outLines[0])
-                true
-            } catch (e: Exception) {
-                false
-            }
+            val isDateOk = isDateStringCorrect("yyyy.MM.dd HH:mm:ss:SSS", outLines[0])
             val isOutOk = outLines[1].trim() == "Linux"
 
             isDateOk && isOutOk
@@ -161,14 +155,24 @@ class ModulesTests(private val context: Context) : Test() {
         return testModule("dumpsms") { out ->
             try {
                 val fileNames = out.split("\n")
-                val inboxFile = File(fileNames.find { it.endsWith("inbox") })
-                val sentFile = File(fileNames.find { it.endsWith("sent") })
+
+                val inboxFileName = fileNames.find { it.endsWith("inbox") }
+                    ?: return@testModule false
+
+                val sentFileName = fileNames.find { it.endsWith("sent") }
+                    ?: return@testModule false
+
+                val inboxFile = File(inboxFileName)
+                val sentFile = File(sentFileName)
+
                 val isInboxOk = inboxFile.readLines()
                     .first()
                     .startsWith("From:")
+
                 val isSentOk = sentFile.readLines()
                     .first()
                     .startsWith("To:")
+
                 isInboxOk && isSentOk
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -187,11 +191,13 @@ class ModulesTests(private val context: Context) : Test() {
             val cn = ComponentName(context, MainActivity::class.java)
             val isActivityDisabled = pm.getComponentEnabledSetting(cn) !=
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+
             pm.setComponentEnabledSetting(
                 cn,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP
             )
+
             isActivityDisabled
         }
     }
@@ -203,11 +209,15 @@ class ModulesTests(private val context: Context) : Test() {
     }
 
     private fun testLocate(): Boolean {
-        // FIXME проверять формат
         return testModule("locate") { out ->
-            out.split("\n")
+            val fields = out.split("\n")
                 .first()
-                .split(" ").size == 4
+                .split(" ")
+
+            val isDateOk = isDateStringCorrect("yyyy.MM.dd HH:mm:ss", fields[0] + " " + fields[1])
+            val isLocationOk = isFloat(fields[2]) && isFloat(fields[3])
+
+            return@testModule fields.size == 4 && isDateOk && isLocationOk
         }
     }
 
@@ -216,7 +226,9 @@ class ModulesTests(private val context: Context) : Test() {
             val nm = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             val notifications = nm.activeNotifications
             val isNotifyVisible = notifications.find { it.id == 0 } != null
+
             nm.cancelAll()
+
             isNotifyVisible
         }
     }
@@ -251,7 +263,11 @@ class ModulesTests(private val context: Context) : Test() {
 
     private fun testStatus(): Boolean {
         return testModule("status") { out ->
-            out.contains("Battery:")
+                    out.contains("Battery:") &&
+                    out.contains("Operator:") &&
+                    out.contains("WiFi:") &&
+                    out.contains("Uptime:") &&
+                    out.contains("Last update:")
         }
     }
 

@@ -2,7 +2,7 @@
 
 ### Settings
 
-NUMBER=79604984718
+NUMBER=123
 PIN=1234
 TIMEOUT=20
 
@@ -36,14 +36,9 @@ CMDS[7]="dial $NUMBER"
 #CMDS[8]="sms $NUMBER hi there"
 CMDS[9]="alarm"
 CMDS[10]="audio 10"
-CMDS[11]="lock $PIN"
-CMDS[12]="lock off"
-CMDS[13]="hide on"
-CMDS[14]="hide off"
-CMDS[15]="cmd uname -a"
-CMDS[16]="dumpsys"
-CMDS[17]="lost 1234"
-CMDS[18]="lost off"
+CMDS[11]="hide on"
+CMDS[12]="hide off"
+CMDS[13]="cmd uname -a"
 
 TMP=/tmp/antrack_test
 rm -rf $TMP
@@ -53,16 +48,16 @@ for cmd in "${CMDS[@]}"; do
     cp -r * $TMP
 
     green "COMMAND: $cmd"
-    echo $cmd > ./control
+    echo $cmd > ./ctl
 
     sleep $TIMEOUT
-    
+
     green -n "RESULT: "
     cat ./result
 
     green "DIFF: "
     diff -r $TMP .
-   
+
     green "Press ENTER..."
     read
 done
