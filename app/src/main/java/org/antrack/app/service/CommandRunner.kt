@@ -8,6 +8,7 @@ import org.antrack.app.functions.className
 import org.antrack.app.functions.formatDate
 import org.antrack.app.functions.logD
 import org.antrack.app.modules.Modules
+import splitMultiCommand
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -42,29 +43,12 @@ class CommandRunner {
             return
         }
 
-        // Parse multi-command
-        parseMultiCommand(cmd).forEach { (cmd, args) ->
-            executeSingleCommand(cmd, args)
-        }
-    }
+        internalCommand = cmd.startsWith("!")
 
-    private fun parseMultiCommand(cmd: String) = cmd
-        .skipInternalCmdFlag()
-        .split(";")
-        .dropLastWhile { it.isEmpty() }
-        .map { it.trim() }
-        .map { it.split(" ", limit = 2) }
-        .associate { it[0] to it.getOrElse(1) { "" } }
-
-    // Commands that start with "!" are internal: no write /result
-    private fun String.skipInternalCmdFlag(): String {
-        return if (startsWith("!")) {
-            internalCommand = true
-            substring(1)
-        } else {
-            internalCommand = false
-            this
-        }
+        cmd.splitMultiCommand()
+            .forEach { (cmd, args) ->
+                executeSingleCommand(cmd, args)
+            }
     }
 
     private fun executeSingleCommand(cmd: String, args: String) {
@@ -73,15 +57,15 @@ class CommandRunner {
             else -> Modules.command(cmd, args.split(" "))
         }
 
-        writeResult(cmd, result)
+        if (!internalCommand) {
+            writeResult(cmd, result)
+        }
     }
 
-    private fun writeResult(cmd: String, result: String?) {
-        if (result != null && !internalCommand) {
-            File(Env.resultFilePath).apply {
-                val date = formatDate(Date().time, ACCURATE_TIME_FORMAT)
-                writeText("$date\n$cmd $result\n")
-            }
+    private fun writeResult(cmd: String, result: String) {
+        File(Env.resultFilePath).apply {
+            val date = formatDate(Date().time, ACCURATE_TIME_FORMAT)
+            writeText("$date\n$cmd $result\n")
         }
     }
 }
