@@ -27,10 +27,8 @@ class CommandRunner {
 
         BufferedReader(InputStreamReader(iStream)).use { reader ->
             reader.forEachLine { line ->
-                if (line.length > 2) {
-                    logD(className, "get bootstrap line: $line")
-                    executeCommand(line.trim())
-                }
+                logD(className, "get bootstrap line: $line")
+                executeCommand(line.trim())
             }
         }
     }
@@ -38,8 +36,8 @@ class CommandRunner {
     fun executeCommand(cmd: String) {
         logD(className, "command: $cmd")
 
-        if (cmd.length > 200) {
-            writeResult("internal", "error: command can't be > 200 symbols")
+        if (cmd.length !in 2..200) {
+            writeResult("internal", "error: command should be 2..200 symbols")
             return
         }
 

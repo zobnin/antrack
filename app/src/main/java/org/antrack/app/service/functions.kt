@@ -1,6 +1,6 @@
 
 fun String.splitMultiCommand() =
-    removePrefix("!")
+    this.removePrefix("!")
         .split(";")
         .dropLastWhile { it.isEmpty() }
         .map { it.trim() }
