@@ -49,6 +49,8 @@ object Env {
     val cloudCtlPath = "/$deviceNameId$CONTROL_FILE"
     val cloudCtlqPath = "/$deviceNameId$CONTROL_Q_FILE"
 
+    val testingFilePath = mainDirPath + TESTING_FILE
+
     init {
         makeDirs()
     }

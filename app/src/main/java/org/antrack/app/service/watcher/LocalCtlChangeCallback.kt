@@ -2,21 +2,19 @@ package org.antrack.app.service.watcher
 
 import org.antrack.app.CONTROL_FILE
 import org.antrack.app.CONTROL_Q_FILE
-import org.antrack.app.Env
 import org.antrack.app.Settings
 import org.antrack.app.functions.className
 import org.antrack.app.functions.logE
-import org.antrack.app.functions.readAsList
 import org.antrack.app.service.CommandRunner
+import org.antrack.app.service.Files
 import org.antrack.app.watcher.IWatcherCallback
-import java.io.File
 
 class LocalCtlChangeCallback(
-    private val cc: CommandRunner,
-): IWatcherCallback {
+    private val runner: CommandRunner,
+) : IWatcherCallback {
 
     override val watchFile: String
-        get() = "/ctl"
+        get() = CONTROL_FILE
 
     override fun onFileUpdated(path: String) {
         if (path.isEmpty()) return
@@ -37,16 +35,14 @@ class LocalCtlChangeCallback(
     }
 
     private fun parseCtl() {
-        val command = File(Env.ctlFilePath).readText()
-        cc.executeCommand(command)
+        val command = Files.readCtlFile()
+        runner.executeCommand(command)
     }
 
     private fun parseCtlq() {
-        File(Env.ctlqFilePath)
-            .readAsList()
-            .forEach { cmd ->
-                processCtlqCommand(cmd)
-            }
+        Files.readCtlqFile().forEach { cmd ->
+            processCtlqCommand(cmd)
+        }
     }
 
     private fun processCtlqCommand(cmd: String) {
@@ -59,7 +55,7 @@ class LocalCtlChangeCallback(
 
         if (cmdTime > Settings.lastCommandTime) {
             Settings.lastCommandTime = cmdTime
-            cc.executeCommand(command)
+            runner.executeCommand(command)
         }
     }
 }

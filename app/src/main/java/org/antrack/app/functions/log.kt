@@ -2,8 +2,8 @@ package org.antrack.app.functions
 
 import android.util.Log
 import org.antrack.app.*
-import java.io.*
-
+import java.io.File
+import java.io.IOException
 import java.util.*
 
 fun logD(tag: String, msg: String) {
@@ -32,10 +32,4 @@ private fun addLineToFile(line: String) {
 }
 
 private fun newFile(path: String) = File(path).apply { touch() }
-
-private fun File.addLine(text: String) {
-    PrintWriter(BufferedWriter(FileWriter(this, true))).use {
-        it.println(text)
-    }
-}
 

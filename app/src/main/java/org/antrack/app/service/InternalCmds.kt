@@ -10,14 +10,12 @@ import org.antrack.app.libs.Admin
 import org.antrack.app.modules.Modules
 import java.io.File
 
-class InternalCommands {
-    companion object {
-        const val LOST = "lost"
-        const val MODULES = "modules"
-        const val DUMP_JSON = "dumpjson"
-        const val LOCK = "lock"
-        const val WIPE = "wipe"
-    }
+object InternalCmds {
+    private const val LOST = "lost"
+    private const val MODULES = "modules"
+    private const val DUMP_JSON = "dumpjson"
+    private const val LOCK = "lock"
+    private const val WIPE = "wipe"
 
     private val admin = Admin()
 

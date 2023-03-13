@@ -1,9 +1,6 @@
 package org.antrack.app.functions
 
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileReader
-import java.io.IOException
+import java.io.*
 
 fun File.touch() {
     try {
@@ -21,6 +18,12 @@ fun File.mkdirsForFile() {
 fun File.readAsList(): List<String> {
     BufferedReader(FileReader(this)).use { br ->
         return br.lineSequence().toList()
+    }
+}
+
+fun File.addLine(text: String) {
+    PrintWriter(BufferedWriter(FileWriter(this, true))).use {
+        it.println(text)
     }
 }
 
