@@ -8,28 +8,29 @@ import org.antrack.app.functions.logD
 import org.antrack.app.functions.toast
 
 class TestRunner(private val activity: Activity) {
+    private val testStartedStr = "testing started"
 
-    fun run() {
-        logD(className, "Testing started")
-        activity.toast("Testing started")
-
-        Thread {
-            val modTestResults = runModulesTests()
-
-            activity.runOnUiThread {
-                showResultDialog(modTestResults)
-            }
-        }.start()
+    fun runModTests() {
+        runTests("Modules", ModulesTests(activity.applicationContext))
     }
 
-    private fun runModulesTests(): List<String> {
-        val modTests = ModulesTests(activity.applicationContext)
+    fun runCmdTests() {
+        runTests("Commands", CommandsTest(activity.applicationContext))
+    }
 
-        modTests.before()
-        val results = modTests.run()
-        modTests.after()
+    private fun runTests(name: String, test: Test) {
+        logD(className, "$name $testStartedStr")
+        activity.toast("$name $testStartedStr")
 
-        return results
+        Thread {
+            test.before()
+            val results = test.run()
+            test.after()
+
+            activity.runOnUiThread {
+                showResultDialog(results)
+            }
+        }.start()
     }
 
     private fun showResultDialog(results: List<String>) {

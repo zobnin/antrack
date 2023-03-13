@@ -20,9 +20,16 @@
         android:entryValues="@array/pref_update_interval_values"
         android:defaultValue="30" />
     <Preference
-        android:key="run_tests"
-        android:title="@string/run_tests" />
-    <Preference
         android:key="run_setup_wizard"
-        android:title="@string/run_setup_wizard" />
+        android:title="@string/run_setup_wizard"
+        android:summary="@string/run_setup_wizard_more" />
+
+    <PreferenceCategory
+        android:title="Testing" />
+    <Preference
+        android:key="run_cmd_tests"
+        android:title="Run commands tests" />
+    <Preference
+        android:key="run_mod_tests"
+        android:title="Run modules tests" />
 </PreferenceScreen>

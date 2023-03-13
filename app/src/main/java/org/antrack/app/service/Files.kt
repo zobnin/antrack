@@ -40,11 +40,24 @@ object Files {
         writeCmdResult("internal", "error: $result")
     }
 
+    // Testing only
+
     fun writeTestCmdResult(cmd: String, result: String) {
-        File(Env.testingFilePath).addLine("$cmd $result\n")
+        File(Env.testingFilePath).apply {
+            addLine("$cmd $result")
+        }
     }
 
-    fun removeTestResultFile() {
+    fun writeTestErrorResult(result: String) {
+        writeTestCmdResult("internal", "error: $result")
+    }
+
+    fun purgeTestResultFile() {
         File(Env.testingFilePath).delete()
+        File(Env.testingFilePath).createNewFile()
+    }
+
+    fun readTestResultFile(): List<String> {
+        return File(Env.testingFilePath).readAsList()
     }
 }

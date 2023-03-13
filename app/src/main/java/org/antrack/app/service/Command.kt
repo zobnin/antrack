@@ -8,7 +8,7 @@ class Command(
     private sealed class Type(
         val startSymbol: String,
     ) {
-        object Regular: Type("")
+        object Regular : Type("")
         object Silent : Type("!")
         object Testing : Type("@")
     }
@@ -21,8 +21,8 @@ class Command(
         }
 
     fun execute() {
-        if (command.length !in 2..200) {
-            Files.writeErrorResult("command should be 2..200 symbols")
+        checkForErrors()?.let {
+            handleError(it)
             return
         }
 
@@ -31,6 +31,13 @@ class Command(
             .forEach { (cmd, args) ->
                 executeSingleCommand(cmd, args)
             }
+    }
+
+    private fun checkForErrors(): String? {
+        return when (command.length) {
+            in 2..200 -> null
+            else -> "command should be 2..200 symbols"
+        }
     }
 
     private fun executeSingleCommand(cmd: String, args: String) {
@@ -47,6 +54,14 @@ class Command(
             Type.Regular -> Files.writeCmdResult(cmd, result)
             Type.Testing -> Files.writeTestCmdResult(cmd, result)
             Type.Silent -> { /* silent */ }
+        }
+    }
+
+    private fun handleError(errorStr: String) {
+        when (type) {
+            is Type.Testing -> Files.writeTestErrorResult(errorStr)
+            is Type.Regular -> Files.writeErrorResult(errorStr)
+            is Type.Silent -> { /* silent */ }
         }
     }
 

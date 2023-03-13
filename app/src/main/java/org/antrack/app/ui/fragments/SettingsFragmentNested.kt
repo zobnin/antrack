@@ -19,8 +19,13 @@ class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedP
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
 
-        findPreference("run_tests")?.setOnPreferenceClickListener {
-            TestRunner(activity).run()
+        findPreference("run_cmd_tests")?.setOnPreferenceClickListener {
+            TestRunner(activity).runCmdTests()
+            true
+        }
+
+        findPreference("run_mod_tests")?.setOnPreferenceClickListener {
+            TestRunner(activity).runModTests()
             true
         }
 

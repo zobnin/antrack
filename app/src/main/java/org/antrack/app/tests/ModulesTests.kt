@@ -16,7 +16,7 @@ import org.antrack.app.watcher.FileWatcher
 import java.io.File
 
 
-class ModulesTests(private val context: Context) : Test() {
+class ModulesTests(private val context: Context) : ModuleTest() {
     override fun before() {
         // Slows down the tests
         FileWatcher.removeCallback("service_uploader")
