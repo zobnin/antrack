@@ -1,4 +1,4 @@
-package org.antrack.app.ui
+package org.antrack.app.modules
 
 data class Module(
     val name: String = "",

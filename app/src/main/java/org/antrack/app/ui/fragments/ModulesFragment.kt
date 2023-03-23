@@ -7,8 +7,8 @@ import org.antrack.app.functions.bold
 import org.antrack.app.functions.className
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.plus
+import org.antrack.app.modules.Module
 import org.antrack.app.modules.ModulesSerializer
-import org.antrack.app.ui.Module
 
 class ModulesFragment : ListBaseFragment() {
     private val modSerializer = ModulesSerializer()
