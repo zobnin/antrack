@@ -2,7 +2,6 @@ package org.antrack.app.cloud
 
 import android.app.Activity
 import org.antrack.app.App
-import org.antrack.app.Settings
 import org.antrack.app.cloud.provider.Dropbox
 import org.antrack.app.functions.className
 import org.antrack.app.functions.isNetConnected
@@ -10,6 +9,9 @@ import org.antrack.app.functions.logD
 import org.antrack.app.functions.sleepS
 
 object Cloud {
+    const val DROPBOX = "dropbox"
+    private const val MAX_ONLINE_WAIT = 320
+
     private var provider: ICloudProvider? = null
 
     var isConnected = false
@@ -24,26 +26,14 @@ object Cloud {
             throw IllegalStateException("Token is empty")
         }
 
-        if (providerName == "dropbox") {
-            provider = Dropbox(token)
-            isConnected = getConnectionStatus()
-
-            if (isConnected) {
-                logD(className, "Connected to cloud")
-                return
-            }
+        if (providerName == DROPBOX) {
+            connectDropbox(token)
         }
     }
 
-    private fun getConnectionStatus(): Boolean {
-        return provider?.getStatus()?.isConnected ?: false
-    }
-
-    fun auth(activity: Activity) {
-        if (Settings.plugin == "dropbox") {
-            provider = Dropbox().apply {
-                auth(activity)
-            }
+    fun auth(activity: Activity, providerName: String) {
+        if (providerName == DROPBOX) {
+            authDropbox(activity)
         }
     }
 
@@ -66,8 +56,6 @@ object Cloud {
         return provider?.watchForChanges(dir)
     }
 
-    private const val MAX_SLEEP = 320
-
     @Synchronized
     fun waitOnline() {
         var seconds = 10
@@ -75,8 +63,27 @@ object Cloud {
             logD(className, "No internet, sleep $seconds seconds")
             sleepS(seconds)
 
-            if (seconds < MAX_SLEEP)
+            if (seconds < MAX_ONLINE_WAIT)
                 seconds *= 2
+        }
+    }
+
+    private fun connectDropbox(token: String) {
+        provider = Dropbox(token)
+        isConnected = getConnectionStatus()
+
+        if (isConnected) {
+            logD(className, "Connected to cloud")
+        }
+    }
+
+    private fun getConnectionStatus(): Boolean {
+        return provider?.getStatus()?.isConnected ?: false
+    }
+
+    private fun authDropbox(activity: Activity) {
+        provider = Dropbox().apply {
+            auth(activity)
         }
     }
 }

@@ -7,7 +7,7 @@ fun File.touch() {
         mkdirsForFile()
         createNewFile()
     } catch (e: IOException) {
-        e.printStackTrace()
+        //
     }
 }
 

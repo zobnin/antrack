@@ -43,7 +43,7 @@ class Admin {
         if (Build.VERSION.SDK_INT >= 29) {
             dpm.wipeData(
                 DevicePolicyManager.WIPE_SILENTLY or
-                        DevicePolicyManager.WIPE_EXTERNAL_STORAGE
+                    DevicePolicyManager.WIPE_EXTERNAL_STORAGE
             )
         } else {
             dpm.wipeData(DevicePolicyManager.WIPE_EXTERNAL_STORAGE)
