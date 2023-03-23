@@ -4,6 +4,7 @@ package org.antrack.app.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -48,21 +49,20 @@ class LogsFragment : BaseFragment() {
                     return@async
                 }
 
-                val logsText = logs
-                    .map(::recolor)
-                    .reversed()
-                    .map { it + "\n" }
-                    .reduce { acc, string -> acc + string }
-
-                runOnUiThread {
-                    textView.text = logsText
-                    textView.movementMethod = ScrollingMovementMethod()
-                    hideMessage()
-                }
+                val logsText = prepareLogs(logs)
+                showTextInUiThread(textView, logsText)
             } catch (e: Exception) {
                 showException(e)
             }
         }
+    }
+
+    private fun prepareLogs(logs: List<String>): SpannableStringBuilder {
+        return logs
+            .map(::recolor)
+            .reversed()
+            .map { it + "\n" }
+            .reduce { acc, string -> acc + string }
     }
 
     private fun recolor(text: CharSequence): CharSequence {
@@ -78,5 +78,16 @@ class LogsFragment : BaseFragment() {
         }
 
         return dateText.color(Color.WHITE) + " " + logText2
+    }
+
+    private fun showTextInUiThread(
+        textView: TextView,
+        logsText: SpannableStringBuilder
+    ) {
+        runOnUiThread {
+            textView.text = logsText
+            textView.movementMethod = ScrollingMovementMethod()
+            hideMessage()
+        }
     }
 }

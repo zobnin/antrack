@@ -25,7 +25,6 @@ class ModulesFragment : ListBaseFragment() {
                 val modules = modSerializer.read().values
                 val strings = modules.map { moduleToSpannable(it) }
                 showListInUiThread(strings)
-
                 logD(className, "Fragment updated")
             } catch (e: Exception) {
                 showException(e)

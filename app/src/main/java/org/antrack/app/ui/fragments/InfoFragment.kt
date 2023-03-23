@@ -96,6 +96,7 @@ class InfoFragment : ListBaseFragment() {
 
     private fun infoToSpannable(info: Info): Spannable {
         val title = info.title.bold()
+
         val data = when {
             info.data.isNotEmpty() -> info.data.highlightBooleans()
             else -> getString(R.string.loading)

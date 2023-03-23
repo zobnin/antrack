@@ -42,15 +42,36 @@ class ShellFragment : BaseFragment() {
         // Otherwise GetActivity() return null after orientation change
         retainInstance = true
 
-        val view = inflater.inflate(R.layout.fragment_shell, container, false)
-        val ps1 = view.findViewById(R.id.fragment_shell_ps1) as TextView
-        val inputField = view.findViewById(R.id.fragment_shell_edittext) as EditText
-        resultView = view.findViewById(R.id.fragment_shell_textview) as TextView
+        val main = inflater.inflate(R.layout.fragment_shell, container, false)
+        val ps1 = main.findViewById(R.id.fragment_shell_ps1) as TextView
+        val inputField = main.findViewById(R.id.fragment_shell_edittext) as EditText
+        resultView = main.findViewById(R.id.fragment_shell_textview) as TextView
 
         ps1.text = Env.deviceName + "$ "
         inputField.requestFocus()
 
-        view.setOnClickListener {
+        setListeners(main, resultView, inputField)
+
+        return main
+    }
+
+    override fun onStart() {
+        super.onStart()
+        FileWatcher.addCallback(className, FragmentCallback())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        resultView.hideKeyboard()
+        FileWatcher.removeCallback(className)
+    }
+
+    private fun setListeners(
+        mainView: View,
+        resultView: TextView,
+        inputField: EditText,
+    ) {
+        mainView.setOnClickListener {
             inputField.focusAndShowKeyboard()
         }
 
@@ -64,19 +85,6 @@ class ShellFragment : BaseFragment() {
             }
             true
         }
-
-        return view
-    }
-
-    override fun onStart() {
-        super.onStart()
-        FileWatcher.addCallback(className, FragmentCallback())
-    }
-
-    override fun onStop() {
-        super.onStop()
-        resultView.hideKeyboard()
-        FileWatcher.removeCallback(className)
     }
 
     private fun onEnterPressed(inputField: EditText) {
@@ -92,18 +100,23 @@ class ShellFragment : BaseFragment() {
     private fun onResultFileUpdated() {
         try {
             val module = Modules.get().getOrElse(lastCommand.split(" ")[0]) { null }
+
             val out = when {
                 module != null && module.resultType() == "txt" -> readModuleOutFile(module)
                 else -> readResultFile()
             }
 
-            activity.runOnUiThread {
-                resultView.text = out
-                resultView.fadeIn()
-            }
+            insertOutInResultViewOnUiThread(out)
         } catch (e: Exception) {
             logE(className, "Can't read result file: $e")
             activity.toast(e.message.toString())
+        }
+    }
+
+    private fun insertOutInResultViewOnUiThread(out: String) {
+        activity.runOnUiThread {
+            resultView.text = out
+            resultView.fadeIn()
         }
     }
 
@@ -111,6 +124,7 @@ class ShellFragment : BaseFragment() {
 
     private fun readModuleOutFile(module: ModuleInterface): String {
         val resultFile = File(Env.mainDirPath + module.result())
+
         return if (resultFile.isDirectory) {
             resultFile.listFiles()?.joinToString("\n") { it.readText() } ?: "error"
         } else {
