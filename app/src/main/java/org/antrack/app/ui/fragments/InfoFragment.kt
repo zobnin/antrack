@@ -6,14 +6,15 @@ import android.text.Spannable
 import app.R
 import org.antrack.app.Env
 import org.antrack.app.functions.*
+import org.antrack.app.modules.ModulesSerializer
 import org.antrack.app.ui.AppStatus
-import org.antrack.app.ui.readModulesFile
 import org.antrack.app.ui.runCommandAsync
 import org.antrack.app.watcher.FileWatcher
 import org.antrack.app.watcher.IWatcherCallback
 import java.io.File
 
 class InfoFragment : ListBaseFragment() {
+    val modSerializer = ModulesSerializer()
 
     data class Info(
         val title: CharSequence,
@@ -55,7 +56,7 @@ class InfoFragment : ListBaseFragment() {
     private fun readInfoAndStatus(): List<Info> {
         // On first run there is no modules file so we don't throw the exception
         val modules = try {
-            readModulesFile()
+            modSerializer.read()
         } catch (e: Exception) {
             return emptyList()
         }

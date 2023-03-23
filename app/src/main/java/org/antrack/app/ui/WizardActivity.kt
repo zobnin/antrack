@@ -139,10 +139,11 @@ class WizardActivity : PermissionsActivity() {
     private fun setupDropboxButton() {
         val button = findViewById<Button>(R.id.button_dropbox)
         button.setOnClickListener { v ->
-            Settings.plugin = "dropbox"
+            Settings.plugin = Cloud.DROPBOX
+
             try {
                 pluginChosen = true
-                Cloud.auth(this@WizardActivity)
+                Cloud.auth(this@WizardActivity, Settings.plugin)
             } catch (e: InterruptedException) {
                 toast(R.string.no_internet)
             }

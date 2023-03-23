@@ -11,7 +11,6 @@ import org.antrack.app.App
 class Receivers {
     private var registered = false
 
-    private val context = App.context
     private val phoneStateReceiver = PhoneStateReceiver()
     private val screenOnReceiver = ScreenOnReceiver()
     private val simChangeReceiver = SimChangeReceiver()
@@ -38,9 +37,9 @@ class Receivers {
 
     private fun registerExtReceiver(receiver: BroadcastReceiver, filter: IntentFilter) {
         if (Build.VERSION.SDK_INT >= 33) {
-            context.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED)
+            App.context.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED)
         } else {
-            context.registerReceiver(receiver, filter)
+            App.context.registerReceiver(receiver, filter)
         }
     }
 }

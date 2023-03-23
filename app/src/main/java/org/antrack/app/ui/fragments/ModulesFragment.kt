@@ -7,10 +7,11 @@ import org.antrack.app.functions.bold
 import org.antrack.app.functions.className
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.plus
+import org.antrack.app.modules.ModulesSerializer
 import org.antrack.app.ui.Module
-import org.antrack.app.ui.readModulesFile
 
 class ModulesFragment : ListBaseFragment() {
+    private val modSerializer = ModulesSerializer()
 
     override fun onStart() {
         super.onStart()
@@ -21,7 +22,7 @@ class ModulesFragment : ListBaseFragment() {
     private fun updateAsync() {
         async {
             try {
-                val modules = readModulesFile().values
+                val modules = modSerializer.read().values
                 val strings = modules.map { moduleToSpannable(it) }
                 showListInUiThread(strings)
 

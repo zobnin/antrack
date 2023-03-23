@@ -1,17 +1,13 @@
 package org.antrack.app.modules
 
 import org.antrack.app.App
-import org.antrack.app.DONE
 import org.antrack.app.Env
-import org.antrack.app.MODULES_JSON_FILE
 import org.antrack.app.functions.className
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.logE
 import org.antrack.app.libs.Admin
 import org.antrack.app.libs.Shell
 import java.io.File
-import java.io.FileWriter
-import java.io.IOException
 
 object Modules {
     private val modules by lazy { loadModules() }
@@ -60,60 +56,6 @@ object Modules {
         }
     }
 
-    fun writeModulesFile(): String {
-        if (modules.isEmpty()) return "error: no modules"
-
-        try {
-            val writer = FileWriter(Env.modulesFilePath)
-
-            for ((key) in modules) {
-                val module = modules[key]
-                var info = ""
-
-                info += "Name: $key\n"
-                info += "Version: ${module!!.version()}\n"
-                info += "Author: ${module.author()}\n"
-                info += "Description: ${module.desc()}\n"
-                info += "Command: ${module.command()}\n"
-                info += "Uses root: ${module.usesRoot()}\n"
-                info += "Uses admin: ${module.usesAdmin()}\n"
-
-                info += "Result file: "
-                info += module.result() ?: "none"
-                info += "\n"
-
-                info += "Start when: "
-                info += module.startWhen()?.joinToString(" ") ?: "never"
-                info += "\n"
-
-                info += "\n"
-                writer.write(info)
-            }
-            writer.close()
-        } catch (e: IOException) {
-            logE(className, "error: ${e.message}")
-            e.printStackTrace()
-        }
-
-        return DONE
-    }
-
-    fun writeJsonFile(): String {
-        try {
-            FileWriter(Env.mainDirPath + MODULES_JSON_FILE).use { writer ->
-                modules.forEach { (name, module) ->
-                    val json = genJson(name, module)
-                    writer.write(json)
-                    writer.flush()
-                }
-            }
-            return DONE
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return "error: $e"
-        }
-    }
-
     private fun loadModules(): Map<String, ModuleInterface> {
         try {
             File(Env.modulesDirPath).mkdirs()
@@ -135,23 +77,6 @@ object Modules {
         }
 
         module.onLoad(App.context)
-    }
-
-    private fun genJson(key: String, module: ModuleInterface): String {
-        return """
-            {
-                "name": "$key",
-                "version": "${module.version()}",
-                "author": "${module.author()}",
-                "desc": "${module.desc()}",
-                "startWhen": "${module.startWhen().joinToString(" ")}",
-                "command": "${module.command()}",
-                "result": "${module.result()}",
-                "resultType": "${module.resultType()}",
-                "usesAdmin": "${module.usesAdmin()}",
-                "usesRoot": ${module.usesRoot()},
-            }
-        """.trimIndent()
     }
 
     private fun checkForRoot(): Boolean {

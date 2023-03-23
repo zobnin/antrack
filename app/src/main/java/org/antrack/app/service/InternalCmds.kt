@@ -7,7 +7,7 @@ import org.antrack.app.functions.className
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.touch
 import org.antrack.app.libs.Admin
-import org.antrack.app.modules.Modules
+import org.antrack.app.modules.ModulesSerializer
 import java.io.File
 
 object InternalCmds {
@@ -18,6 +18,7 @@ object InternalCmds {
     private const val WIPE = "wipe"
 
     private val admin = Admin()
+    private val modSerializer = ModulesSerializer()
 
     private val commands = listOf(
         LOST, LOCK, MODULES, DUMP_JSON, LOCK, WIPE
@@ -31,8 +32,8 @@ object InternalCmds {
         LOST -> markAsLost(args)
         LOCK -> lockDevice()
         WIPE -> wipeDevice()
-        MODULES -> Modules.writeModulesFile()
-        DUMP_JSON -> Modules.writeJsonFile()
+        MODULES -> modSerializer.write()
+        DUMP_JSON -> modSerializer.writeJson()
         else -> "error: command not found"
     }
 
