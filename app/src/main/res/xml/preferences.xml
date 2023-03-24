@@ -32,4 +32,7 @@
     <Preference
         android:key="run_mod_tests"
         android:title="Run modules tests" />
+    <Preference
+        android:key="run_cloud_tests"
+        android:title="Run cloud tests" />
 </PreferenceScreen>

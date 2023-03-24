@@ -29,6 +29,11 @@ class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedP
             true
         }
 
+        findPreference("run_cloud_tests")?.setOnPreferenceClickListener {
+            TestRunner(activity).runCloudTests()
+            true
+        }
+
         findPreference("run_setup_wizard")?.setOnPreferenceClickListener {
             WizardActivity.launch(activity, WIZARD_LAUNCH_CODE)
             true

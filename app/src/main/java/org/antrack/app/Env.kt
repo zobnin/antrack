@@ -49,7 +49,10 @@ object Env {
     val cloudCtlPath = "/$deviceNameId$CONTROL_FILE"
     val cloudCtlqPath = "/$deviceNameId$CONTROL_Q_FILE"
 
+    // Tests only
     val testingFilePath = mainDirPath + TESTING_FILE
+    val testingTempFilePath = mainDirPath + TESTING_TEMP_FILE
+    val cloudTestingTempFilePath = "/$deviceNameId$TESTING_TEMP_FILE"
 
     init {
         makeDirs()

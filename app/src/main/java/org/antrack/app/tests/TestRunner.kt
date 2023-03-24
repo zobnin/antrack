@@ -18,6 +18,10 @@ class TestRunner(private val activity: Activity) {
         runTests("Commands", CommandsTest(activity.applicationContext))
     }
 
+    fun runCloudTests() {
+        runTests("Cloud", CloudTest())
+    }
+
     private fun runTests(name: String, test: Test) {
         logD(className, "$name $testStartedStr")
         activity.toast("$name $testStartedStr")

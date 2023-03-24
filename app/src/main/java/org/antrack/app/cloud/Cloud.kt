@@ -7,6 +7,7 @@ import org.antrack.app.functions.className
 import org.antrack.app.functions.isNetConnected
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.sleepS
+import java.io.InputStream
 
 object Cloud {
     const val DROPBOX = "dropbox"
@@ -46,9 +47,24 @@ object Cloud {
         provider?.putFile(lFile, rFile)
     }
 
+    fun putFile(iStream: InputStream, rFile: String) {
+        logD(className, "Put stream as $rFile")
+        provider?.putFile(iStream, rFile)
+    }
+
     fun getFile(rFile: String, lFile: String) {
         logD(className, "Get file $rFile as $lFile")
         provider?.getFile(rFile, lFile)
+    }
+
+    fun getMetadata(rFile: String): CloudMetadata? {
+        try {
+            logD(className, "Get metadata: $rFile")
+            return provider?.getMetadata(rFile)
+        } catch (e: Exception) {
+            logD(className, "Get metadata error: ${e.message}")
+            return null
+        }
     }
 
     fun watchForChanges(dir: String): List<String>? {

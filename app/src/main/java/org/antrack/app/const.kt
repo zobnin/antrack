@@ -27,6 +27,7 @@ const val CONTROL_Q_FILE = "/ctlq"
 const val RESULT_FILE = "/result"
 
 const val TESTING_FILE = "/testing"
+const val TESTING_TEMP_FILE = "/testing_temp"
 
 const val TOKEN_FILE = "/.token"
 const val LOST_FILE = "/.lost"
