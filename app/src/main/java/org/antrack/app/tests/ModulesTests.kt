@@ -135,7 +135,7 @@ class ModulesTests(private val context: Context) : ModuleTest() {
         return testModule("cmd", "cmd uname") { out ->
             val outLines = out.split("\n")
 
-            val isDateOk = isDateStringCorrect("yyyy.MM.dd HH:mm:ss:SSS", outLines[0])
+            val isDateOk = isCorrectDateString("yyyy.MM.dd HH:mm:ss:SSS", outLines[0])
             val isOutOk = outLines[1].trim() == "Linux"
 
             isDateOk && isOutOk
@@ -214,7 +214,7 @@ class ModulesTests(private val context: Context) : ModuleTest() {
                 .first()
                 .split(" ")
 
-            val isDateOk = isDateStringCorrect("yyyy.MM.dd HH:mm:ss", fields[0] + " " + fields[1])
+            val isDateOk = isCorrectDateString("yyyy.MM.dd HH:mm:ss", fields[0] + " " + fields[1])
             val isLocationOk = isFloat(fields[2]) && isFloat(fields[3])
 
             return@testModule fields.size == 4 && isDateOk && isLocationOk
