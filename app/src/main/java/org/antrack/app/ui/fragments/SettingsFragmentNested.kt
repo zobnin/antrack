@@ -5,6 +5,7 @@ package org.antrack.app.ui.fragments
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceFragment
+import app.BuildConfig
 import app.R
 import org.antrack.app.DEFAULT_UPDATE_INTERVAL
 import org.antrack.app.Settings
@@ -19,24 +20,15 @@ class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedP
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
 
-        findPreference("run_cmd_tests")?.setOnPreferenceClickListener {
-            TestRunner(activity).runCmdTests()
-            true
-        }
-
-        findPreference("run_mod_tests")?.setOnPreferenceClickListener {
-            TestRunner(activity).runModTests()
-            true
-        }
-
-        findPreference("run_cloud_tests")?.setOnPreferenceClickListener {
-            TestRunner(activity).runCloudTests()
-            true
-        }
-
         findPreference("run_setup_wizard")?.setOnPreferenceClickListener {
             WizardActivity.launch(activity, WIZARD_LAUNCH_CODE)
             true
+        }
+
+        if (BuildConfig.DEBUG) {
+            setDebugOptions()
+        } else {
+            removeDebugOptions()
         }
     }
 
@@ -90,5 +82,40 @@ class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedP
     override fun onPause() {
         preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         super.onPause()
+    }
+
+    private fun setDebugOptions() {
+        findPreference("run_cmd_tests")?.setOnPreferenceClickListener {
+            TestRunner(activity).runCmdTests()
+            true
+        }
+
+        findPreference("run_mod_tests")?.setOnPreferenceClickListener {
+            TestRunner(activity).runModTests()
+            true
+        }
+
+        findPreference("run_cloud_tests")?.setOnPreferenceClickListener {
+            TestRunner(activity).runCloudTests()
+            true
+        }
+    }
+
+    private fun removeDebugOptions() {
+        findPreference("testing")?.apply {
+            preferenceScreen.removePreference(this)
+        }
+
+        findPreference("run_cmd_tests")?.apply {
+            preferenceScreen.removePreference(this)
+        }
+
+        findPreference("run_mod_tests")?.apply {
+            preferenceScreen.removePreference(this)
+        }
+
+        findPreference("run_cloud_tests")?.apply {
+            preferenceScreen.removePreference(this)
+        }
     }
 }

@@ -25,6 +25,7 @@
         android:summary="@string/run_setup_wizard_more" />
 
     <PreferenceCategory
+        android:key="testing"
         android:title="Testing" />
     <Preference
         android:key="run_cmd_tests"
