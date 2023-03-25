@@ -9,8 +9,8 @@ import android.os.Bundle
 import android.widget.TextView
 import app.R
 import org.antrack.app.*
-import org.antrack.app.functions.bold
 import org.antrack.app.functions.className
+import org.antrack.app.functions.color
 import org.antrack.app.functions.logD
 import org.antrack.app.service.CloudService
 import org.antrack.app.ui.fragments.*
@@ -73,10 +73,10 @@ class MainActivity : Activity() {
         buttons: List<TextView>,
         idx: Int
     ) {
-        // Reset colors for all buttons
+        // Reset styles for all buttons
         buttons.forEach { it.text = it.text.toString() }
         // Highlight current button
-        buttons[idx].text = buttons[idx].text.bold()
+        buttons[idx].text = buttons[idx].text.color(getColor(R.color.accent))
     }
 
     private fun initDefaultFragment() {

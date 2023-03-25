@@ -1,5 +1,5 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Material.NoActionBar">
-        <item name="android:colorAccent">#BA68C8</item>
+        <item name="android:colorAccent">@color/accent</item>
     </style>
 </resources>
