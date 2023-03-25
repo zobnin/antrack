@@ -1,14 +1,14 @@
 package org.antrack.app.service
 
-import android.annotation.TargetApi
 import android.app.ActivityManager
-import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import org.antrack.app.*
+import org.antrack.app.ALARM_ASSET
+import org.antrack.app.Env
+import org.antrack.app.Settings
 import org.antrack.app.cloud.Cloud
 import org.antrack.app.functions.className
 import org.antrack.app.functions.logD
@@ -74,7 +74,7 @@ class CloudService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(1111, createNotification().build())
+            startForeground(1111, Notification.createServiceNotification().build())
         }
 
         executor.submit {
@@ -170,15 +170,6 @@ class CloudService : Service() {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
-    private fun createNotification(): Notification.Builder {
-        return Notification.Builder(App.context, "main")
-            .setContentTitle("AnTrack Service")
-            .setContentText("Working")
-            .setSmallIcon(android.R.drawable.ic_media_play)
-            .setAutoCancel(true)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
@@ -194,6 +185,6 @@ class CloudService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder? {
-        throw UnsupportedOperationException("Not yet implemented")
+        return null
     }
 }

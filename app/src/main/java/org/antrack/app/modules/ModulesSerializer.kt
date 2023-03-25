@@ -91,17 +91,17 @@ class ModulesSerializer {
         reader.readLines()
             .asSequence()
             .map { line -> line.split(":") }
-            .forEach { pair ->
-                when (pair[0]) {
-                    NAME -> module = module.copy(name = pair[1].trim())
-                    VERSION -> module = module.copy(version = pair[1].trim())
-                    AUTHOR -> module = module.copy(author = pair[1].trim())
-                    DESCRIPTION -> module = module.copy(desc = pair[1].trim())
-                    COMMAND -> module = module.copy(command = pair[1].trim())
-                    USES_ROOT -> module = module.copy(usesRoot = pair[1].trim())
-                    USES_ADMIN -> module = module.copy(usesAdmin = pair[1].trim())
-                    START_WHEN -> module = module.copy(startWhen = pair[1].trim())
-                    RESULT_FILE -> module = module.copy(result = pair[1].trim())
+            .forEach { stringArr ->
+                when (stringArr[0]) {
+                    NAME -> module = module.copy(name = stringArr[1].trim())
+                    VERSION -> module = module.copy(version = stringArr[1].trim())
+                    AUTHOR -> module = module.copy(author = stringArr[1].trim())
+                    DESCRIPTION -> module = module.copy(desc = stringArr[1].trim())
+                    COMMAND -> module = module.copy(command = stringArr[1].trim())
+                    USES_ROOT -> module = module.copy(usesRoot = stringArr[1].trim())
+                    USES_ADMIN -> module = module.copy(usesAdmin = stringArr[1].trim())
+                    START_WHEN -> module = module.copy(startWhen = stringArr[1].trim())
+                    RESULT_FILE -> module = module.copy(result = stringArr[1].trim())
                     else -> {
                         modulesInt[module.name] = module
                         module = Module()

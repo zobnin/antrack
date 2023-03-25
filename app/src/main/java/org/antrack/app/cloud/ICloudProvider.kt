@@ -15,8 +15,7 @@ interface ICloudProvider {
     fun deleteFile(rPath: String, permanent: Boolean = false)
     fun moveFile(rPathFrom: String, rPathTo: String): CloudMetadata
     fun getMetadata(rFile: String): CloudMetadata
-    fun listDir(rDir: String, withDeleted: Boolean = false,
-                        withDirs: Boolean = false): List<CloudMetadata>
+    fun listDir(rDir: String, deleted: Boolean = false, dirs: Boolean = false): List<CloudMetadata>
     fun listDirRecursive(rDir: String, fileList: MutableList<CloudMetadata>)
     fun createDir(rDir: String): CloudMetadata
     fun checkForChanges(rDir: String): Boolean

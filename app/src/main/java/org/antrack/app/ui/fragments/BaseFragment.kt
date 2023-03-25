@@ -9,6 +9,8 @@ import android.widget.TextView
 import app.R
 import org.antrack.app.Env
 import org.antrack.app.functions.*
+import java.io.File
+import java.io.IOException
 
 abstract class BaseFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +80,14 @@ abstract class BaseFragment : Fragment() {
                 text = message
                 fadeIn()
             }
+        }
+    }
+
+    fun runCommandAsync(cmd: String) {
+        try {
+            File(Env.ctlFilePath).writeText(cmd)
+        } catch (e: IOException) {
+            logE("runCommandAsync", "Can't run command $cmd: $e")
         }
     }
 }

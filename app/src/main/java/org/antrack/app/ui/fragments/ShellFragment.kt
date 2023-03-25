@@ -16,7 +16,6 @@ import org.antrack.app.RESULT_FILE
 import org.antrack.app.functions.*
 import org.antrack.app.modules.ModuleInterface
 import org.antrack.app.modules.Modules
-import org.antrack.app.ui.runCommandAsync
 import org.antrack.app.watcher.FileWatcher
 import org.antrack.app.watcher.IWatcherCallback
 import java.io.File

@@ -8,7 +8,6 @@ import org.antrack.app.Env
 import org.antrack.app.functions.*
 import org.antrack.app.modules.ModulesSerializer
 import org.antrack.app.ui.AppStatus
-import org.antrack.app.ui.runCommandAsync
 import org.antrack.app.watcher.FileWatcher
 import org.antrack.app.watcher.IWatcherCallback
 import java.io.File

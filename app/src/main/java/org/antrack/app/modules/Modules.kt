@@ -22,12 +22,7 @@ object Modules {
         if (module.usesRoot() && !checkForRoot()) return "error: no root rights"
         if (module.usesAdmin() && !checkForAdmin()) return "error: no admin rights"
 
-        return try {
-            module.onCommand(App.context, args.toTypedArray())
-        } catch (e: Exception) {
-            e.printStackTrace()
-            "error: ${e.message.toString()}"
-        }
+        return execCommand(module, args)
     }
 
     fun run(action: String, extra: String) {
@@ -40,32 +35,40 @@ object Modules {
             if (module.usesRoot() && !haveRoot) return@forEach
             if (module.usesAdmin() && !haveAdmin) return@forEach
 
-            try {
-                when (action) {
-                    "boot" -> module.onBoot(App.context)
-                    "alarm" -> module.onAlarm(App.context)
-                    "screenOn" -> module.onScreenOn(App.context)
-                    "incomingCall" -> module.onIncomingCall(App.context, extra)
-                    "outgoingCall" -> module.onOutgoingCall(App.context, extra)
-                    "load" -> processLoadAction(module)
-                }
-            } catch (e: Exception) {
-                logE(className, "error: ${e.message}")
-                e.printStackTrace()
-            }
+            execAction(module, action, extra)
         }
     }
 
-    private fun loadModules(): Map<String, ModuleInterface> {
-        try {
-            File(Env.modulesDirPath).mkdirs()
-            return ModuleLoader(App.context, Env.modulesDirPath).getModuleObjects()
+    private fun execCommand(
+        module: ModuleInterface,
+        args: List<String>
+    ): String {
+        return try {
+            module.onCommand(App.context, args.toTypedArray())
         } catch (e: Exception) {
             e.printStackTrace()
-            logE(className, "Filed to load modules")
+            "error: ${e.message.toString()}"
         }
+    }
 
-        return emptyMap()
+    private fun execAction(
+        module: ModuleInterface,
+        action: String,
+        extra: String
+    ) {
+        try {
+            when (action) {
+                "boot" -> module.onBoot(App.context)
+                "alarm" -> module.onAlarm(App.context)
+                "screenOn" -> module.onScreenOn(App.context)
+                "incomingCall" -> module.onIncomingCall(App.context, extra)
+                "outgoingCall" -> module.onOutgoingCall(App.context, extra)
+                "load" -> processLoadAction(module)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            logE(className, "error: ${e.message}")
+        }
     }
 
     private fun processLoadAction(module: ModuleInterface) {
@@ -85,5 +88,17 @@ object Modules {
 
     private fun checkForAdmin(): Boolean {
         return Admin().isActive
+    }
+
+    private fun loadModules(): Map<String, ModuleInterface> {
+        try {
+            File(Env.modulesDirPath).mkdirs()
+            return ModuleLoader(App.context, Env.modulesDirPath).getModuleObjects()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            logE(className, "Filed to load modules")
+        }
+
+        return emptyMap()
     }
 }

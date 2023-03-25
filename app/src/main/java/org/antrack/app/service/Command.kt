@@ -8,9 +8,9 @@ class Command(
     private sealed class Type(
         val startSymbol: String,
     ) {
-        object Regular : Type("")
-        object Silent : Type("!")
-        object Testing : Type("@")
+        object Regular : Type(startSymbol = "")
+        object Silent : Type(startSymbol = "!")
+        object Testing : Type(startSymbol = "@")
     }
 
     private val type: Type

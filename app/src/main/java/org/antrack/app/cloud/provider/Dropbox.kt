@@ -206,15 +206,15 @@ class Dropbox(token: String = "") : ICloudProvider {
 
     override fun listDir(
         rDir: String,
-        withDeleted: Boolean,
-        withDirs: Boolean,
+        deleted: Boolean,
+        dirs: Boolean,
     ): List<CloudMetadata> {
 
         val metadataList = mutableListOf<CloudMetadata>()
 
         var result = client.files()
             .listFolderBuilder(rDir)
-            .withIncludeDeleted(withDeleted)
+            .withIncludeDeleted(deleted)
             .start()
 
         while (true) {
@@ -232,7 +232,7 @@ class Dropbox(token: String = "") : ICloudProvider {
             result = client.files().listFolderContinue(result.cursor)
         }
 
-        return if (withDirs) {
+        return if (dirs) {
             val dirs = metadataList
                 .filterNot { it is CloudFileMetadata }
                 .sortedBy { it.name }

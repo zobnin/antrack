@@ -23,6 +23,29 @@ class ModuleLoader(
         return objects
     }
 
+    private fun unpackModules(): Boolean {
+        val modules = context.assets.list(MODULES_ASSET_DIR)
+            ?: throw IllegalStateException("no modules")
+
+        modules.forEach { module ->
+            unpackModule(module)
+        }
+
+        return true
+    }
+
+    private fun unpackModule(module: String?) {
+        try {
+            logD(className, "Unpacking $module")
+            val iStream = context.assets.open("$MODULES_ASSET_DIR/$module")
+            val oStream = File("$modDir/$module").outputStream()
+            iStream.copyTo(oStream)
+        } catch (e: Exception) {
+            logE(className, "Unpack module error: $e")
+            e.printStackTrace()
+        }
+    }
+
     private fun getModuleFiles(): List<File> {
         val files = File(modDir).listFiles()
             ?: throw IllegalArgumentException("There is no module files")
@@ -36,21 +59,27 @@ class ModuleLoader(
         files: List<File>,
     ): Map<String, ModuleInterface> {
 
-        val hashmap = mutableMapOf<String, ModuleInterface>()
+        val modMap = mutableMapOf<String, ModuleInterface>()
 
         files.forEach { file ->
             val modName = file.name.removeJarExt()
-            try {
-                val modObj = loadClass(file).newInstance() as ModuleInterface
-                hashmap[modName] = modObj
-                logD(className, "Module loaded: $modName")
-            } catch (e: Exception) {
-                e.printStackTrace()
-                logE(className, "Can't load module: $modName")
-            }
+            val module = loadModule(file) ?: return@forEach
+            modMap[modName] = module
         }
 
-        return hashmap
+        return modMap
+    }
+
+    private fun loadModule(file: File): ModuleInterface? {
+        try {
+            logD(className, "Loading module ${file.name}")
+            return loadClass(file).newInstance() as ModuleInterface
+        } catch (e: Exception) {
+            logE(className, "Can't load module ${file.name}: ${e.message}")
+            e.printStackTrace()
+        }
+
+        return null
     }
 
     private fun loadClass(file: File): Class<*> {
@@ -64,25 +93,6 @@ class ModuleLoader(
         return classLoader.loadClass(className)
     }
 
-    private fun unpackModules(): Boolean {
-        val modules = context.assets.list(MODULES_ASSET_DIR)
-            ?: throw IllegalStateException("no modules")
-
-        modules.forEach { module ->
-            try {
-                logD(className, "unpackModules: unpacking $module")
-                val iStream = context.assets.open("$MODULES_ASSET_DIR/$module")
-                val oStream = File("$modDir/$module").outputStream()
-                iStream.copyTo(oStream)
-            } catch (e: Exception) {
-                logE(className, "unpackModules error: $e")
-            }
-        }
-
-        return true
-    }
-
     private fun String.removeJarExt() = removeSuffix(".jar")
-
     private fun String.toModuleClassName() = "$APP_NAME.modules.$this.Module"
 }

@@ -47,7 +47,7 @@ class ModulesTests(private val context: Context) : ModuleTest() {
         val playResult = testPlayWithoutArg() && testPlayWithWrongArg() && testPlay()
 
         val results = listOf(
-            // FIXME alarm влияет на результат теста play
+            // FIXME alarm can affect play module
             "alarm: " + testAlarm(),
             "apps: " + testApps(),
             "audio: " + audioResult,
