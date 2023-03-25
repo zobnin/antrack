@@ -12,7 +12,9 @@ class CommandRunner {
     fun executeBootstrap() {
         Files.readBootstrap().forEach { line ->
             logD(className, "get bootstrap line: $line")
-            executeCommand(line.trim())
+            if (line.isNotBlank()) {
+                executeCommand(line.trim())
+            }
         }
     }
 

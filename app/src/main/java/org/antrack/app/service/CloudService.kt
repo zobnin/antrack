@@ -28,7 +28,17 @@ class CloudService : Service() {
     private val receivers by lazy { Receivers() }
     private val cc by lazy { CommandRunner() }
     private val intentActionProcessor by lazy { IntentActionProcessor(cc) }
-    private var initDone = false
+
+    private sealed class State {
+        abstract val canInit: Boolean
+
+        class Starting(override val canInit: Boolean = false) : State()
+        class Started(override val canInit: Boolean = false) : State()
+        class Stopped(override val canInit: Boolean = true) : State()
+        class Error(override val canInit: Boolean = true) : State()
+    }
+
+    private var state: State = State.Stopped()
 
     companion object {
         fun isWorking(context: Context): Boolean {
@@ -89,12 +99,12 @@ class CloudService : Service() {
 
     private fun init1() {
         try {
-            if (initDone) return
+            if (!state.canInit) return
 
-            Cloud.connect(Settings.plugin, Settings.token)
-
+            state = State.Starting()
             logD(className, "Service started")
 
+            Cloud.connect(Settings.plugin, Settings.token)
             setAlarm()
 
             // File watcher must be started AFTER creating all catalogs
@@ -102,16 +112,7 @@ class CloudService : Service() {
             cc.executeModules("load", "")
 
             startFileWatcher()
-            FileWatcher.waitForFile("init", "/${Env.deviceNameId}/") {
-                init2()
-            }
-        } catch (e: Exception) {
-            logE(className, "Init #1 error: ${e.message}")
-        }
-    }
 
-    private fun init2() {
-        try {
             Features().write(Env.featuresFilePath)
 
             /* Bootstrap */
@@ -124,9 +125,10 @@ class CloudService : Service() {
             getCtlqFile()
             startCtlWatcher()
 
-            initDone = true
+            state = State.Started()
         } catch (e: Exception) {
-            logE(className, "Init #2 error: ${e.message}")
+            logE(className, "Init error: ${e.message}")
+            state = State.Error()
         }
     }
 
@@ -182,6 +184,7 @@ class CloudService : Service() {
 
         logD(className, "Service stopped")
         stopSelf()
+        state = State.Stopped()
     }
 
     override fun onBind(intent: Intent): IBinder? {

@@ -54,8 +54,9 @@ class LocalCtlChangeCallback(
         val command = cmdA[1]
 
         if (cmdTime > Settings.lastCommandTime) {
-            Settings.lastCommandTime = cmdTime
             runner.executeCommand(command)
         }
+
+        Settings.lastCommandTime = cmdTime
     }
 }

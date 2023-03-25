@@ -6,7 +6,6 @@ import org.antrack.app.cloud.CloudFileMetadata
 import org.antrack.app.functions.sleepS
 import org.antrack.app.functions.touch
 import java.io.File
-import java.util.*
 
 class CloudTest: Test {
     private val testFile = File(Env.testingTempFilePath)
@@ -67,9 +66,5 @@ class CloudTest: Test {
                 "Actual: $resultString",
             )
         }
-    }
-
-    private fun genRandomString(): String {
-        return UUID.randomUUID().toString()
     }
 }

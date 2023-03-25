@@ -3,17 +3,44 @@ package org.antrack.app.tests
 import android.content.Context
 import org.antrack.app.Env
 import org.antrack.app.functions.sleep
+import org.antrack.app.functions.sleepS
 import org.antrack.app.service.CloudService
 import org.antrack.app.service.Files
+import org.antrack.app.watcher.CloudWatcher
 import org.antrack.app.watcher.FileWatcher
 import java.io.File
+import java.util.*
 
-class CommandsTest(private val context: Context): Test {
-    private val ctlFile = File(Env.ctlFilePath)
+class CommandsTest(private val context: Context) : Test {
+
+    private val commands = listOf(
+        "@cmd uname",
+        "@cmd xxx",
+        "@status; info",
+        "@    info   ",
+        "@status; @info",
+        "@XXX",
+        "@",
+        "cmd uname", // silent
+    )
+
+    private val expected = listOf(
+        "cmd done",
+        "cmd error: no output",
+        "status done",
+        "info done",
+        "info done",
+        "status done",
+        "@info error: no such module",
+        "XXX error: no such module",
+        "internal error: command should be 2..200 symbols",
+    )
 
     override fun before() {
         // Slows down the tests
         FileWatcher.removeCallback("service_uploader")
+        // Can affect the results
+        CloudWatcher.removeCallback("service_cloud_watcher")
         // Multithreaded execution don't allow to read result on time
         FileWatcher.multithreded = false
     }
@@ -25,28 +52,11 @@ class CommandsTest(private val context: Context): Test {
     }
 
     override fun run(): List<String> {
-        val commands = listOf(
-            "@cmd uname",
-            "@cmd xxx",
-            "@status; info",
-            "@    info   ",
-            "@status; @info",
-            "@XXX",
-            "@",
-            "cmd uname", // silent
-        )
+        return runCtlTest() + runCtlqTest()
+    }
 
-        val expected = listOf(
-            "cmd done",
-            "cmd error: no output",
-            "status done",
-            "info done",
-            "info done",
-            "status done",
-            "@info error: no such module",
-            "XXX error: no such module",
-            "internal error: command should be 2..200 symbols",
-        )
+    private fun runCtlTest(): List<String> {
+        val ctlFile = File(Env.ctlFilePath)
 
         Files.purgeTestResultFile()
 
@@ -57,23 +67,52 @@ class CommandsTest(private val context: Context): Test {
 
         val results = Files.readTestResultFile()
 
-        return checkResults(expected, results)
+        return checkResults(ctlFile, expected, results)
+    }
+
+    private fun runCtlqTest(): List<String> {
+        val ctlqFile = File(Env.ctlqFilePath)
+
+        Files.purgeTestResultFile()
+
+        var text = ""
+
+        commands.forEach {
+            text = text + Date().time + " " + it + "\n"
+            sleep(100)
+        }
+
+        ctlqFile.writeText(text)
+        sleepS(1)
+
+        val results = Files.readTestResultFile()
+
+        return checkResults(ctlqFile, expected, results)
     }
 
     private fun checkResults(
+        ctlFile: File,
         expected: List<String>,
         results: List<String>,
     ): List<String> {
+
+        if (results.size != expected.size) {
+            return listOf(
+                "${ctlFile.name} test passed: false",
+                "Expected:\n$expected",
+                "Actual:\n$results",
+            )
+        }
 
         val info = results
             .mapIndexed { idx, result -> checkResult(expected.getOrNull(idx), result) }
             .filterNotNull()
 
-        return info.ifEmpty { listOf("All test passed: true") }
+        return info.ifEmpty { listOf("${ctlFile.name} test passed: true") }
     }
 
     private fun checkResult(exp: String?, actual: String?) = when {
-        actual != exp -> "Expected: $exp\n\nActual: $actual"
+        actual != exp -> "Expected: $exp\nActual: $actual"
         else -> null
     }
 }

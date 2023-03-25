@@ -1,6 +1,7 @@
 package org.antrack.app.tests
 
 import java.text.SimpleDateFormat
+import java.util.*
 
 fun isCorrectDateString(format: String, string: String): Boolean {
     return try {
@@ -18,4 +19,8 @@ fun isFloat(string: String): Boolean {
     } catch (e: Exception) {
         false
     }
+}
+
+fun genRandomString(): String {
+    return UUID.randomUUID().toString()
 }

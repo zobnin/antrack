@@ -13,6 +13,11 @@ import java.io.InputStreamReader
 import java.util.*
 
 object Files {
+    private val ctlFile = File(Env.ctlFilePath)
+    private val ctlqFile = File(Env.ctlqFilePath)
+    private val resultFile = File(Env.resultFilePath)
+    private val testingFile = File(Env.testingFilePath)
+
     fun readBootstrap(): List<String> {
         val iStream = App.context.assets.open(BOOTSTRAP_ASSET)
 
@@ -22,15 +27,15 @@ object Files {
     }
 
     fun readCtlFile(): String {
-        return File(Env.ctlFilePath).readText()
+        return ctlFile.readText()
     }
 
     fun readCtlqFile(): List<String> {
-        return File(Env.ctlqFilePath).readAsList()
+        return ctlqFile.readAsList()
     }
 
     fun writeCmdResult(cmd: String, result: String) {
-        File(Env.resultFilePath).apply {
+        resultFile.apply {
             val date = formatDate(Date().time, ACCURATE_TIME_FORMAT)
             writeText("$date\n$cmd $result\n")
         }
@@ -43,7 +48,7 @@ object Files {
     // Testing only
 
     fun writeTestCmdResult(cmd: String, result: String) {
-        File(Env.testingFilePath).apply {
+        testingFile.apply {
             addLine("$cmd $result")
         }
     }
@@ -53,11 +58,10 @@ object Files {
     }
 
     fun purgeTestResultFile() {
-        File(Env.testingFilePath).delete()
-        File(Env.testingFilePath).createNewFile()
+        testingFile.writeText("")
     }
 
     fun readTestResultFile(): List<String> {
-        return File(Env.testingFilePath).readAsList()
+        return testingFile.readAsList()
     }
 }

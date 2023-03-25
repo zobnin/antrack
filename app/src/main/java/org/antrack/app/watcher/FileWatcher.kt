@@ -22,7 +22,9 @@ object FileWatcher : IWatcher, RecursiveFileObserver(Env.mainDirPath) {
 
         if (multithreded) {
             Env.executor.submit {
-                executeCallbacks(filePath)
+                if (multithreded) {
+                    executeCallbacks(filePath)
+                }
             }
         } else {
             executeCallbacks(filePath)

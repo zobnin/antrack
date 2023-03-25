@@ -59,8 +59,8 @@ class Command(
 
     private fun handleError(errorStr: String) {
         when (type) {
-            is Type.Testing -> Files.writeTestErrorResult(errorStr)
             is Type.Regular -> Files.writeErrorResult(errorStr)
+            is Type.Testing -> Files.writeTestErrorResult(errorStr)
             is Type.Silent -> { /* silent */ }
         }
     }
