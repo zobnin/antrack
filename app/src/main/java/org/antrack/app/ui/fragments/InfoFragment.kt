@@ -39,16 +39,14 @@ class InfoFragment : ListBaseFragment() {
         FileWatcher.removeCallback(className)
     }
 
-    private fun readFilesAndUpdateAsync() {
-        async {
-            try {
-                val infos = readInfoAndStatus() + readAppInfo()
-                val strings = infos.map(::infoToSpannable)
-                showListInUiThread(strings)
-                logD(className, "Fragment updated")
-            } catch (e: Exception) {
-                showException(e)
-            }
+    private fun readFilesAndUpdateAsync() = async {
+        try {
+            val infos = readInfoAndStatus() + readAppInfo()
+            val strings = infos.map(::infoToSpannable)
+            showListInUiThread(strings)
+            logD(className, "Fragment updated")
+        } catch (e: Exception) {
+            showException(e)
         }
     }
 

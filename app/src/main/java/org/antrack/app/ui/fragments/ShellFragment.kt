@@ -96,7 +96,7 @@ class ShellFragment : BaseFragment() {
         }
     }
 
-    private fun onResultFileUpdated() {
+    private fun onResultFileUpdated() = async {
         try {
             val module = Modules.get().getOrElse(lastCommand.split(" ")[0]) { null }
 

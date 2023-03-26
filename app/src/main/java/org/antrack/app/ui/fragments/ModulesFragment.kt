@@ -16,19 +16,17 @@ class ModulesFragment : ListBaseFragment() {
     override fun onStart() {
         super.onStart()
         showLoadingIfAdapterEmpty()
-        updateAsync()
+        readModulesAndUpdateAsync()
     }
 
-    private fun updateAsync() {
-        async {
-            try {
-                val modules = modSerializer.read().values
-                val strings = modules.map { moduleToSpannable(it) }
-                showListInUiThread(strings)
-                logD(className, "Fragment updated")
-            } catch (e: Exception) {
-                showException(e)
-            }
+    private fun readModulesAndUpdateAsync() = async {
+        try {
+            val modules = modSerializer.read().values
+            val strings = modules.map { moduleToSpannable(it) }
+            showListInUiThread(strings)
+            logD(className, "Fragment updated")
+        } catch (e: Exception) {
+            showException(e)
         }
     }
 

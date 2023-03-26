@@ -41,19 +41,21 @@ class LogsFragment : BaseFragment() {
             return
         }
 
-        async {
-            try {
-                val logs = File(Env.logFilePath).readAsList()
-                if (logs.isEmpty()) {
-                    showNoData()
-                    return@async
-                }
+        readLogAndUpdateAsync(textView)
+    }
 
-                val logsText = prepareLogs(logs)
-                showTextInUiThread(textView, logsText)
-            } catch (e: Exception) {
-                showException(e)
+    private fun readLogAndUpdateAsync(textView: TextView) = async {
+        try {
+            val logs = File(Env.logFilePath).readAsList()
+            if (logs.isEmpty()) {
+                showNoData()
+                return@async
             }
+
+            val logsText = prepareLogs(logs)
+            showTextInUiThread(textView, logsText)
+        } catch (e: Exception) {
+            showException(e)
         }
     }
 
