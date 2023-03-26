@@ -35,7 +35,7 @@ class CloudService : Service() {
         class Starting(override val canInit: Boolean = false) : State()
         class Started(override val canInit: Boolean = false) : State()
         class Stopped(override val canInit: Boolean = true) : State()
-        class Error(override val canInit: Boolean = true) : State()
+        class Error(override val canInit: Boolean = true, val e: Exception) : State()
     }
 
     private var state: State = State.Stopped()
@@ -128,7 +128,7 @@ class CloudService : Service() {
             state = State.Started()
         } catch (e: Exception) {
             logE(className, "Init error: ${e.message}")
-            state = State.Error()
+            state = State.Error(e = e)
         }
     }
 
