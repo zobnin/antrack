@@ -40,7 +40,16 @@ class LocalCtlChangeCallback(
 
     private fun parseCtlq() {
         Files.readCtlqFile().forEach { cmd ->
+            executeCtlqCommand(cmd)
+        }
+    }
+
+    private fun executeCtlqCommand(cmd: String) {
+        try {
             runner.executeCtlqCommand(cmd)
+        } catch (e: Exception) {
+            logE(className, "Error: ${e.message}")
+            e.printStackTrace()
         }
     }
 }

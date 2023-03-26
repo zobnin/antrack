@@ -52,7 +52,10 @@ class CommandsTest(private val context: Context) : Test {
     }
 
     override fun run(): List<String> {
-        return runCtlTest() + runCtlqTest()
+        return  runCtlTest() +
+                runCtlqTest() +
+                runCtlqFuzzingTest() +
+                runCtlqTimeTest()
     }
 
     private fun runCtlTest(): List<String> {
@@ -76,7 +79,6 @@ class CommandsTest(private val context: Context) : Test {
         Files.purgeTestResultFile()
 
         var text = ""
-
         commands.forEach {
             text = text + Date().time + " " + it + "\n"
             sleep(100)
@@ -88,6 +90,62 @@ class CommandsTest(private val context: Context) : Test {
         val results = Files.readTestResultFile()
 
         return checkResults(ctlqFile, expected, results)
+    }
+
+    private fun runCtlqFuzzingTest(): List<String> {
+        val commands = listOf(
+            "zzzzzzzzzzzz",
+            "121213 1313131",
+            "dewdew lopkoijoi bhyhyu",
+            "X",
+            "x".repeat(1_000),
+            "${Date().time} @cmd uname"
+        )
+
+        val expected = listOf(
+            "cmd done"
+        )
+
+        return ctlqGenericTest(commands, expected)
+    }
+
+    private fun runCtlqTimeTest(): List<String> {
+        val time = Date().time
+
+        val commands = listOf(
+            "$time @info",
+            "${time+1} @status",
+            "${time+2} @info",
+            "${time-10} @status"
+        )
+
+        val expected = listOf(
+            "info done",
+            "status done",
+            "info done"
+        )
+
+        return ctlqGenericTest(commands, expected)
+    }
+
+    private fun ctlqGenericTest(commands: List<String>, expected: List<String>): List<String> {
+        val ctlqFile = File(Env.ctlqFilePath)
+
+        Files.purgeTestResultFile()
+
+        var text = ""
+        commands.forEach {
+            text = text + it + "\n"
+            sleep(100)
+        }
+
+        ctlqFile.writeText(text)
+        sleepS(1)
+
+        val results = Files.readTestResultFile()
+
+        return checkResults(ctlqFile, expected, results)
+
     }
 
     private fun checkResults(
