@@ -3,7 +3,7 @@ package org.antrack.app
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import org.antrack.app.service.Notification
+import org.antrack.app.service.Notifications
 
 class App : Application() {
     companion object {
@@ -19,6 +19,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        Notification.createChannel()
+        Notifications.createChannel()
     }
 }

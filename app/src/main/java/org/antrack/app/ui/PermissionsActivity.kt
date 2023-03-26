@@ -1,5 +1,6 @@
 package org.antrack.app.ui
 
+import android.annotation.TargetApi
 import android.app.Activity
 import android.app.admin.DeviceAdminReceiver
 import android.app.admin.DevicePolicyManager
@@ -7,6 +8,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import app.BuildConfig
 import org.antrack.app.functions.toast
 
 open class PermissionsActivity : Activity() {
@@ -22,11 +26,11 @@ open class PermissionsActivity : Activity() {
     private var pCallback: (Boolean) -> Unit = {}
     private var permissionsNeed = listOf<String>()
 
-    fun checkPermission(permission: String): Boolean {
+    protected fun checkPermission(permission: String): Boolean {
         return checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }
 
-    fun requestPermissions(
+    protected fun requestPermissions(
         permArray: Array<String>,
         callback: (Boolean) -> Unit,
     ) {
@@ -65,12 +69,29 @@ open class PermissionsActivity : Activity() {
         pCallback(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
     }
 
-    fun checkAdminPermission(): Boolean {
+    @TargetApi(Build.VERSION_CODES.R)
+    protected fun showAllFilesAccessSettingsScreen() {
+        try {
+            val intent = Intent(
+                android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+            ).apply {
+                // We need CLEAR_TOP flag to remove previous settings screen
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+            startActivity(intent)
+        } catch (e: Exception) {
+            toast(e.message.toString())
+        }
+    }
+
+    protected fun checkAdminPermission(): Boolean {
         val policyManager = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
         return policyManager.isAdminActive(adminComponent)
     }
 
-    fun requestAdminPermission() {
+    protected fun requestAdminPermission() {
         try {
             val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
                 putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent)

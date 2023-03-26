@@ -84,7 +84,7 @@ class CloudService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(1111, Notification.createServiceNotification().build())
+            startForeground(1111, Notifications.createServiceNotification().build())
         }
 
         executor.submit {
@@ -116,7 +116,7 @@ class CloudService : Service() {
             Features().write(Env.featuresFilePath)
 
             /* Bootstrap */
-            cc.executeCommand("!modules")
+            cc.executeCtlCommand("!modules")
             cc.executeBootstrap()
 
             unpackAsset(ALARM_ASSET)
@@ -184,6 +184,7 @@ class CloudService : Service() {
 
         logD(className, "Service stopped")
         stopSelf()
+
         state = State.Stopped()
     }
 

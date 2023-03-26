@@ -42,7 +42,7 @@ class Command(
 
     private fun executeSingleCommand(cmd: String, args: String) {
         val result = when {
-            InternalCmds.isInternal(cmd) -> InternalCmds.run(cmd, args)
+            InternalCommands.isInternal(cmd) -> InternalCommands.run(cmd, args)
             else -> Modules.command(cmd, args.split(" "))
         }
 

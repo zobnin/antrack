@@ -3,15 +3,12 @@
 package org.antrack.app.ui
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import app.BuildConfig
 import app.R
 import org.antrack.app.*
 import org.antrack.app.cloud.Cloud
@@ -25,7 +22,24 @@ class WizardActivity : PermissionsActivity() {
     private val admin = Admin()
     private val appStatus = AppStatus(this)
     private var pluginChosen = false
-    lateinit var closeButton: Button
+
+    private val filesAccessButton: Button
+        get() = findViewById(R.id.button_files_access)
+
+    private val backgroundButton: Button
+        get() = findViewById(R.id.button_background_work)
+
+    private val adminButton: Button
+        get() = findViewById(R.id.button_admin)
+
+    private val rootButton: Button
+        get() = findViewById(R.id.button_root)
+
+    private val dropboxButton: Button
+        get() = findViewById(R.id.button_dropbox)
+
+    private val closeButton: Button
+        get() = findViewById(R.id.button_close)
 
     companion object {
         private val wizardCompleteFile = App.dataDir + WIZARD_COMPLETE_FILE
@@ -64,8 +78,8 @@ class WizardActivity : PermissionsActivity() {
                 Manifest.permission.READ_CONTACTS,
                 Manifest.permission.READ_SMS
             )
-        ) { ok ->
-            if (ok) {
+        ) { granted ->
+            if (granted) {
                 main()
             } else {
                 toast(R.string.wizard_nopermissions)
@@ -76,7 +90,7 @@ class WizardActivity : PermissionsActivity() {
 
     private fun main() {
         setContentView(R.layout.activity_wizard)
-        setupAllFilesAccessButton()
+        setupFilesAccessButton()
         setupBackgroundWorkButton()
         setupAdminButton()
         setupRootButton()
@@ -84,24 +98,23 @@ class WizardActivity : PermissionsActivity() {
         setupCloseButton()
     }
 
-    private fun setupAllFilesAccessButton() {
-        val button = findViewById<Button>(R.id.button_files_access)
-        if (Build.VERSION.SDK_INT >= 30) {
-            button.setOnClickListener {
-                if (!appStatus.haveAccessToAllFiles) {
-                    showAllFilesAccessSettingsScreen()
-                } else {
-                    toast(R.string.already_allowed)
-                }
+    private fun setupFilesAccessButton() {
+        if (Build.VERSION.SDK_INT < 30) {
+            filesAccessButton.visibility = View.GONE
+            return
+        }
+
+        filesAccessButton.setOnClickListener {
+            if (!appStatus.haveAccessToAllFiles) {
+                showAllFilesAccessSettingsScreen()
+            } else {
+                toast(R.string.already_allowed)
             }
-        } else {
-            button.visibility = View.GONE
         }
     }
 
     private fun setupBackgroundWorkButton() {
-        val button = findViewById<Button>(R.id.button_background_work)
-        button.setOnClickListener {
+        backgroundButton.setOnClickListener {
             if (!appStatus.isIgnoringBatteryOptimizations) {
                 requestIgnoreBatteryOptimisation()
             } else {
@@ -111,8 +124,7 @@ class WizardActivity : PermissionsActivity() {
     }
 
     private fun setupAdminButton() {
-        val button = findViewById<Button>(R.id.button_admin)
-        button.setOnClickListener {
+        adminButton.setOnClickListener {
             if (!admin.isActive) {
                 admin.showDialog(this)
             } else {
@@ -122,23 +134,22 @@ class WizardActivity : PermissionsActivity() {
     }
 
     private fun setupRootButton() {
-        val button = findViewById<Button>(R.id.button_root)
-        if (Shell.checkSu()) {
-            button.setOnClickListener {
-                if (Shell.checkSuRun()) {
-                    toast(R.string.root_rights_granted)
-                } else {
-                    toast(R.string.no_root_right)
-                }
+        if (!Shell.checkSu()) {
+            rootButton.isEnabled = false
+            return
+        }
+
+        rootButton.setOnClickListener {
+            if (Shell.checkSuRun()) {
+                toast(R.string.root_rights_granted)
+            } else {
+                toast(R.string.no_root_right)
             }
-        } else {
-            button.isEnabled = false
         }
     }
 
     private fun setupDropboxButton() {
-        val button = findViewById<Button>(R.id.button_dropbox)
-        button.setOnClickListener { v ->
+        dropboxButton.setOnClickListener { v ->
             Settings.plugin = Cloud.DROPBOX
 
             try {
@@ -151,7 +162,6 @@ class WizardActivity : PermissionsActivity() {
     }
 
     private fun setupCloseButton() {
-        closeButton = findViewById(R.id.button_close)
         closeButton.isEnabled = Settings.token.isNotEmpty()
         closeButton.setOnClickListener { exit() }
     }
@@ -173,32 +183,17 @@ class WizardActivity : PermissionsActivity() {
     override fun onResume() {
         super.onResume()
 
-        // Handle Dropbox plugin auth
         if (pluginChosen) {
-            val token = Cloud.resume()
-            if (token != null) {
-                Settings.token = token
-                closeButton.isEnabled = true
-            } else {
-                toast(R.string.authentication_failed)
-            }
+            processToken(Cloud.resume())
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.R)
-    private fun showAllFilesAccessSettingsScreen() {
-        try {
-            val intent = Intent(
-                android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-            ).apply {
-                // We need CLEAR_TOP flag to remove previous settings screen
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_CLEAR_TOP
-            }
-            startActivity(intent)
-        } catch (e: Exception) {
-            toast(e.message.toString())
+    private fun processToken(token: String?) {
+        if (token != null) {
+            Settings.token = token
+            closeButton.isEnabled = true
+        } else {
+            toast(R.string.authentication_failed)
         }
     }
 }

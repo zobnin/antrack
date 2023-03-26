@@ -10,7 +10,7 @@ import org.antrack.app.libs.Admin
 import org.antrack.app.modules.ModulesSerializer
 import java.io.File
 
-object InternalCmds {
+object InternalCommands {
     private const val LOST = "lost"
     private const val MODULES = "modules"
     private const val DUMP_JSON = "dumpjson"

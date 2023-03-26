@@ -40,7 +40,8 @@ object CloudWatcher : IWatcher {
                         }
                     }
                 } catch (e: Exception) {
-                    logE(className, "Thread interrupted")
+                    logE(className, e.message.toString())
+                    e.printStackTrace()
                     break
                 }
             }

@@ -9,7 +9,7 @@ import android.os.Build
 import app.R
 import org.antrack.app.App
 
-object Notification {
+object Notifications {
     fun createChannel() {
         if (Build.VERSION.SDK_INT >= 26) {
             val name = App.context.getString(R.string.app_name)

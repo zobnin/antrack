@@ -61,11 +61,19 @@ class MainActivity : Activity() {
         highlightButton(buttons, Settings.fragmentId)
 
         buttons.forEachIndexed { idx, button ->
-            button.setOnClickListener {
-                loadFragment(fragments[idx])
-                highlightButton(buttons, idx)
-                Settings.fragmentId = idx
-            }
+            setBottomButtonClickListener(buttons, button, idx)
+        }
+    }
+
+    private fun setBottomButtonClickListener(
+        buttons: List<TextView>,
+        button: TextView,
+        idx: Int,
+    ) {
+        button.setOnClickListener {
+            loadFragment(fragments[idx])
+            highlightButton(buttons, idx)
+            Settings.fragmentId = idx
         }
     }
 
@@ -96,6 +104,7 @@ class MainActivity : Activity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == WIZARD_FIRST_LAUNCH_CODE && data != null) {
             main()
         }

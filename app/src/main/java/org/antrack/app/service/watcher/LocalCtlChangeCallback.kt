@@ -2,7 +2,6 @@ package org.antrack.app.service.watcher
 
 import org.antrack.app.CONTROL_FILE
 import org.antrack.app.CONTROL_Q_FILE
-import org.antrack.app.Settings
 import org.antrack.app.functions.className
 import org.antrack.app.functions.logE
 import org.antrack.app.service.CommandRunner
@@ -36,27 +35,12 @@ class LocalCtlChangeCallback(
 
     private fun parseCtl() {
         val command = Files.readCtlFile()
-        runner.executeCommand(command)
+        runner.executeCtlCommand(command)
     }
 
     private fun parseCtlq() {
         Files.readCtlqFile().forEach { cmd ->
-            processCtlqCommand(cmd)
+            runner.executeCtlqCommand(cmd)
         }
-    }
-
-    private fun processCtlqCommand(cmd: String) {
-        val cmdA = cmd
-            .split(" ", limit = 2)
-            .dropLastWhile { it.isEmpty() }
-
-        val cmdTime = cmdA[0].toLong()
-        val command = cmdA[1]
-
-        if (cmdTime > Settings.lastCommandTime) {
-            runner.executeCommand(command)
-        }
-
-        Settings.lastCommandTime = cmdTime
     }
 }

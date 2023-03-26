@@ -17,7 +17,7 @@ class IntentActionProcessor(private val cc: CommandRunner) {
     private fun processCommand(intent: Intent) {
         val command = intent.getStringExtra(IntentActions.EXTRA_COMMAND)
         if (command != null) {
-            cc.executeCommand(command)
+            cc.executeCtlCommand(command)
         }
     }
 
