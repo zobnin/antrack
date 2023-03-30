@@ -1,5 +1,7 @@
 package org.antrack.app
 
+import app.BuildConfig
+
 const val TRUE = "true"
 const val FALSE = "false"
 const val DONE = "done"
@@ -10,7 +12,7 @@ const val WIZARD_FIRST_LAUNCH_CODE = 1
 const val WIZARD_LAUNCH_CODE = 2
 const val DEVICE_ADMIN_CODE = 3
 
-const val DROPBOX_KEY = "otyoz3pz5z9rtmn"
+const val DROPBOX_KEY = BuildConfig.DROPBOX_KEY
 const val LONG_POLL_TIMEOUT = 300
 
 const val APP_NAME = "org.antrack.app"

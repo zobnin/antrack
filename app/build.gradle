@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdkVersion 33
 
@@ -11,6 +14,7 @@ android {
         versionCode 1
         versionName "0.1.0"
         multiDexEnabled true
+        buildConfigField "String", "DROPBOX_KEY",localProperties['dropboxKey']
     }
 
     dexOptions {
