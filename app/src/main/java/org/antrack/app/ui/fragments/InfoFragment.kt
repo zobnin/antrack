@@ -13,7 +13,7 @@ import org.antrack.app.watcher.IWatcherCallback
 import java.io.File
 
 class InfoFragment : ListBaseFragment() {
-    val modSerializer = ModulesSerializer()
+    private val modSerializer = ModulesSerializer()
 
     data class Info(
         val title: CharSequence,
