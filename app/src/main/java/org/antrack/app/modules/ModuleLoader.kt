@@ -48,7 +48,7 @@ class ModuleLoader(
 
     private fun getModuleFiles(): List<File> {
         val files = File(modDir).listFiles()
-            ?: throw IllegalArgumentException("There is no module files")
+            ?: throw IllegalArgumentException("There are no module files")
 
         return files
             .toList()
@@ -72,7 +72,7 @@ class ModuleLoader(
 
     private fun loadModule(file: File): ModuleInterface? {
         try {
-            logD(className, "Loading module ${file.name}")
+            logD(className, "Loading module ${file.name}...")
             return loadClass(file).newInstance() as ModuleInterface
         } catch (e: Exception) {
             logE(className, "Can't load module ${file.name}: ${e.message}")
