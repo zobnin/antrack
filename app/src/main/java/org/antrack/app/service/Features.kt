@@ -1,19 +1,19 @@
 package org.antrack.app.service
 
-import android.content.pm.PackageManager
-import android.hardware.Camera
 import org.antrack.app.App
+import org.antrack.app.functions.hasBackCamera
+import org.antrack.app.functions.hasFrontCamera
+import org.antrack.app.functions.hasTelephony
+import org.antrack.app.libs.Admin
 import org.antrack.app.libs.Shell
 import java.io.FileWriter
 
 class Features {
     val root by lazy { Shell.checkSu() }
-    val admin = false
-    val backCamera by lazy { Camera.getNumberOfCameras() > 0 }
-    val frontCamera by lazy { Camera.getNumberOfCameras() > 1 }
-    val phone by lazy {
-        App.context.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
-    }
+    val admin: Boolean get() = Admin().isActive
+    val backCamera by lazy { App.context.hasBackCamera }
+    val frontCamera by lazy { App.context.hasFrontCamera }
+    val phone by lazy { App.context.hasTelephony }
 
     fun write(path: String) {
         try {

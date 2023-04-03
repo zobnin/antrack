@@ -33,7 +33,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (WizardActivity.isNeedToLaunch()) {
+        if (WizardActivity.needToLaunch()) {
             WizardActivity.launch(this, WIZARD_FIRST_LAUNCH_CODE)
         } else {
             main()

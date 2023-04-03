@@ -49,7 +49,7 @@ class WizardActivity : PermissionsActivity() {
             activity.startActivityForResult(intent, code)
         }
 
-        fun isNeedToLaunch(): Boolean {
+        fun needToLaunch(): Boolean {
             return !File(wizardCompleteFile).exists()
         }
 

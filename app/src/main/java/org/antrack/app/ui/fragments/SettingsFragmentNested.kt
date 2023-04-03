@@ -14,7 +14,10 @@ import org.antrack.app.service.CloudService
 import org.antrack.app.tests.TestRunner
 import org.antrack.app.ui.WizardActivity
 
-class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragmentNested :
+    PreferenceFragment(),
+    SharedPreferences.OnSharedPreferenceChangeListener {
+
     @Deprecated("Deprecated in Java")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,16 +77,6 @@ class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedP
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onPause() {
-        preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
-        super.onPause()
-    }
-
     private fun setDebugOptions() {
         findPreference("run_cmd_tests")?.setOnPreferenceClickListener {
             TestRunner(activity).runCmdTests()
@@ -117,5 +110,15 @@ class SettingsFragmentNested : PreferenceFragment(), SharedPreferences.OnSharedP
         findPreference("run_cloud_tests")?.apply {
             preferenceScreen.removePreference(this)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onPause() {
+        preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        super.onPause()
     }
 }
