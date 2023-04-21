@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="enable_service"
+        android:title="@string/main_enable_service"
+        android:summary="@string/main_enable_service_more"
+        android:defaultValue="true" />
+    <CheckBoxPreference
+        android:key="start_at_boot"
+        android:dependency="enable_service"
+        android:title="@string/main_start_at_boot"
+        android:summary="@string/main_start_at_boot_more"
+        android:defaultValue="true" />
+    <ListPreference
+        android:key="update_interval"
+        android:dependency="enable_service"
+        android:title="@string/main_update_interval"
+        android:summary="@string/main_update_interval_more"
+        android:entries="@array/pref_update_interval_entries"
+        android:entryValues="@array/pref_update_interval_values"
+        android:defaultValue="30" />
+    <Preference
+        android:key="run_setup_wizard"
+        android:title="@string/run_setup_wizard"
+        android:summary="@string/run_setup_wizard_more" />
+
+    <PreferenceCategory
+        android:key="testing"
+        android:title="Testing" />
+    <Preference
+        android:key="run_cmd_tests"
+        android:title="Run commands tests" />
+    <Preference
+        android:key="run_mod_tests"
+        android:title="Run modules tests" />
+    <Preference
+        android:key="run_cloud_tests"
+        android:title="Run cloud tests" />
+</PreferenceScreen>

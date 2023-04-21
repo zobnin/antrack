@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">AnTrack</string>
+    <string name="main_enable_service">Enable service</string>
+    <string name="main_start_at_boot">Start service at boot</string>
+    <string name="main_update_interval">Update interval in minutes</string>
+    <string name="wizard_root_button">Grant root permissions</string>
+    <string name="wizard_close_button">Close</string>
+    <string name="wizard_welcome">Settings wizard</string>
+    <string name="root_rights_granted">Root rights granted</string>
+    <string name="device_info">Device info</string>
+    <string name="message_nodata">No data</string>
+    <string name="message_nomodule">Module not found</string>
+    <string name="wizard_nopermissions">You must grant all permissions to the app</string>
+    <string name="main_update_interval_more">The time interval between sending data to cloud</string>
+    <string name="pref_15_minutes">15 minutes</string>
+    <string name="pref_30_minutes">30 minutes</string>
+    <string name="pref_1_hour">1 hour</string>
+    <string name="pref_2_hours">2 hours</string>
+    <string name="pref_3_hours">3 hours</string>
+    <string name="main_enable_service_more">Service will respond to requests from other devices and send data to the cloud</string>
+    <string name="main_start_at_boot_more">Automatic start at boot allows AnTrack stay connected to other devices</string>
+    <string name="loading">Loading…</string>
+    <string name="no_root_right">No root right</string>
+    <string name="no_internet">No internet</string>
+    <string name="authentication_required">Authentication required</string>
+    <string name="authentication_failed">Authentication failed</string>
+    <string name="device_status">Device status</string>
+    <string name="app_info">App info</string>
+    <string name="connect">Connect</string>
+    <string name="wizard_all_files_button">Grant access to all files</string>
+    <string name="wizard_background_work_button">Allow to work in the background</string>
+    <string name="already_allowed">Already allowed</string>
+    <string name="run_setup_wizard">Run setup wizard</string>
+    <string name="wizard_admin_button">Grant admin permissions</string>
+    <string name="run_tests">Run tests</string>
+    <string name="run_setup_wizard_more">Initial Setup Screen</string>
+</resources>

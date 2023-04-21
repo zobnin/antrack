@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_update_interval_entries">
+        <item>@string/pref_15_minutes</item>
+        <item>@string/pref_30_minutes</item>
+        <item>@string/pref_1_hour</item>
+        <item>@string/pref_2_hours</item>
+        <item>@string/pref_3_hours</item>
+    </string-array>
+    <string-array name="pref_update_interval_values" translatable="false">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>180</item>
+    </string-array>
+</resources>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/status_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="?android:attr/listPreferredItemPaddingStart"
+                    android:text="Info"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+                <TextView
+                    android:id="@+id/modules_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="?android:attr/listPreferredItemPaddingEnd"
+                    android:text="Mods"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+                <TextView
+                    android:id="@+id/logs_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="?android:attr/listPreferredItemPaddingEnd"
+                    android:text="Logs"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+                <TextView
+                    android:id="@+id/shell_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="?android:attr/listPreferredItemPaddingEnd"
+                    android:text="Shell"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+                <TextView
+                    android:id="@+id/settings_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="?android:attr/listPreferredItemPaddingEnd"
+                    android:text="⚙"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+</FrameLayout>
+
