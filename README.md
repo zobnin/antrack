@@ -51,7 +51,7 @@ $ echo uname -a > ctl
 
 The result will appear in the `cmdout` file.
 
-See the FIXME repository for more information about working with modules.
+See the [antack_modules](https://github.com/zobnin/antrack_modules) repository for more information about working with modules.
 
 ## Limitations
 
