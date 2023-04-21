@@ -1,3 +1,5 @@
+## What is it
+
 AnTrack is a simple application for tracking and managing your device via cloud file services with three goals in mind:
 
 1. _Following the KISS_ principle. AnTrack is as simple as possible and has only two direct dependencies: the standard Kotlin language library and the Dropbox SDK.
