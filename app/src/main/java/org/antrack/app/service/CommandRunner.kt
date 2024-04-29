@@ -25,12 +25,12 @@ class CommandRunner {
     }
 
     fun executeCtlqCommand(cmd: String) {
-        val cmdA = cmd
+        val cmdArr = cmd
             .split(" ", limit = 2)
             .dropLastWhile { it.isEmpty() }
 
-        val cmdTime = cmdA[0].toLong()
-        val command = cmdA[1]
+        val cmdTime = cmdArr[0].toLong()
+        val command = cmdArr[1]
 
         if (cmdTime > Settings.lastCommandTime) {
             Settings.lastCommandTime = cmdTime

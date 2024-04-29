@@ -13,7 +13,12 @@ import android.widget.TextView
 import app.R
 import org.antrack.app.Env
 import org.antrack.app.RESULT_FILE
-import org.antrack.app.functions.*
+import org.antrack.app.functions.className
+import org.antrack.app.functions.fadeIn
+import org.antrack.app.functions.focusAndShowKeyboard
+import org.antrack.app.functions.hideKeyboard
+import org.antrack.app.functions.logE
+import org.antrack.app.functions.toast
 import org.antrack.app.modules.ModuleInterface
 import org.antrack.app.modules.Modules
 import org.antrack.app.watcher.FileWatcher
@@ -42,9 +47,9 @@ class ShellFragment : BaseFragment() {
         retainInstance = true
 
         val main = inflater.inflate(R.layout.fragment_shell, container, false)
-        val ps1 = main.findViewById(R.id.fragment_shell_ps1) as TextView
-        val inputField = main.findViewById(R.id.fragment_shell_edittext) as EditText
-        resultView = main.findViewById(R.id.fragment_shell_textview) as TextView
+        val ps1: TextView = main.findViewById(R.id.fragment_shell_ps1)
+        val inputField: EditText = main.findViewById(R.id.fragment_shell_edittext)
+        resultView = main.findViewById(R.id.fragment_shell_textview)!!
 
         ps1.text = Env.deviceName + "$ "
         inputField.requestFocus()

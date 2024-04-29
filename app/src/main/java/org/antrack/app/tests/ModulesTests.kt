@@ -15,7 +15,6 @@ import org.antrack.app.ui.MainActivity
 import org.antrack.app.watcher.FileWatcher
 import java.io.File
 
-
 class ModulesTests(private val context: Context) : ModuleTest() {
     override fun before() {
         // Slows down the tests

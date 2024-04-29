@@ -18,7 +18,7 @@ fun CharSequence.replace(
     return Replacer(this, matcher, replacement).replace()
 }
 
-private class Replacer constructor(
+private class Replacer(
     private val mSource: CharSequence, private val mMatcher: Matcher,
     private val mReplacement: CharSequence
 ) {

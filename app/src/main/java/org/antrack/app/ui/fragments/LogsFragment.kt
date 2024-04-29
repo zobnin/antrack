@@ -28,7 +28,7 @@ class LogsFragment : BaseFragment() {
         retainInstance = true
 
         val view = inflater.inflate(R.layout.fragment_textview, container, false)
-        val textView = view.findViewById(R.id.fragment_textview_text) as TextView
+        val textView: TextView = view.findViewById(R.id.fragment_textview_text)
 
         showLoading()
         onFileUpdate(textView)

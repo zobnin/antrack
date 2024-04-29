@@ -8,7 +8,11 @@ import android.view.View
 import android.widget.TextView
 import app.R
 import org.antrack.app.Env
-import org.antrack.app.functions.*
+import org.antrack.app.functions.className
+import org.antrack.app.functions.fadeIn
+import org.antrack.app.functions.fadeOut
+import org.antrack.app.functions.logE
+import org.antrack.app.functions.toast
 import java.io.File
 import java.io.IOException
 
@@ -65,7 +69,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     fun hideMessage() {
-        activity?.runOnUiThread {
+        runOnUiThread {
             activity?.findViewById<TextView>(R.id.message)?.fadeOut()
         }
     }
@@ -75,7 +79,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     private fun showMessage(message: String) {
-        activity?.runOnUiThread {
+        runOnUiThread {
             activity?.findViewById<TextView>(R.id.message)?.apply {
                 text = message
                 fadeIn()

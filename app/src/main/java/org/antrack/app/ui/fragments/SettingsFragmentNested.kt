@@ -35,7 +35,7 @@ class SettingsFragmentNested :
         }
     }
 
-    override fun onSharedPreferenceChanged(sp: SharedPreferences, key: String) {
+    override fun onSharedPreferenceChanged(sp: SharedPreferences, key: String?) {
         when (key) {
             "enable_service" -> toggleEnableService(sp, key)
             "start_at_boot" -> toggleStartAtBoot(sp, key)

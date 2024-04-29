@@ -9,7 +9,7 @@ import org.antrack.app.service.Files
 import org.antrack.app.watcher.CloudWatcher
 import org.antrack.app.watcher.FileWatcher
 import java.io.File
-import java.util.*
+import java.util.Date
 
 class CommandsTest(private val context: Context) : Test {
 
@@ -145,7 +145,6 @@ class CommandsTest(private val context: Context) : Test {
         val results = Files.readTestResultFile()
 
         return checkResults(ctlqFile, expected, results)
-
     }
 
     private fun checkResults(
