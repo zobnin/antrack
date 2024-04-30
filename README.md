@@ -22,7 +22,7 @@ Example commands:
 
 All these commands are implemented by separate modules with the same name. Moreover, modules can respond to commands not only given at application startup or written to file `ctl`. They can also be executed on a timer (the `locate` module does that) or, for example, when a call comes in (the `calls` module does that, recording the history of the calls in a separate directory.
 
-See the source code of the [[modules/ModuleInterface.java]] interface for details.
+See the source code of the [modules/ModuleInterface.java] interface for details.
 
 ## How to use it
 
@@ -51,7 +51,7 @@ $ echo uname -a > ctl
 
 The result will appear in the `cmdout` file.
 
-See the FIXME repository for more information about working with modules.
+See the [antack_modules](https://github.com/zobnin/antrack_modules) repository for more information about working with modules.
 
 ## Limitations
 
