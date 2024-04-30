@@ -38,9 +38,11 @@ class ModuleLoader(
             logD(className, "Unpacking $module")
             val iStream = context.assets.open("$MODULES_ASSET_DIR/$module")
             val oFile = File("$modDir/$module")
+            // Delete file to reset permissions
             oFile.delete()
             val oStream = oFile.outputStream()
             iStream.copyTo(oStream)
+            // Android 14 requirement
             oFile.setReadOnly()
         } catch (e: Exception) {
             logE(className, "Unpack module error: $e")
