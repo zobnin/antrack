@@ -10,12 +10,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import app.R
-import org.antrack.app.*
+import org.antrack.app.App
+import org.antrack.app.Settings
+import org.antrack.app.WIZARD_COMPLETE_FILE
 import org.antrack.app.cloud.Cloud
 import org.antrack.app.functions.requestIgnoreBatteryOptimisation
 import org.antrack.app.functions.toast
 import org.antrack.app.functions.touch
-import org.antrack.app.libs.*
+import org.antrack.app.libs.Admin
+import org.antrack.app.libs.Shell
 import java.io.File
 
 class WizardActivity : PermissionsActivity() {
@@ -76,7 +79,8 @@ class WizardActivity : PermissionsActivity() {
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.PROCESS_OUTGOING_CALLS,
                 Manifest.permission.READ_CONTACTS,
-                Manifest.permission.READ_SMS
+                Manifest.permission.READ_SMS,
+                Manifest.permission.POST_NOTIFICATIONS,
             )
         ) { granted ->
             if (granted) {
