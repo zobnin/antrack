@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap
 // Watch for control file changes in cloud
 object CloudWatcher : IWatcher {
     override val callbacks = ConcurrentHashMap<String, IWatcherCallback>()
-    var active = false
+    private var active = false
 
     override fun startWatching() {
         startWatcherThread()

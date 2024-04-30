@@ -13,6 +13,7 @@ import org.antrack.app.cloud.Cloud
 import org.antrack.app.functions.className
 import org.antrack.app.functions.logD
 import org.antrack.app.functions.logE
+import org.antrack.app.functions.unpackAsset
 import org.antrack.app.functions.wakelock
 import org.antrack.app.receivers.Receivers
 import org.antrack.app.service.watcher.CloudCtlChangeCallback
@@ -20,7 +21,6 @@ import org.antrack.app.service.watcher.LocalCtlChangeCallback
 import org.antrack.app.service.watcher.UploaderCallback
 import org.antrack.app.watcher.CloudWatcher
 import org.antrack.app.watcher.FileWatcher
-import unpackAsset
 import java.util.concurrent.Executors
 
 class CloudService : Service() {
@@ -107,8 +107,8 @@ class CloudService : Service() {
             Cloud.connect(Settings.plugin, Settings.token)
             setAlarm()
 
-            // File watcher must be started AFTER creating all catalogs
-            // Catalogs for modules created on load step
+            // File watcher must be started AFTER creating all directories
+            // Directories for modules created on load step
             cc.executeModules("load", "")
 
             startFileWatcher()

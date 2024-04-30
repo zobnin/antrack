@@ -1,0 +1,8 @@
+.gradle
+.idea
+/local.properties
+/.navigation
+.DS_Store
+/build
+/captures
+/app/src/main/assets/modules

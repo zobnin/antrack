@@ -1,12 +1,10 @@
 package org.antrack.app
 
 import android.os.Build
-import androidId
+import org.antrack.app.functions.androidId
 import org.antrack.app.functions.touch
-
 import java.io.File
-
-import java.util.*
+import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

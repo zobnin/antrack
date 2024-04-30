@@ -35,6 +35,7 @@ class Receivers {
         registered = true
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerExtReceiver(receiver: BroadcastReceiver, filter: IntentFilter) {
         if (Build.VERSION.SDK_INT >= 33) {
             App.context.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED)

@@ -1,7 +1,6 @@
 package org.antrack.app.modules
 
 import android.content.Context
-import copyTo
 import dalvik.system.DexClassLoader
 import org.antrack.app.APP_NAME
 import org.antrack.app.MODULES_ASSET_DIR
@@ -38,8 +37,13 @@ class ModuleLoader(
         try {
             logD(className, "Unpacking $module")
             val iStream = context.assets.open("$MODULES_ASSET_DIR/$module")
-            val oStream = File("$modDir/$module").outputStream()
+            val oFile = File("$modDir/$module")
+            // Delete file to reset permissions
+            oFile.delete()
+            val oStream = oFile.outputStream()
             iStream.copyTo(oStream)
+            // Android 14 requirement
+            oFile.setReadOnly()
         } catch (e: Exception) {
             logE(className, "Unpack module error: $e")
             e.printStackTrace()

@@ -8,7 +8,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
+import java.util.Properties
 
 object Settings {
     private const val S_UPDATE_INTERVAL = "updateInterval" // 30
@@ -48,7 +48,7 @@ object Settings {
         set(value) = put(S_UPDATE_INTERVAL, value.toString())
 
     var lastCommandTime: Long
-        get() = get(S_LAST_CMD_TIME)?.toLong() ?: Date().time
+        get() = get(S_LAST_CMD_TIME)?.toLong() ?: 0
         set(value) = put(S_LAST_CMD_TIME, value.toString())
 
     var token: String
