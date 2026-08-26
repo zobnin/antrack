@@ -2,6 +2,9 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+/.idea/caches/
+/.idea/deploymentTargetSelector.xml
+/.idea/runConfigurations.xml
 .DS_Store
 /build
 /captures
