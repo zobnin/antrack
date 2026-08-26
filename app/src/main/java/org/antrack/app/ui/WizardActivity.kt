@@ -3,11 +3,13 @@
 package org.antrack.app.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.window.OnBackInvokedDispatcher
 import android.widget.Button
 import app.R
 import org.antrack.app.App
@@ -63,26 +65,36 @@ class WizardActivity : PermissionsActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            onBackInvokedDispatcher.registerOnBackInvokedCallback(
+                OnBackInvokedDispatcher.PRIORITY_DEFAULT
+            ) { handleBackNavigation() }
+        }
+
         checkPermissions()
     }
 
     private fun checkPermissions() {
-        requestPermissions(
-            arrayOf(
-                Manifest.permission.ACCESS_WIFI_STATE,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.SEND_SMS,
-                Manifest.permission.CALL_PHONE,
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.PROCESS_OUTGOING_CALLS,
-                Manifest.permission.READ_CONTACTS,
-                Manifest.permission.READ_SMS,
-                Manifest.permission.POST_NOTIFICATIONS,
-            )
-        ) { granted ->
+        val permissions = mutableListOf(
+            Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.PROCESS_OUTGOING_CALLS,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.READ_SMS,
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions += Manifest.permission.POST_NOTIFICATIONS
+        }
+
+        requestPermissions(permissions.toTypedArray()) { granted ->
             if (granted) {
                 main()
             } else {
@@ -153,7 +165,7 @@ class WizardActivity : PermissionsActivity() {
     }
 
     private fun setupDropboxButton() {
-        dropboxButton.setOnClickListener { v ->
+        dropboxButton.setOnClickListener {
             Settings.plugin = Cloud.DROPBOX
 
             try {
@@ -170,7 +182,10 @@ class WizardActivity : PermissionsActivity() {
         closeButton.setOnClickListener { exit() }
     }
 
-    override fun onBackPressed() {
+    @SuppressLint("GestureBackNavigation")
+    override fun onBackPressed() = handleBackNavigation()
+
+    private fun handleBackNavigation() {
         if (Settings.token.isEmpty()) {
             toast(R.string.authentication_required)
         } else {

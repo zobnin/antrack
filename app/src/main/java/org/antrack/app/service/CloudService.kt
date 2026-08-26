@@ -1,6 +1,5 @@
 package org.antrack.app.service
 
-import android.app.ActivityManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -41,17 +40,10 @@ class CloudService : Service() {
     private var state: State = State.Stopped()
 
     companion object {
-        fun isWorking(context: Context): Boolean {
-            val manager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        @Volatile
+        private var running = false
 
-            for (service in manager.getRunningServices(Int.MAX_VALUE)) {
-                if (CloudService::class.java.name.equals(service.service.className)) {
-                    return true
-                }
-            }
-
-            return false
-        }
+        fun isWorking(): Boolean = running
 
         fun start(context: Context, action: String = "") {
             if (!Settings.isServiceEnabled) return
@@ -77,6 +69,7 @@ class CloudService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        running = true
         executor.submit {
             init1()
         }
@@ -173,6 +166,7 @@ class CloudService : Service() {
     }
 
     override fun onDestroy() {
+        running = false
         super.onDestroy()
 
         stopFileWatcher()

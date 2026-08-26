@@ -32,6 +32,11 @@
     <string name="already_allowed">Already allowed</string>
     <string name="run_setup_wizard">Run setup wizard</string>
     <string name="wizard_admin_button">Grant admin permissions</string>
-    <string name="run_tests">Run tests</string>
     <string name="run_setup_wizard_more">Initial Setup Screen</string>
+    <string name="nav_info">Info</string>
+    <string name="nav_modules">Mods</string>
+    <string name="nav_logs">Logs</string>
+    <string name="nav_shell">Shell</string>
+    <string name="nav_settings">⚙</string>
+    <string name="shell_prompt">PS1&gt; </string>
 </resources>

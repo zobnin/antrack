@@ -14,7 +14,8 @@
             android:id="@+id/fragment_shell_ps1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PS1> "
+            android:labelFor="@id/fragment_shell_edittext"
+            android:text="@string/shell_prompt"
             android:textStyle="bold"
             android:typeface="monospace" />
 
@@ -24,6 +25,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:imeOptions="actionSend|flagNoExtractUi"
+            android:importantForAutofill="no"
             android:inputType="text|textNoSuggestions"
             android:textSize="14sp"
             android:typeface="monospace" />

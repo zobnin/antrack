@@ -77,7 +77,7 @@ class ModuleLoader(
     private fun loadModule(file: File): ModuleInterface? {
         try {
             logD(className, "Loading module ${file.name}...")
-            return loadClass(file).newInstance() as ModuleInterface
+            return loadClass(file).getDeclaredConstructor().newInstance() as ModuleInterface
         } catch (e: Exception) {
             logE(className, "Can't load module ${file.name}: ${e.message}")
             e.printStackTrace()

@@ -29,7 +29,7 @@ fun File.addLine(text: String) {
 
 fun File.purgeDir() {
     try {
-        for (file in listFiles()) file.delete()
+        for (file in listFiles().orEmpty()) file.delete()
     } catch (e: Exception) {
         //
     }

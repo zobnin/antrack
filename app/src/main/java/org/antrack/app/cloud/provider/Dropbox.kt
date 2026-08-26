@@ -163,7 +163,7 @@ class Dropbox(token: String = "") : ICloudProvider {
         if (permanent) {
             client.files().permanentlyDelete(rPath)
         } else {
-            client.files().delete(rPath)
+            client.files().deleteV2(rPath)
         }
     }
 
@@ -320,10 +320,10 @@ class Dropbox(token: String = "") : ICloudProvider {
 
                     fileList = ArrayList()
                     for (md in folderResult.entries) {
-                        val changedFilePath = md.pathLower
-
                         if (md is DeletedMetadata || md is FolderMetadata)
                             continue
+
+                        val changedFilePath = md.pathLower ?: md.pathDisplay ?: continue
 
                         d("watchForChanges: modified file: $changedFilePath")
                         fileList.add(changedFilePath)
@@ -346,18 +346,18 @@ class Dropbox(token: String = "") : ICloudProvider {
 
     private fun dropboxFileMetaToCloudMeta(meta: FileMetadata): CloudFileMetadata {
         return CloudFileMetadata(
-            path = meta.pathLower,
+            path = meta.pathLower ?: meta.pathDisplay ?: meta.name,
             name = meta.name,
             lastModified = meta.serverModified.time,
             size = meta.size,
-            hash = meta.contentHash,
+            hash = meta.contentHash.orEmpty(),
             revision = meta.rev,
         )
     }
 
     private fun dropboxFolderMetaToCloudMeta(meta: FolderMetadata): CloudMetadata {
         return CloudMetadata(
-            path = meta.pathLower,
+            path = meta.pathLower ?: meta.pathDisplay ?: meta.name,
             name = meta.name,
         )
     }

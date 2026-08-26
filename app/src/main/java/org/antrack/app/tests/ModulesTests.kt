@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.pm.PackageManager
 import android.media.AudioManager
-import app.BuildConfig
 import org.antrack.app.libs.Shell
 import org.antrack.app.service.CloudService
 import org.antrack.app.service.watcher.UploaderCallback
@@ -241,7 +240,7 @@ class ModulesTests(private val context: Context) : ModuleTest() {
     }
 
     private fun testPlay(): Boolean {
-        val samplePath = "/data/data/${BuildConfig.APPLICATION_ID}/alarm.ogg"
+        val samplePath = File(context.filesDir, "alarm.ogg").path
         return testModule("play", "play $samplePath") { out ->
             isMusicActive()
         }
