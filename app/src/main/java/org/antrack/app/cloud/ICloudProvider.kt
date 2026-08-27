@@ -20,4 +20,20 @@ interface ICloudProvider {
     fun createDir(rDir: String): CloudMetadata
     fun checkForChanges(rDir: String): Boolean
     fun watchForChanges(dir: String): List<String>?
+
+    fun hasSameContent(content: ByteArray, remote: CloudFileMetadata): Boolean = false
+
+    fun putFileBatch(
+        files: List<Pair<ByteArray, String>>,
+    ): Map<String, CloudFileMetadata> {
+        val results = mutableMapOf<String, CloudFileMetadata>()
+        for ((content, path) in files) {
+            try {
+                results[path] = putFile(content.inputStream(), path)
+            } catch (_: Exception) {
+                // Failed uploads can be retried by the caller.
+            }
+        }
+        return results
+    }
 }
