@@ -66,17 +66,17 @@ abstract class ModuleTest: Test {
     ): String {
         val modOutDir = File(Env.mainDirPath + module.result())
         modOutDir.purgeDir()
-        val modDirContents = modOutDir.listFiles().toSet()
+        val modDirContents = modOutDir.listFiles().orEmpty().toSet()
         ctlFile.writeText(command)
 
-        while (modOutDir.listFiles().toSet() == modDirContents) {
+        while (modOutDir.listFiles().orEmpty().toSet() == modDirContents) {
             sleep(100)
         }
 
         // Give it time to fill the files
         sleep(100)
 
-        val newFiles = (modOutDir.listFiles().toSet() - modDirContents.toSet())
+        val newFiles = (modOutDir.listFiles().orEmpty().toSet() - modDirContents)
             .joinToString("\n") { it.absolutePath }
 
         logD(className, "Dir ${modOutDir.name} changed:\n$newFiles")

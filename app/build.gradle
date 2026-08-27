@@ -1,45 +1,48 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+}
 
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
-    compileSdk 34
+    namespace = 'app'
+    compileSdk = 36
 
     defaultConfig {
-        applicationId "org.antrack.app"
-        minSdkVersion 23
-        targetSdk 34
-        versionCode 1
-        versionName "0.1.0"
-        multiDexEnabled true
+        applicationId = "org.antrack.app"
+        minSdk = 23
+        targetSdk = 36
+        versionCode = 1
+        versionName = "0.1.0"
         buildConfigField "String", "DROPBOX_KEY", localProperties['dropboxKey']
     }
 
-    dexOptions {
-        javaMaxHeapSize "4g"
+    buildFeatures {
+        buildConfig = true
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            debuggable true
-            minifyEnabled false
+            debuggable = true
+            minifyEnabled = false
         }
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.23"
-    implementation 'com.dropbox.core:dropbox-core-sdk:5.4.6'
+    // 7.1+ is built with Kotlin 2.4 metadata, which the stable AGP 9.3.1
+    // built-in Kotlin 2.2 compiler cannot read yet. 7.0.0 already contains
+    // Dropbox's required server-certificate compatibility fix.
+    implementation 'com.dropbox.core:dropbox-core-sdk:7.0.0'
+    implementation 'com.dropbox.core:dropbox-android-sdk:7.0.0'
 }
-

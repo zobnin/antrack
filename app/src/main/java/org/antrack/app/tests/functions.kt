@@ -1,11 +1,12 @@
 package org.antrack.app.tests
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 fun isCorrectDateString(format: String, string: String): Boolean {
     return try {
-        SimpleDateFormat(format).parse(string)
+        SimpleDateFormat(format, Locale.US).parse(string)
         true
     } catch (e: Exception) {
         false

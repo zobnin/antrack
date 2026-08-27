@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="?android:attr/listPreferredItemPaddingStart"
-                    android:text="Info"
+                    android:text="@string/nav_info"
                     android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
                 <TextView
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="?android:attr/listPreferredItemPaddingEnd"
-                    android:text="Mods"
+                    android:text="@string/nav_modules"
                     android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
                 <TextView
@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="?android:attr/listPreferredItemPaddingEnd"
-                    android:text="Logs"
+                    android:text="@string/nav_logs"
                     android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
                 <TextView
@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="?android:attr/listPreferredItemPaddingEnd"
-                    android:text="Shell"
+                    android:text="@string/nav_shell"
                     android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
                 <TextView
@@ -71,10 +71,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="?android:attr/listPreferredItemPaddingEnd"
-                    android:text="⚙"
+                    android:text="@string/nav_settings"
                     android:textAppearance="?android:attr/textAppearanceListItemSmall" />
             </LinearLayout>
         </HorizontalScrollView>
     </LinearLayout>
 </FrameLayout>
-

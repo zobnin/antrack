@@ -15,7 +15,7 @@ class AppStatus(private val context: Context) {
         get() = BuildConfig.VERSION_NAME
 
     val isServiceEnabled: Boolean
-        get() = CloudService.isWorking(context)
+        get() = CloudService.isWorking()
 
     val cloudPlugin: String
         get() = Settings.plugin
